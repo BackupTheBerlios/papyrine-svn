@@ -42,6 +42,37 @@ class Papyrine
 	private $_hooks = array ();
 	private $_smarty = false;
 
+	public function RegisterHook ($hook, $function, $object = false)
+	{
+		// See if the function has already been registered for this hook.
+		if (in_array ($function, $this->_hooks [$hook]))
+			return false;
+
+		$this->hooks [$hook] [] = array (
+			"object"   => $object,
+			"function" => $function
+		);
+	}
+
+	public function ExecuteHooks ($hook_id, &$params)
+	{
+		foreach ($this->hooks [$hook_id] as $hook)
+		{
+			if ($hook ["object"])
+			{
+				if (!$hook ["object"]->$hook ["function"] ($params))
+					return false;
+			}
+			else
+			{
+				if (!$hook ["function"] ($params))
+					return false;
+			}
+		}
+
+		return true;
+	}
+
 	/**
 	 * If we are going to use smarty, set it up.
 	 *
@@ -83,13 +114,27 @@ class Papyrine
 	}
 
 	/**
+	 * Create a new blog.
+	 *
+	 * @param string $title The blog's title.
+	 * @return integer
+	 * @uses PapyrineBlog::Create
+	 */
+	public function CreateBlog ($blog, $title)
+	{
+		return PapyrineBlog::Create (
+			$title
+		);
+	}
+
+	/**
 	 * Create a new category.
 	 *
 	 * @param string $blog The blog to create a category for.
 	 * @param string $title The category's title.
 	 * @return integer
 	 * @uses PapyrineBlog::CreateCategory
-	 */
+	 *
 	public function CreateCategory ($blog, $title)
 	{
 		$blog = new PapyrineBlog ($this->database, $blog);
@@ -106,7 +151,7 @@ class Papyrine
 	 * @param string $blog The blog to get a category for.
 	 * @param integer $id Category's unique id.
 	 * @return PapyrineCategory
-	 */
+	 *
 	public function GetCategory ($blog, $id)
 	{
 		$blog = new PapyrineBlog ($this->database, $blog);
@@ -119,7 +164,7 @@ class Papyrine
 	 *
 	 * @param integer $id Comment's unique id.
 	 * @return PapyrineComment
-	 */
+	 *
 	public function GetComment ($id)
 	{
 		return new PapyrineComment ($this->database, $id);
@@ -131,7 +176,7 @@ class Papyrine
 	 * @param integer $entry Relationship's entry id.
 	 * @param integer $category Relationship's category id.
 	 * @return PapyrineCategoryRelationship
-	 */
+	 *
 	public function GetCategoryRelationship ($entry, $category)
 	{
 		return new PapyrineCategoryRelationship ($this->database, $entry,
@@ -152,7 +197,7 @@ class Papyrine
 	 * @param string $autodisable Timestamp to disable comments at.
 	 * @return integer
 	 * @uses PapyrineEntry::Create
-	 */
+	 *
 	public function CreateEntry ($title, $summary, $body, $owner, $status = true, $onfrontpage = true, $allowcomments = true, $autodisable = false)
 	{
 		return PapyrineEntry::Create (
@@ -174,7 +219,7 @@ class Papyrine
 	 *
 	 * @param integer $id Entry's unique id.
 	 * @return PapyrineEntry
-	 */
+	 *
 	public function GetEntry ($id)
 	{
 		return new PapyrineEntry ($this->database, $id);
@@ -188,7 +233,7 @@ class Papyrine
 	 * @param integer $frontpage Should we show non-frontpage entries.
 	 * @return array
 	 * @uses PapyrineEntry::TABLE
-	 */
+	 *
 	public function GetEntries ($status, $limit = 10, $frontpage = true)
 	{
 		$result = sqlite_query ($this->database, sprintf (
@@ -224,7 +269,7 @@ class Papyrine
 	 * @param string $email New user's email address.
 	 * @return integer
 	 * @uses PapyrineUser::Create
-	 */
+	 *
 	public function CreateUser ($nickname, $password, $firstname, $lastname,
 	                            $email)
 	{
@@ -244,7 +289,7 @@ class Papyrine
 	 *
 	 * @param integer $id Entry's unique id or username.
 	 * @return PapyrineUser
-	 */
+	 *
 	public function GetUser ($id)
 	{
 		return new PapyrineUser ($this->database, $id);
@@ -255,7 +300,7 @@ class Papyrine
 	 *
 	 * @return array
 	 * @uses PapyrinePlugin::TABLE
-	 */
+	 *
 	private function GetModifiers ()
 	{
 		$result = sqlite_query ($this->database, sprintf (
@@ -277,7 +322,7 @@ class Papyrine
 	 *
 	 * @return array
 	 * @uses PapyrinePlugin::TABLE
-	 */
+	 *
 	private function GetSyndicators ()
 	{
 		$result = sqlite_query ($this->database, sprintf (
@@ -299,7 +344,7 @@ class Papyrine
 	 *
 	 * @param integer $id Plugin's unique id.
 	 * @return PapyrinePlugin
-	 */
+	 *
 	public function GetPlugin ($id)
 	{
 		return new PapyrinePlugin ($this->database, $id);
@@ -316,7 +361,7 @@ class Papyrine
 	 * @param array $objects The objects to convert.
 	 * @return array
 	 * @uses PapyrineObject::ToArray
-	 */
+	 *
 	public static function Objects2Array ($objects)
 	{
 		$output = array ();
@@ -352,37 +397,6 @@ class Papyrine
 		return PapyrinePluginManager::GetID ($this->database, $object);
 	}
 
-	public function RegisterHook ($hook, $function, $object = false)
-	{
-		// See if the function has already been registered for this hook.
-		if (in_array ($function, $this->hooks [$hook]))
-			return false;
-
-		$this->hooks [$hook] [] = array (
-			"object"   => $object,
-			"function" => $function
-		);
-	}
-
-	public function ExecuteHooks ($hook_id, &$params)
-	{
-		foreach ($this->hooks [$hook_id] as $hook)
-		{
-			if ($hook ["object"])
-			{
-				if (!$hook ["object"]->$hook ["function"] ($params))
-					return false;
-			}
-			else
-			{
-				if (!$hook ["function"] ($params))
-					return false;
-			}
-		}
-
-		return true;
-	}
-
 	public static function GetFile ($url)
 	{
 		$snoopy = new Snoopy ();
@@ -393,6 +407,7 @@ class Papyrine
 
 		// return location
 	}
+*/
 }
 
 ?>

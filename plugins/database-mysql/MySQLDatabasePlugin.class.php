@@ -29,7 +29,7 @@
  * @package Papyrine
  * @subpackage Plugins
  */
-class MySQLDatabasePlugin extends PapyrinePlugin
+class SQLiteDatabasePlugin extends PapyrinePlugin
 {
 	const TABLES = array (
 		"entries" => "papyrine_entries"
@@ -44,17 +44,20 @@ class MySQLDatabasePlugin extends PapyrinePlugin
 
 	function __construct ()
 	{
-		$GLOBALS ["papyrine"]->RegisterHook ("entry_initialize", 
-		                                     "Initialize",
-		                                     $this);
+		global $papyrine;
+/*
+		$papyrine->RegisterHook ("entry_initialize", 
+		                         "Initialize",
+		                         $this);
 
-		$GLOBALS ["papyrine"]->RegisterHook ("entry_populate_data", 
-		                                     "EntryPopulateData",
-		                                     $this);
+		$papyrine->RegisterHook ("entry_populate_data", 
+		                         "EntryPopulateData",
+		                         $this);
 
-		$GLOBALS ["papyrine"]->RegisterHook ("entry_delete", 
-		                                     "EntryDelete",
-		                                     $this);
+		$papyrine->RegisterHook ("entry_delete", 
+		                         "EntryDelete",
+		                         $this);
+*/
 	}
 
    	/**
@@ -123,7 +126,7 @@ class MySQLDatabasePlugin extends PapyrinePlugin
 		$result->free ();
 
 		$output = !DB::isError ($result);
-	}
+	}*/
 }
 
 ?>

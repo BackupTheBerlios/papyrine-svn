@@ -33,15 +33,8 @@
  * @package Papyrine
  * @subpackage Classes
  */
-class PapyrineCategory extends PapyrineObject
+class PapyrineBlog
 {
-	/**
-	 * Name of the database table to map this object to.
-	 *
-	 * @var string 
-	 */
-	const TABLE = "papyrine_blogs";
-
 	/**
 	 * PapyrineCategory constructor.
 	 *
@@ -61,7 +54,7 @@ class PapyrineCategory extends PapyrineObject
 			$id
 		);
 	}
-
+/*
 	public function GetEntry ($id)
 	{
 		return PapyrineEntry ($this->blog, $id);
@@ -72,7 +65,7 @@ class PapyrineCategory extends PapyrineObject
 	 *
 	 * @param string $title The category's title.
 	 * @return integer
-	 */
+	 *
 	public function CreateCategory ($title)
 	{
 		return PapyrineCategory::Create (
@@ -87,7 +80,7 @@ class PapyrineCategory extends PapyrineObject
 	 *
 	 * @param integer $id Category's unique id.
 	 * @return PapyrineCategory
-	 */
+	 *
 	public function GetCategory ($id)
 	{
 		return new PapyrineCategory ($this->database, $this->blog, $id);
@@ -100,7 +93,7 @@ class PapyrineCategory extends PapyrineObject
 	 * @param string $title New category's title.
 	 * @return integer
 	 * @uses PapyrineCategory::Create
-	 */
+	 *
 	public static function CreateCategory (&$database, $title)
 	{
 		return PapyrineCategory::Create (
