@@ -1,0 +1,45 @@
+<?xml version='1.0'?> 
+<prime>
+	<!--// Form's Objects //-->
+	<forms>
+		<form name="UserCreate" class="UserCreateForm" />
+	</forms>
+	
+	<!--// Global Forwards //-->
+	<forwards>
+	</forwards>
+		
+	<!--// Actions Mapping //-->
+	<actions>
+		<!-- <action input="" validate="" name="" form="" class="" parameter="" forward="" path="" roles="" ></action> -->
+		<action 
+			name="Frontpage" 
+			parameter="frontpage.html" 
+			class="DisplayFrontpageAction" >
+		</action>
+		<action 
+			name="Administration" 
+			parameter="admin/index.html" 
+			class="AdministrationAction" >
+		</action>
+		<action 
+			name="PluginAdministration" 
+			parameter="admin/plugins.html" 
+			class="PluginAdministrationAction" >
+		</action>
+		<action 
+			name="UserAdministration" 
+			parameter="admin/users.html" 
+			class="UserAdministrationAction" >
+		</action>
+		<action 
+			name="UserCreate" 
+			class="UserCreateAction"
+			form="UserCreate" 
+			validate="true" >
+		</action>
+	</actions>
+	
+	<!--// Welcome Action //-->
+	<welcome name="Frontpage" />
+</prime>

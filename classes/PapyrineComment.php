@@ -35,30 +35,28 @@
 interface PapyrineComment
 {
 	// General functions.
-	public function __construct (integer $id);
+	public function __construct( $id );
 
 	// Functions to fetch information.
-	public function GetID ();
-	public function GetEntry ();
-	public function GetBody ();
-	public function GetOwnerName ();
-	public function GetOwnerEmail ();
-	public function GetStatus ();
-	public function GetCreated ();
+	public function getID();
+	public function getEntry();
+	public function getBody();
+	public function getOwnerName();
+	public function getOwnerEmail();
+	public function getStatus();
+	public function getCreated();
 
 	// Functions to set information.
-	public function SetBody (string $body);
-	public function SetOwnerName (string $name);
-	public function SetOwnerEmail (string $email);
-	public function SetStatus (integer $status);
+	public function setBody( $body );
+	public function setOwnerName( $name );
+	public function setOwnerEmail( $email );
+	public function setStatus( $status );
 
 	// Functions to create.
-	public static function Create (integer $entry, string $body, 
-	                               string $owner_name, 
-	                               string $owner_email);
+	public static function create( $entry, $body, $owner_name, $owner_email );
 
 	// Functions to delete.
-	public function Delete ();
+	public function delete();
 }
 
 ?>

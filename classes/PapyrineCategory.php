@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Papyrine is a weblogging system built using PHP5 and Smarty.
+ * Papyrine is a weblogging system built using PHP5.
  * Copyright (C) 2004 Thomas Reynolds
  * 
  * This program is free software; you can redistribute it and/or
@@ -34,23 +34,23 @@
  */
 interface PapyrineCategory
 {
-	public static function Create (integer $blog, string $title);
+	public static function create( $title );
 
 	// General functions.
-	public function __construct (integer $blog, string $id);
+	public function __construct( $id );
 
 	// Functions to fetch information.
-	public function GetID ();
-	public function GetTitle ();
-	public function GetBlog ();
-	public function GetEntries (integer $limit = false);
+	public function getID();
+	public function getTitle();
+	public function getBlog();
+	public function getEntries( $limit = false );
 
 	// Functions to set information.
-	public function SetTitle (string $title);
-	public function SetBlog (integer $blog);
+	public function setTitle( $title );
+	public function setBlog( $blog );
 
 	// Functions to delete.
-	public function Delete ();
+	public function delete();
 }
 
 ?>

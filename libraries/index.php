@@ -24,6 +24,6 @@
 		require_once ($class . '.php');
 	}
 
-	$papyrine = Papyrine::singleton();
+	$papyrine = new Papyrine;
 	$control = new Controller;
 ?>

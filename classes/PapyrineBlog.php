@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Papyrine is a weblogging system built using PHP5 and Smarty.
+ * Papyrine is a weblogging system built using PHP5.
  * Copyright (C) 2004 Thomas Reynolds
  * 
  * This program is free software; you can redistribute it and/or
@@ -29,38 +29,35 @@
  * Decribes a Papyrine blog and must be extended by a database implementation
  * plugin.
  *
- * @author Thomas Reynolds <thomasr@infograph.com>
+ * @author Thomas Reynolds <tdreyno@gmail.com>
  * @package Papyrine
  * @subpackage Classes
  */
 interface PapyrineBlog
 {
 	// General functions.
-	public function __construct (integer $id);
+	public function __construct( $id );
 
 	// Functions to fetch information.
-	public function GetID ();
-	public function GetTitle ();
-	public function GetEntry (integer $id);
-	public function GetCategory (integer $id);
-	public function GetComment (integer $id);
-	public function GetEntries ();
+	public function getID();
+	public function getTitle();
+	public function getEntry( $id );
+	public function getCategory( $id );
+	public function getComment( $id );
+	public function getEntries();
 
 	// Functions to set information.
-	public function SetTitle (string $title);
+	public function setTitle ( $title );
 
 	// Functions to create.
-	public static function Create (string $title);
-	public function CreateEntry (string $title, string$summary, 
-	                             string $body, integer $owner, 
-	                             boolean $status = true, 
-	                             boolean $onfrontpage = true, 
-	                             boolean $allowcomments = true, 
-	                             boolean $autodisable = false);
-	public function CreateCategory (string $title);
+	public static function create( $title );
+	public function createEntry( $title, $summary, $body,  $owner, 
+	                             $status = true, $onfrontpage = true, 
+	                             $allowcomments = true, $autodisable = false );
+	public function createCategory( $title );
 
 	// Functions to delete.
-	public function Delete ();
+	public function delete();
 }
 
 ?>

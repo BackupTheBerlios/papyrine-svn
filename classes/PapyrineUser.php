@@ -35,28 +35,16 @@
 interface PapyrineUser
 {
 	// General functions.
-	public function __construct (integer $id);
+	public function __construct ($id);
 
-	// Functions to fetch information.
-	public function GetID ();
-	public function GetPassword ();
-	public function GetFirstName ();
-	public function GetLastName ();
-	public function GetEmail ();
+	public static function authenticate ($id, $password);
 
-	public static function Authenticate ($id, $password);
-
-	// Functions to set information.
-	public function SetPassword ($password);
-	public function SetFirstName ($firstname);
-	public function SetLastName ($lastname);
-	public function SetEmail ($email);
-
+	public static function emailExists ($email);
 	// Functions to create.
-	public static function Create ($password, $firstname, $lastname, $email);
+	public static function create ($email, $name, $password);
 
 	// Functions to delete.
-	public function Delete ();
+	public function delete ();
 }
 
 ?>

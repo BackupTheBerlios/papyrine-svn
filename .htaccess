@@ -1,8 +1,11 @@
 Options +followsymlinks 
 RewriteEngine  on
 
-RewriteRule		^$ 	libraries/index.php
-RewriteRule		^administration/plugins$ libraries/index.php?PluginAdministration
+RewriteRule		^$ 								libraries/
+RewriteRule		^administration$ 				libraries/?Administration
+RewriteRule		^administration/plugins$ 		libraries/?PluginAdministration
+RewriteRule		^administration/users$ 			libraries/?UserAdministration
+RewriteRule		^administration/user-create$	libraries/?UserCreate
 
 #RewriteRule		^admin(.?)$ /papyrine/libraries/index.php?route=admin
 #RewriteRule		^admin/post(.?)$ /papyrine/libraries/index.php?route=admin_post

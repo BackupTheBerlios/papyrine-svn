@@ -40,7 +40,11 @@ final class Papyrine extends Savant2
 	{
 		// Choose DB from config
 		parent::__construct();
-		$this->addPath ('template', BASE . 'templates/');
+		$this->addPath( 'template', BASE . 'templates/' );
+
+		// Hardwire SQLite
+		$plugin = new PapyrinePlugin (BASE . 'plugins/database-sqlite/');
+		$this->database = $plugin->getInstance();
 	}
 
 	static function singleton()
@@ -55,8 +59,9 @@ final class Papyrine extends Savant2
 
 		while( $it->valid() )
 		{
-			$xml_path = $it->getPath() . $it->getFilename() . "/plugin.xml";
-			if ( $it->isReadable() && $it->isDir() && file_exists( $xml_path ) )
+			$xml_path = $it->getPath() . $it->getFilename() . '/';
+			$xml_file = $xml_path . "plugin.xml";
+			if ( $it->isReadable() && $it->isDir() && file_exists( $xml_file ) )
 				$output [] = new PapyrinePlugin( $xml_path );
 
 			$it->next();
@@ -65,35 +70,39 @@ final class Papyrine extends Savant2
 		return $output;
 	}
 
-	public function CreateBlog ($title)
+	public function createBlog( $title )
 	{
-		return $this->database->CreateBlog ($title);
+		return $this->database->createBlog( $title );
 	}
 
-	public function CreateUser ($password, $firstname, $lastname, $email)
+	public function createUser ($email, $name, $password)
 	{
-		return $this->database->CreateUser ($password, $firstname, $lastname, 
-		                                    $email);
+		return $this->database->createUser ($email, $name, $password);
 	}
 
-	public function GetUser ($id)
+	public function getUser( $id )
 	{
-		return $this->database->GetUser ($id);
+		return $this->database->getUser( $id );
 	}
 
-	public function GetUsers ($as_array = false)
+	public function emailExists ($email)
 	{
-		return $this->database->GetUsers ($as_array);
+		return $this->database->emailExists ($email);
 	}
 
-	public function GetBlog ($id)
+	public function getUsers( $as_array = false )
 	{
-		return $this->database->GetBlog ($id);
+		return $this->database->getUsers( $as_array );
 	}
 
-	public function GetEntries ($status, $limit = 10, $frontpage = true)
+	public function getBlog( $id )
 	{
-		return $this->database->GetEntries ();
+		return $this->database->getBlog( $id );
+	}
+
+	public function getEntries( $status, $limit = 10, $frontpage = true )
+	{
+		return $this->database->getEntries();
 	}
 }
 
