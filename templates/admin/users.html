@@ -1,26 +1,22 @@
-{include file="admin/header.html"}
-{papyrine_getusers assign="users"}
 <table>
 	<tr>
+		<th>Name</th>
 		<th>Email</th>
-		<th>Firstname</th>
-		<th>Lastname</th>
 	</tr>
-{if count ($users) <= 0}
-	<tr>
-		<td colspan="4">There are no users</td>
-	</tr>
-{else}
-  {foreach from=$users item=user}
-	<tr>
-		<td>{$user.email}</td>
-		<td>{$user.firstname}</td>
-		<td>{$user.lastname}</td>
-	</tr>
-  {/foreach}
-{/if}
+	<?php if (count ($this->users) < 1): ?>
+		<tr>
+			<td colspan="4">There are no users</td>
+		</tr>
+	<?php else: ?>
+		<?php foreach ($this->users as $user): ?>
+			<tr>
+				<td><?php echo $user->name ?></td>
+				<td><?php echo $user->email ?></td>
+			</tr>
+  		<?php endforeach; ?>
+	<?php endif; ?>
 </table>
-<form action="/papyrine/admin/users" method="post">
+<form action="<?php echo SITE ?>administration/user-create" method="post">
 <table>
 	<caption>Create a new user</caption>
 	<tr>
@@ -33,26 +29,26 @@
 	</tr>
 	<tr>
 		<td>
+			<label for="name">Name</label>
+		</td>
+		<td>
+			<input type="text" id="name" name="name" />
+		</td>
+	</tr>
+	<tr>
+		<td>
 			<label for="password">Password</label>
 		</td>
 		<td>
-			<input type="text" id="password" name="password" />
+			<input type="password" id="password" name="password" />
 		</td>
 	</tr>
 	<tr>
 		<td>
-			<label for="firstname">Firstname</label>
+			<label for="repeat_password">Repeat Password</label>
 		</td>
 		<td>
-			<input type="text" id="firstname" name="firstname" />
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<label for="lastname">Lastname</label>
-		</td>
-		<td>
-			<input type="text" id="lastname" name="lastname" />
+			<input type="password" id="repeat_password" name="repeat_password" />
 		</td>
 	</tr>
 	<tr>
@@ -62,4 +58,3 @@
 	</tr>
 </table>
 </form>
-{include file="admin/footer.html"}
