@@ -43,54 +43,11 @@ function __autoload ($class)
 class Papyrine extends Smarty
 {
 	/**
-	 * Our prized database connection.
-	 *
-	 * @var mixed 
-	 */
-	private $database_con = false;
-
-	/**
 	 * An array of registered hooks.
 	 *
 	 * @var array 
 	 */
 	private $hooks = array ();
-
-   	/**
-   	 * The class destructor, closes the database connection if open.
-   	 */
-	function __destruct () 
-	{
-		$this->database_con->disconnect();
-	}
-
-   	/**
-   	 * If we ask for the database and we don't have it, create one.
-   	 */
-	function __get ($var) 
-	{
-		if ($var == "database")
-		{
-			if (!$this->database_con)
-				$this->database_con =& Papyrine::connect ();
-			else
-				return $this->database_con;
-		}
-	}
-
-	/**
-	 * Static database connection so we don't need to carry the location
-	 * of the database file around.
-	 */
-	public static function connect ($file)
-	{
-		$dsn = array(
-    		"phptype"  => "sqlite",
-		    "hostspec" => "/" . $_SERVER["DOCUMENT_ROOT"] . "Data/" . $file
-		);
-
-		return DB::connect ($dsn);
-	}
 
 	/**
 	 * If we are going to use smarty, set it up.

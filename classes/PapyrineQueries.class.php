@@ -32,7 +32,7 @@
  * @package Papyrine
  * @subpackage Classes
  */
-class SQLQueries extends PapyrinePlugin
+class MySQL extends PapyrinePlugin
 {
 	function __construct ()
 	{
@@ -50,6 +50,8 @@ class SQLQueries extends PapyrinePlugin
 		);
 	}
 
+	public function PopulateData ()
+	{
 	const BLOG_POPULATE_DATA = 
 		" SELECT * FROM %s                    " .
 		" WHERE id = %s                       " .

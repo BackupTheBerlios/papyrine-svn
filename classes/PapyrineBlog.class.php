@@ -62,7 +62,6 @@ class PapyrineCategory extends PapyrineObject
 		);
 	}
 
-
 	public function GetEntry ($id)
 	{
 		return PapyrineEntry ($this->blog, $id);

@@ -35,53 +35,6 @@
 class PapyrineObject
 {
 	/**
-	 * Our database connection.
-	 *
-	 * @var mixed 
-	 */
-	protected $database;
-
-	/**
-	 * Array of information describing this object.
-	 *
-	 * @var array|boolean
-	 */
-	protected $data = false;
-
-	/**
-	 * Temp value for use when creating database.
-	 *
-	 * @var mixed
-	 */
-	protected $sql;
-
-	/**
-	 * Contains the changes that need to be sync'd with the database.
-	 *
-	 * @var array 
-	 */
-	protected $mod = array ();
-
-	/**
-	 * Name of the database table to map this object to.
-	 *
-	 * @var string 
-	 */
-	protected $table;
-
-	/**
-	 * Constructor, sets up our table, database and empty array.
-	 *
-	 * @param string $table Database table to access.
-	 * @param mixed $database Reference for already opened database.
-	 */
-	function __construct (&$database, $table) 
-	{
-		$this->table    = $table
-		$this->database = &$database;
-	}
-
-	/**
 	 * Destructor called when this object is done being used. Synchronizes
 	 * the object with the database if needed.
 	 *
@@ -138,14 +91,6 @@ class PapyrineObject
 			$this->data[$var] = $val;
 			$this->mod[$var]  = true;
 		}
-	}
-
-	private function PopulateData ()
-	{
-		$this->data = $this->database->getRow (
-			$this->sql,
-			DB_FETCHMODE_ASSOC
-		);
 	}
 
 	/**

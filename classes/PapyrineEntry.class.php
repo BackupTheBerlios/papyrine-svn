@@ -26,44 +26,41 @@
  */
 
 /**
- * Decribes a Papyrine entry.
+ * A general interface for accessing a Papyrine entry.
  *
  * @author Thomas Reynolds <thomasr@infograph.com>
  * @package Papyrine
  * @subpackage Classes
  */
-class PapyrineEntry extends PapyrineObject
+class PapyrineEntry
 {
-	/**
-	 * Name of the database table to map this object to.
-	 *
-	 * @var string 
-	 */
-	const TABLE = "papyrine_entries";
+	private $blog;
+	private $id;
 
 	/**
-	 * PapyrineEntry constructor.
+	 * Array of information describing this object.
 	 *
-	 * @param integer|string $id Entry's unique id.
-	 * @param mixed $database Reference for already opened database.
-	 * @uses PapyrineEntry::TABLE
+	 * @var array|boolean
 	 */
-	function __construct (&$database, $blog, $id)
+	protected $data = false;
+
+	/**
+	 * Contains the changes that need to be sync'd with the database.
+	 *
+	 * @var array 
+	 */
+	protected $mod = array ();
+
+	/**
+	 * PapyrineEntry class constructor.
+	 *
+	 * @param integer $blog The entry's unique blog id.
+	 * @param integer|string $id The entry's unique id.
+	 */
+	function __construct ($blog, $id)
 	{
-		// Initial PapyrineObject.
-		parent::_construct ($database, self::TABLE);
-
-		// How to populate data.
-		$this->sql = sprintf (
-			" SELECT * FROM %s " .
-			" WHERE blog = %s  " .
-			" AND     %s = %s  " .
-			" LIMIT 1          " ,
-			self::TABLE,
-			$blog,
-			(is_numeric ($id) ? "id" : "linktitle"),
-			$id
-		);
+		$this->id   = $id;
+		$this->blog = $blog;
 	}
 
 	/**
@@ -75,11 +72,9 @@ class PapyrineEntry extends PapyrineObject
 		{
 			if (array_key_exists ("body", $this->mod))
 			{
-				$this->data["modified"] = $val;
-				$this->mod["modified"]  = true;
+				$this->data ["modified"] = $val;
+				$this->mod  ["modified"] = true;
 			}
-
-			parent::__destruct ();
 		}
 	}
 
@@ -143,7 +138,7 @@ class PapyrineEntry extends PapyrineObject
 	 */
 	public function GetOwner ()
 	{
-		return new PapyrineUser ($this->database, $this->data["owner"]);
+		return new PapyrineUser ($this->data["owner"]);
 	}
 
 	/**
@@ -369,6 +364,17 @@ class PapyrineEntry extends PapyrineObject
 		return !DB::isError ($result);
 	}
 
+	private function PopulateData ()
+	{
+		Papyrine::ExecuteHooks (
+			"entry_populate_data", 
+			array (
+				"id"  => $id
+			),
+			$this->data
+		);
+	}
+
 	/**
 	 * Delete the entry.
 	 *
@@ -380,19 +386,16 @@ class PapyrineEntry extends PapyrineObject
 	 */
 	public function Delete ()
 	{
-		$result = $this->database->query (
-			" DELETE FROM ! " .
-			" WHERE id = ?  " .
-			" LIMIT 1       " ,
+		Papyrine::ExecuteHooks (
+			"entry_delete", 
 			array (
-				self::TABLE,
-				$this->data["id"]
-			)
+				"id"  => $id
+			),
+			$this->data,
+			$output
 		);
 
-		$result->free ();
-
-		return !DB::isError ($result);
+		return $output;
 	}
 }
 
