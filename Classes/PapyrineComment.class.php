@@ -51,7 +51,7 @@ class PapyrineComment extends PapyrineObject
 	function __construct (&$database, $id) 
 	{
 		// Initial PapyrineObject.
-		parent::_construct ($database, PapyrineComment::table);
+		parent::_construct ($database, self::table);
 
 		$this->id = $id;
 	}
@@ -60,24 +60,22 @@ class PapyrineComment extends PapyrineObject
 	 * Populate the object when we need it.
 	 *
 	 * @uses PapyrineComment::table
-	 * @uses DB_common::query
 	 * @uses DB_result::getRow
 	 */
 	function __get ($var)
 	{
 		if (!$this->data)
 		{
-			// Query the database for the desired entry.
-			$result = $this->database->query (sprintf (
-				" SELECT * FROM %s " .
-				" WHERE id = %s    " .
-				" LIMIT 1          " ,
-				PapyrineComment::table,
-				$this->id)
+			$this->data = $this->database->getRow (
+				" SELECT * FROM ! " .
+				" WHERE id = ?    " .
+				" LIMIT 1         " ,
+				array (
+					self::table,
+					$this->id
+				),
+				DB_FETCHMODE_ASSOC
 			);
-
-			// Populate the object from the database.
-			$this->data = $result->getRow ($result, DB_FETCHMODE_ASSOC);
 		}
 
 		return parent::__get ($var);
@@ -105,8 +103,8 @@ class PapyrineComment extends PapyrineObject
 	 */
 	public static function CreateTable (&$database)
 	{
-		$database->query (sprintf (
-			"CREATE TABLE %s (                    " .
+		$database->query (
+			"CREATE TABLE ! (                     " .
 			" id int(11) NOT NULL auto_increment, " .
 			" entry int(11) NOT NULL,             " .
 			" body text NOT NULL,                 " .
@@ -117,7 +115,9 @@ class PapyrineComment extends PapyrineObject
 			" PRIMARY KEY (id),                   " .
 			" FULLTEXT KEY body (body)            " .
 			") TYPE=MyISAM;                       " ,
-			PapyrineComment::table)
+			array (
+				self::table
+			)
 		);
 
 		$result->free ();
@@ -147,20 +147,22 @@ class PapyrineComment extends PapyrineObject
 			return false;
 
 		// Generate the query and insert into the database.
-		$result = $database->query (sprintf (
-			"INSERT INTO %s SET " .
-			" entry = %s,       " .
-			" body = %s,        " .
-			" owner_name = %s,  " .
-			" owner_email = %s, " .
-			" status = %s,      " .
-			" created = NOW()   " ,
-			PapyrineComment::table,
-			$post,
-			$database->quoteSmart ($body), 
-			$database->quoteSmart ($owner_name), 
-			$database->quoteSmart ($owner_email), 
-			0
+		$result = $database->query (
+			"INSERT INTO ! SET " .
+			" entry = ?,       " .
+			" body = ?,        " .
+			" owner_name = ?,  " .
+			" owner_email = ?, " .
+			" status = ?,      " .
+			" created = NOW()  " ,
+			array (
+				self::table,
+				$post,
+				$body, 
+				$owner_name, 
+				$owner_email, 
+				0
+			)
 		);
 
 		$result->free ();
@@ -181,13 +183,15 @@ class PapyrineComment extends PapyrineObject
 	public function Delete ()
 	{
 		// Decrement the comments counter for this entry.
-		$result = $this->database->query (sprintf (
-			" UPDATE %s SET           " .
+		$result = $this->database->query (
+			" UPDATE ! SET            " .
 			" comments = comments - 1 " .
-			" WHERE id = %s           " .
+			" WHERE id = ?            " .
 			" LIMIT 1                 " ,
-			PapyrineEntry::table,
-			$this->data["entry"])
+			array (
+				PapyrineEntry::table,
+				$this->data["entry"]
+			)
 		);
 
 		$result->free ();
@@ -195,12 +199,14 @@ class PapyrineComment extends PapyrineObject
 		// If the previous query worked, actually delete the comment.
 		if (!DB::isError ($result))
 		{
-			$result2 = $this->database->query (sprintf (
-				" DELETE FROM %s " .
-				" WHERE id = %s  " .
-				" LIMIT 1        " ,
-				PapyrineComment::table,
-				$this->data["id"])
+			$result2 = $this->database->query (
+				" DELETE FROM ! " .
+				" WHERE id = ?  " .
+				" LIMIT 1       " ,
+				array (
+					PapyrineComment::table,
+					$this->data["id"]
+				)
 			);
 
 			$result2->free ();

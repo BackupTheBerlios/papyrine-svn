@@ -51,7 +51,7 @@ class PapyrineUser extends PapyrineObject
 	function __construct (&$database, $id) 
 	{
 		// Initial PapyrineObject.
-		parent::__construct ($database, PapyrineUser::table);
+		parent::__construct ($database, self::table);
 
 		$this->id = $id;
 	}
@@ -71,7 +71,7 @@ class PapyrineUser extends PapyrineObject
 				" WHERE ! = %s    " .
 				" LIMIT 1         " ,
 				array (
-					PapyrineUser::table,
+					self::table,
 					(is_numeric ($this->id) ? "id" : "nickname"),
 					$this->id
 				),
@@ -109,7 +109,7 @@ class PapyrineUser extends PapyrineObject
 			" PRIMARY KEY (id)                           " .
 			") TYPE=MyISAM;                              " ,
 			array (
-				PapyrineUser::table
+				self::table
 			)
 		);
 
@@ -147,7 +147,7 @@ class PapyrineUser extends PapyrineObject
 			" lastname = ?,    " .
 			" email = ?        " ,
 			array (
-				PapyrineUser::table,
+				self::table,
 				$blog,
 				$nickname,
 				md5 ($password),
@@ -189,7 +189,7 @@ class PapyrineUser extends PapyrineObject
 			" WHERE id = ?  " .
 			" LIMIT 1       " ,
 			array (
-				PapyrineUser::table,
+				self::table,
 				$this->data["id"]
 			)
 		);

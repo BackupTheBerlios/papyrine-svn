@@ -30,65 +30,55 @@
  * @package Papyrine
  * @subpackage Classes
  */
-class PapyrinePlugin
+class PapyrinePlugin extends PapyrineObject
 {
+	/**
+	 * Name of the database table to map this object to.
+	 *
+	 * @var string 
+	 */
 	const table = "papyrine_plugins";
-	protected $xml;
 
-	function __construct ($file)
+	/**
+	 * PapyrinePlugin constructor.
+	 *
+	 * @param integer $id Plugin's unique id.
+	 * @param mixed $database Reference for already opened database.
+	 * @uses PapyrinePlugin::table
+	 */
+	function __construct (&$database, $id) 
 	{
-		$this->xml = simplexml_load_string ($file);
+		// Initial PapyrineObject.
+		parent::_construct ($database, PapyrinePlugin::table);
+
+		$this->id = $id;
 	}
 
-	function __get ($var) 
+		//$this->database =& Papyrine::connect ("file");
+
+	/**
+	 * Populate the object when we need it.
+	 *
+	 * @uses PapyrineCategory::table
+	 * @uses DB_common::getRow
+	 */
+	function __get ($var)
 	{
-		switch
+		if (!$this->data)
 		{
-			case "name":
-				return $this->xml->plugin->name;
-				break;
-			case "description":
-				return $this->xml->plugin->description;
-				break;
-			case "website":
-				return $this->xml->plugin->website;
-				break;
-			case "version":
-				return $this->xml->plugin->version;
-				break;
-			case "authors":
-				$authors = array ();
-				foreach ($this->xml->plugin->author as $author)
-					$authors[] = $author;
-
-				return $authors;
-				break;
-			case "class":
-				return $this->xml->plugin->class;
-				break;
-			case "modifier":
-				return ($this->xml->plugin->class["modifier"] == true);
-				break;
-			case "syndicator":
-				return ($this->xml->plugin->class["syndicator"] == true);
-				break;
-			case "smarty":
-				return $this->xml->plugin->smarty;
-				break;
-			case "templates":
-				return $this->xml->plugin->templates;
-				break;
+			$this->data = $this->database->getRow (
+				" SELECT * FROM %s " .
+				" WHERE id = %s    " .
+				" LIMIT 1          " ,
+				array (
+					PapyrinePlugin::table,
+					$this->id
+				),
+				DB_FETCHMODE_ASSOC
+			);
 		}
-	}
 
-	public function ProvidesTemplates ()
-	{
-		return (isset ($this->xml->plugin->templates]));
-	}
-
-	public function ProvidesSmarty ()
-	{
-		return (isset ($this->xml->plugin->smarty]));
+		return parent::__get ($var);
 	}
 
 	public static function CreateTable (&$database)
@@ -125,8 +115,8 @@ class PapyrinePlugin
 			" smarty = %s,      " .
 			" templates = %s    " .
 			PapyrinePlugin::table,
-			sqlite_escape_string ($name), 
-			sqlite_escape_string ($description), 
+			sqlite_escape_string ($name),
+			sqlite_escape_string ($description),
 			sqlite_escape_string ($version),
 			sqlite_escape_string ($class),
 			($modifier   ? 1 : 0),
@@ -138,17 +128,29 @@ class PapyrinePlugin
 	}
 
 	/**
-	 * Delete the plugin.
+	 * Delete the entry and decrement the entry comments counter.
 	 *
+	 * @return boolean
 	 * @uses PapyrinePlugin::table
+	 * @uses DB::isError
+	 * @uses DB_common::query
+	 * @uses DB_result::free
 	 */
 	public function Delete ()
 	{
-		sqlite_query ($this->database, sprintf (
-			"DELETE FROM %s WHERE id = %s LIMIT 1" ,
-			PapyrinePlugin::table,
-			$this->data["id"])
+		$result = $this->database->query (
+			" DELETE FROM %s " .
+			" WHERE id = %s  " .
+			" LIMIT 1        " ,
+			array (
+				PapyrinePlugin::table,
+				$this->data["entry"]
+			)
 		);
+
+		$result->free ();
+
+		return !DB::isError ($result);
 	}
 }
 

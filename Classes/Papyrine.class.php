@@ -54,8 +54,7 @@ class Papyrine extends Smarty
    	 */
 	function __destruct () 
 	{
-		if ($this->database_con)
-			sqlite_close ($this->database_con);
+		$this->database_con->disconnect();
 	}
 
    	/**
@@ -66,7 +65,7 @@ class Papyrine extends Smarty
 		if ($var == "database")
 		{
 			if (!$this->database_con)
-				$this->database_con = Papyrine::connect ();
+				$this->database_con =& Papyrine::connect ();
 			else
 				return $this->database_con;
 		}
@@ -76,9 +75,14 @@ class Papyrine extends Smarty
 	 * Static database connection so we don't need to carry the location
 	 * of the database file around.
 	 */
-	public static function connect ()
+	public static function connect ($file)
 	{
-		return sqlite_open ("Data/papyrine.db");
+		$dsn = array(
+    		"phptype"  => "sqlite",
+		    "hostspec" => "/" . $_SERVER["DOCUMENT_ROOT"] . "Data/" . $file
+		);
+
+		return DB::connect ($dsn);
 	}
 
 	/**
@@ -323,27 +327,20 @@ class Papyrine extends Smarty
 		return $syndicators;
 	}
 
+	/**
+	 * Get a plugin by id.
+	 *
+	 * @param integer $id Plugin's unique id.
+	 * @return PapyrinePlugin
+	 */
+	public function GetPlugin ($id)
+	{
+		return new PapyrinePlugin ($this->database, $id);
+	}
+
 	public function InstallPlugin ($file)
 	{
-		$directory = $this->DecompressPlugin ($file);
-		$tar = new Archive_Tar ($file, true);
-		$result = $tar->extract ('/Plugins/tmp/');
-
-		$plugin = new PapyrinePlugin ($directory . "about.xml");
-
-		// if same or newer version exists, don't install
-		// if older version exists, prompt to remove
-		// RelaxRG validate
-
-		return PapyrinePlugin::Create (
-			$this->database,
-			$this->name, 
-			$this->description, 
-			$this->version, 
-			($plugin->ProvidesSmarty() ? $plugin->smarty : false), 
-			($plugin->ProvidesTemplates() ? $plugin->templates : false), 
-			($plugin->ProvidesModifiers() ? $plugin->modifiers : false)
-		);
+		return PapyrinePluginManager::Install ($this->database, $file);
 	}
 
 	/**

@@ -101,12 +101,15 @@ class PapyrineObject
 				             $this->database->quoteSmart ($this->data[$key]);
 			}
 
-			$result = $this->database->query (sprintf (
-				" UPDATE %s SET %s      " .
-				" WHERE id = %s LIMIT 1 " ,
-				$this->sqltable,
-				join (", ", $updates),
-				$this->data["id"])
+			$result = $this->database->query (
+				" UPDATE ! SET ! " .
+				" WHERE id = ?   " .
+				" LIMIT 1        " ,
+				array (
+					$this->sqltable,
+					join (", ", $updates),
+					$this->data["id"]
+				)
 			);
 
 			$result->free ();

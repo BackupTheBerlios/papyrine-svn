@@ -51,7 +51,7 @@ class PapyrineCategory extends PapyrineObject
 	function __construct (&$database, $id) 
 	{
 		// Initial PapyrineObject.
-		parent::_construct ($database, PapyrineCategory::table);
+		parent::_construct ($database, self::table);
 
 		$this->id = $id;
 	}
@@ -71,7 +71,7 @@ class PapyrineCategory extends PapyrineObject
 				" WHERE id = %s    " .
 				" LIMIT 1          " ,
 				array (
-					PapyrineCategory::table,
+					self::table,
 					$this->id
 				),
 				DB_FETCHMODE_ASSOC
@@ -90,29 +90,30 @@ class PapyrineCategory extends PapyrineObject
 	 */
 	public function GetEntries ($limit = 10)
 	{
-		$result = sqlite_query ($this->database, sprintf (
-			" SELECT %s.id FROM %s, %s " .
-			" WHERE %s.category = %s   " .
-			" AND %s.id = %s.entry     " .
-			" ORDER BY %s.created ASC  " .
-			" LIMIT %s                 " ,
-			PapyrineEntry::table,
-			PapyrineEntry::table,
-			PapyrineCategoryRelationship::table,
-			PapyrineCategoryRelationship::table,
-			$this->data["id"]
-			PapyrineEntry::table,
-			PapyrineCategoryRelationship::table,
-			PapyrineEntry::table,
-			$limit)
+		$result = $this->database->query (
+			" SELECT !.id FROM !, !  " .
+			" WHERE !.category = ?   " .
+			" AND !.id = !.entry     " .
+			" ORDER BY !.created ASC " .
+			" LIMIT !                " ,
+			array (
+				PapyrineEntry::table,
+				PapyrineEntry::table,
+				PapyrineCategoryRelationship::table,
+				PapyrineCategoryRelationship::table,
+				$this->data["id"]
+				PapyrineEntry::table,
+				PapyrineCategoryRelationship::table,
+				PapyrineEntry::table,
+				$limit
+			)
 		);
 
 		$entries = array ();
-		while (sqlite_has_more ($result))
-		{
-			$entries[] = new PapyrineEntry ($this->database, 
-			                                sqlite_fetch_single ($result));
-		}
+		while ($row =& $result->fetchRow ()) 
+			$entries[] = new PapyrineEntry ($this->database, $row ["id"]);
+
+		$result->free ();
 
 		return $entries;
 	}
@@ -125,16 +126,22 @@ class PapyrineCategory extends PapyrineObject
 	 */
 	public static function CreateTable (&$database)
 	{
-		sqlite_query ($database, sprintf (
-			"CREATE TABLE %s (                    " .
+		$result = $database->query (
+			"CREATE TABLE ! (                     " .
 			" id int(11) NOT NULL auto_increment, " .
 			" blog int(11) NOT NULL,              " .
 			" title text NOT NULL,                " .
 			" PRIMARY KEY (id),                   " .
 			" FULLTEXT KEY body (title)           " .
 			") TYPE=MyISAM;                       " ,
-			PapyrineCategory::table)
+			array (
+				self::table
+			)
 		);
+
+		$result->free ();
+
+		return !DB::isError ($result);
 	}
 
 	/**
@@ -149,18 +156,20 @@ class PapyrineCategory extends PapyrineObject
 	public static function Create (&$database, $blog, $title)
 	{
 		// Generate the query and insert into the database.
-		$result = sqlite_query ($database, sprintf (
-			"INSERT INTO %s SET " .
-			" blog = %s,        " .
-			" title = %s        " ,
-			PapyrineCategory::table,
-			$blog,
-			sqlite_escape_string ($title)
+		$result = $database->query (
+			"INSERT INTO ! SET " .
+			" blog = ?,        " .
+			" title = ?        " ,
+			array (
+				self::table,
+				$blog,
+				$title
+			)
 		);
 
-		// If everything worked, return the PapyrineCategory object created.
-		if ($result)
-			return sqlite_last_insert_rowid ($database);
+		$result->free ();
+
+		return !DB::isError ($result);
 	}
 
 	/**
@@ -170,13 +179,19 @@ class PapyrineCategory extends PapyrineObject
 	 */
 	public function Delete ()
 	{
-		sqlite_query ($this->database, sprintf (
-			" DELETE FROM %s " .
-			" WHERE id = %s  " .
-			" LIMIT 1        " ,
-			PapyrineCategory::table,
-			$this->data["id"])
+		$result = $this->database->query (
+			" DELETE FROM ! " .
+			" WHERE id = ?  " .
+			" LIMIT 1       " ,
+			array (
+				PapyrineCategory::table,
+				$this->data["id"]
+			)
 		);
+
+		$result->free ();
+
+		return !DB::isError ($result);
 	}
 }
 

@@ -52,7 +52,7 @@ class PapyrineCategoryRelationship extends PapyrineObject
 	function __construct (&$database, $entry, $category) 
 	{
 		// Initial PapyrineObject.
-		parent::_construct ($database, PapyrineCategoryRelationship::table);
+		parent::_construct ($database, self::table);
 
 		$this->id = array (
 			"entry"    => $entry,
@@ -76,7 +76,7 @@ class PapyrineCategoryRelationship extends PapyrineObject
 				" AND category = ? " .
 				" LIMIT 1          " ,
 				array (
-					PapyrineCategoryRelationship::table,
+					self::table,
 					$this->id["entry"],
 					$this->id["category"]
 				),
@@ -125,7 +125,7 @@ class PapyrineCategoryRelationship extends PapyrineObject
 			" category int(11) NOT NULL " .
 			") TYPE=MyISAM;             " ,
 			array (
-				PapyrineCategoryRelationship::table
+				self::table
 			)
 		);
 
@@ -154,7 +154,7 @@ class PapyrineCategoryRelationship extends PapyrineObject
 			" entry = ?,       " .
 			" category = ?     " ,
 			array (
-				PapyrineCategoryRelationship::table,
+				self::table,
 				$entry,
 				$category
 			)
@@ -182,7 +182,7 @@ class PapyrineCategoryRelationship extends PapyrineObject
 			" AND category = ? " .
 			" LIMIT 1          " ,
 			array (
-				PapyrineCategoryRelationship::table,
+				self::table,
 				$this->data["entry"],
 				$this->data["category"]
 			)

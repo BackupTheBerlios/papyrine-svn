@@ -51,7 +51,7 @@ class PapyrineEntry extends PapyrineObject
 	function __construct (&$database, $id) 
 	{
 		// Initial PapyrineObject.
-		parent::_construct ($database, PapyrineEntry::table);
+		parent::_construct ($database, self::table);
 
 		$this->id = $id;
 	}
@@ -60,24 +60,22 @@ class PapyrineEntry extends PapyrineObject
 	 * Populate the object when we need it.
 	 *
 	 * @uses PapyrineEntry::table
-	 * @uses DB_common::query
 	 * @uses DB_result::getRow
 	 */
 	function __get ($var)
 	{
 		if (!$this->data)
 		{
-			// Query the database for the desired entry.
-			$result = $this->database->query (sprintf (
-				" SELECT * FROM %s " .
-				" WHERE id = %s    " .
-				" LIMIT 1          " ,
-				PapyrineEntry::table,
-				$this->id)
+			$this->data = $this->database->getRow (
+				" SELECT * FROM ! " .
+				" WHERE id = ?    " .
+				" LIMIT 1         " ,
+				array (
+					self::table,
+					$this->id
+				),
+				DB_FETCHMODE_ASSOC
 			);
-
-			// Populate the object from the database.
-			$this->data = $result->getRow ($result, DB_FETCHMODE_ASSOC);
 		}
 
 		return parent::__get ($var);
@@ -134,12 +132,14 @@ class PapyrineEntry extends PapyrineObject
 	 */
 	public function GetComments ()
 	{
-		$result = $this->database->query (sprintf (
-			" SELECT id FROM %s    " .
-			" WHERE entry = %s     " .
+		$result = $this->database->query (
+			" SELECT id FROM !     " .
+			" WHERE entry = ?      " .
 			" ORDER BY created ASC " ,
-			PapyrineComment::table,
-			$this->data["id"])
+			array (
+				PapyrineComment::table,
+				$this->data["id"]
+			)
 		);
 
 		$comments = array ();
@@ -169,8 +169,9 @@ class PapyrineEntry extends PapyrineObject
 	 */
 	public function AddCategory ($category)
 	{
-		PapyrineCategoryRelationship::Create ($this->database, 
-		                                      $this->data["id"], $category)
+		return PapyrineCategoryRelationship::Create ($this->database, 
+		                                             $this->data["id"],
+		                                             $category)
 	}
 
 	/**
@@ -199,31 +200,33 @@ class PapyrineEntry extends PapyrineObject
 	 */
 	public function GetCategories ()
 	{
-		$result = $this->database->query (sprintf (
-			" SELECT %s.category FROM %s, %s " .
-			" WHERE %s.id = %s.category      " .
-			" AND %s.entry = %s              " .
-			" ORDER BY %s.title ASC          " ,
-			PapyrineCategoryRelationship::table,
-			PapyrineCategoryRelationship::table,
-			PapyrineCategory::table,
-			PapyrineCategory::table,
-			PapyrineCategoryRelationship::table,
-			PapyrineCategoryRelationship::table,
-			$this->data["id"],
-			PapyrineCategory::table)
+		$result = $this->database->query (
+			" SELECT !.category FROM !, ! " .
+			" WHERE !.id = !.category     " .
+			" AND !.entry = ?             " .
+			" ORDER BY !.title ASC        " ,
+			array (
+				PapyrineCategoryRelationship::table,
+				PapyrineCategoryRelationship::table,
+				PapyrineCategory::table,
+				PapyrineCategory::table,
+				PapyrineCategoryRelationship::table,
+				PapyrineCategoryRelationship::table,
+				$this->data["id"],
+				PapyrineCategory::table
+			)
 		);
 
-		$category = array ();
+		$categories = array ();
 		while ($row =& $result->fetchRow ())
 		{
-			$category[] = new PapyrineCategory ($this->database, 
-			                                    $row ["category"]);
+			$categories[] = new PapyrineCategory ($this->database, 
+			                                      $row ["category"]);
 		}
 
 		$result->free ();
 
-		return $category;
+		return $categories;
 	}
 
 	/**
@@ -234,21 +237,22 @@ class PapyrineEntry extends PapyrineObject
 	 */
 	public function GetNext ()
 	{
-		$sql = sprintf (
-			" SELECT id FROM %s    " .
-			" WHERE blog = %s      " .
-			" AND status = %s      " .
-			" AND created > %s     " .
-			" ORDER BY created ASC " .
-			" LIMIT 1              " ,
-			PapyrineEntry::table,
+		$sql = " SELECT id FROM !     " .
+		       " WHERE blog = ?       " .
+		       " AND status = ?       " .
+		       " AND created > ?      " .
+		       " ORDER BY created ASC " .
+		       " LIMIT 1              " ;
+
+		$params = array (
+			self::table,
 			$this->data["blog"],
 			$this->data["status"],
 			$this->data["created"]
 		);
 
 		return new PapyrineEntry ($this->database, 
-		                          $this->database->getOne ($sql));
+		                          $this->database->getOne ($sql, $params));
 	}
 
 	/**
@@ -259,13 +263,14 @@ class PapyrineEntry extends PapyrineObject
 	 */
 	public function GetPrevious ()
 	{
-		$sql = sprintf (
-			" SELECT id FROM %s     " .
-			" WHERE blog = %s       " .
-			" AND status = %s       " .
-			" AND created < %s      " .
-			" ORDER BY created DESC " .
-			" LIMIT 1               " ,
+		$sql = " SELECT id FROM !      " .
+		       " WHERE blog = ?        " .
+		       " AND status = ?        " .
+		       " AND created < ?       " .
+		       " ORDER BY created DESC " .
+		       " LIMIT 1               " ;
+
+		$params = array (
 			PapyrineEntry::table,
 			$this->data["blog"],
 			$this->data["status"],
@@ -273,7 +278,7 @@ class PapyrineEntry extends PapyrineObject
 		);
 
 		return new PapyrineEntry ($this->database,
-		                          $this->database->getOne ($sql));
+		                          $this->database->getOne ($sql, $params));
 	}
 
 	/**
@@ -288,8 +293,8 @@ class PapyrineEntry extends PapyrineObject
 	 */
 	public static function CreateTable (&$database)
 	{
-		$result = $database->query (sprintf (
-			"CREATE TABLE %s (                       " .
+		$result = $database->query (
+			"CREATE TABLE ! (                        " .
 			" id int(11) NOT NULL auto_increment,    " .
 			" blog int(11) NOT NULL,                 " .
 			" title text NOT NULL,                   " .
@@ -307,7 +312,9 @@ class PapyrineEntry extends PapyrineObject
 			" FULLTEXT KEY title (title),            " .
 			" FULLTEXT KEY body (body)               " .
 			") TYPE=MyISAM;                          " ,
-			PapyrineEntry::table)
+			array (
+				self::table
+			)
 		);
 
 		$result->free ();
@@ -340,29 +347,31 @@ class PapyrineEntry extends PapyrineObject
 	                               $allowcomments = true, $autodisable = false)
 	{
 		// Generate the query and insert into the database.
-		$result = $database->query (sprintf (
-			"INSERT INTO %s SET   " .
-			" blog = %s,          " .
-			" title = %s,         " .
-			" summary = %s,       " .
-			" body = %s,          " .
-			" owner = %s,         " .
-			" status = %s,        " .
-			" onfrontpage = %s,   " .
-			" allowcomments = %s, " .
-			" autodisable = %s,   " .
-			" created = NOW(),    " .
-			" modified = NOW()    " ,
-			PapyrineEntry::table,
-			$blog,
-			$database->quoteSmart ($title),
-			$database->quoteSmart ($summary),
-			$database->quoteSmart ($body),
-			$owner,
-			($status ? 1 : 0),
-			($onfrontpage ? 1 : 0),
-			($allowcomments ? 1 : 0),
-			($autodisable ? "FROM_UNIXTIME(" . $autodisable . ")" : 0))
+		$result = $database->query (
+			"INSERT INTO ! SET   " .
+			" blog = ?,          " .
+			" title = ?,         " .
+			" summary = ?,       " .
+			" body = ?,          " .
+			" owner = ?,         " .
+			" status = ?,        " .
+			" onfrontpage = ?,   " .
+			" allowcomments = ?, " .
+			" autodisable = ?,   " .
+			" created = NOW(),   " .
+			" modified = NOW()   " ,
+			array (
+				self::table,
+				$blog,
+				$title,
+				$summary,
+				$body,
+				$owner,
+				($status ? 1 : 0),
+				($onfrontpage ? 1 : 0),
+				($allowcomments ? 1 : 0),
+				($autodisable ? "FROM_UNIXTIME(" . $autodisable . ")" : 0)
+			)
 		);
 
 		$result->free ();
@@ -381,12 +390,14 @@ class PapyrineEntry extends PapyrineObject
 	 */
 	public function Delete ()
 	{
-		$result = $this->database->query (sprintf (
-			" DELETE FROM %s " .
-			" WHERE id = %s  " .
-			" LIMIT 1        " ,
-			PapyrineEntry::table,
-			$this->data["id"])
+		$result = $this->database->query (
+			" DELETE FROM ! " .
+			" WHERE id = ?  " .
+			" LIMIT 1       " ,
+			array (
+				PapyrineEntry::table,
+				$this->data["id"]
+			)
 		);
 
 		$result->free ();
