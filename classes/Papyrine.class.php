@@ -46,7 +46,6 @@ final class Papyrine
 	function __construct ()
 	{
 		// Choose DB from config
-
 		$this->database = new SQLiteDatabasePlugin;
 	}
 
@@ -104,12 +103,9 @@ final class Papyrine
 		);
 
 		// Make loaded plugins visible.
-		$this->_smarty->template_dir  = array (
-			"/var/www/localhost/htdocs/papyrine/templates/default/",
-			"/var/www/localhost/htdocs/papyrine/templates/admin/"
-		);
-
+		$this->_smarty->template_dir  = "/var/www/localhost/htdocs/papyrine/templates/";
 		$this->_smarty->compile_dir  = "/var/www/localhost/htdocs/papyrine/data/compiled_templates/";
+		$this->_smarty->cache_dir    = "/var/www/localhost/htdocs/papyrine/data/smarty_cache/";
 		$this->_smarty->assign ('database', $this->database);
 		$this->_smarty->assign ('system', array (
 			'url'     => '',
@@ -148,6 +144,11 @@ final class Papyrine
 	public function GetUser ($id)
 	{
 		return $this->database->GetUser ($id);
+	}
+
+	public function GetUsers ($as_array = false)
+	{
+		return $this->database->GetUsers ($as_array);
 	}
 
 	public function GetBlog ($id)

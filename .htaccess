@@ -2,4 +2,7 @@ Options +followsymlinks
 RewriteEngine  on
 
 RewriteRule		^$ 			/papyrine/libraries/index.php?route=frontpage
+
+
 RewriteRule		^admin(.?)$ /papyrine/libraries/index.php?route=admin
+RewriteRule		^admin/users(.?)$ /papyrine/libraries/index.php?route=admin_users

@@ -33,34 +33,34 @@
  * @package Papyrine
  * @subpackage Classes
  */
-abstract class PapyrineBlog
+interface PapyrineBlog
 {
 	// General functions.
-	abstract public function __construct (integer $id);
+	public function __construct (integer $id);
 
 	// Functions to fetch information.
-	abstract public function GetID ();
-	abstract public function GetTitle ();
-	abstract public function GetEntry (integer $id);
-	abstract public function GetCategory (integer $id);
-	abstract public function GetComment (integer $id);
-	abstract public function GetEntries ();
+	public function GetID ();
+	public function GetTitle ();
+	public function GetEntry (integer $id);
+	public function GetCategory (integer $id);
+	public function GetComment (integer $id);
+	public function GetEntries ();
 
 	// Functions to set information.
-	abstract public function SetTitle (string $title);
+	public function SetTitle (string $title);
 
 	// Functions to create.
-	abstract public static function Create (string $title);
-	abstract public function CreateEntry (string $title, string$summary, 
-	                                      string $body, integer $owner, 
-	                                      boolean $status = true, 
-	                                      boolean $onfrontpage = true, 
-	                                      boolean $allowcomments = true, 
-	                                      boolean $autodisable = false);
-	abstract public function CreateCategory (string $title);
+	public static function Create (string $title);
+	public function CreateEntry (string $title, string$summary, 
+	                             string $body, integer $owner, 
+	                             boolean $status = true, 
+	                             boolean $onfrontpage = true, 
+	                             boolean $allowcomments = true, 
+	                             boolean $autodisable = false);
+	public function CreateCategory (string $title);
 
 	// Functions to delete.
-	abstract public function Delete ();
+	public function Delete ();
 }
 
 ?>

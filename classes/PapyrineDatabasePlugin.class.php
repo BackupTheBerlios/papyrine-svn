@@ -31,14 +31,16 @@
  * @subpackage Classes
  */
 
-abstract class PapyrineDatabasePlugin
+interface PapyrineDatabasePlugin
 {
-	abstract public function GetBlog (integer $id);
-	abstract public function GetUser (integer $id);
-	abstract public function CreateBlog (string $title);
-	abstract public function CreateUser (string $nickname, string $password, 
-	                                     string $firstname, string $lastname, 
-	                                     string $email);
+	public function GetBlog (integer $id);
+	public function GetUser (integer $id);
+	public function CreateBlog (string $title);
+	public function CreateUser ($nickname, $password, 
+	                            $firstname, $lastname, 
+	                            $email);
+	public function Import (string $file);
+	public function Export ();
 }
 
 ?>

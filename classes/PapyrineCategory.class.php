@@ -32,25 +32,25 @@
  * @package Papyrine
  * @subpackage Classes
  */
-abstract class PapyrineCategory
+interface PapyrineCategory
 {
-	abstract public static function Create (integer $blog, string $title);
+	public static function Create (integer $blog, string $title);
 
 	// General functions.
-	abstract public function __construct (integer $blog, string $id);
+	public function __construct (integer $blog, string $id);
 
 	// Functions to fetch information.
-	abstract public function GetID ();
-	abstract public function GetTitle ();
-	abstract public function GetBlog ();
-	abstract public function GetEntries (integer $limit = false);
+	public function GetID ();
+	public function GetTitle ();
+	public function GetBlog ();
+	public function GetEntries (integer $limit = false);
 
 	// Functions to set information.
-	abstract public function SetTitle (string $title);
-	abstract public function SetBlog (integer $blog);
+	public function SetTitle (string $title);
+	public function SetBlog (integer $blog);
 
 	// Functions to delete.
-	abstract public function Delete ();
+	public function Delete ();
 }
 
 ?>

@@ -26,7 +26,7 @@
 
 	switch ($_REQUEST["route"]) 
 	{
-		case "archive_individual":
+/*		case "archive_individual":
 			$papyrine->display ('archive_individual.html');
         	break;
 		case "archive_daily":
@@ -54,15 +54,28 @@
 			$syndicator = handle_feed_template ($_REQUEST ["version"]);
 			$papyrine->display ($syndicator->GetCategoryFeedTemplate ());
         	break;
-
+*/
 		case "admin":
-			$papyrine->CreateBlog ('test');
-			$papyrine->display ('admin.html');
+			$papyrine->display ('admin/admin.html');
+        	break;
+
+		case "admin_users":
+			if (isset ($_POST ["Submit"]))
+			{
+				$papyrine->CreateUser (1,
+					$_POST ["nickname"],
+					$_POST ["password"],
+					$_POST ["firstname"],
+					$_POST ["lastname"],
+					$_POST ["email"]
+				);
+			}
+			$papyrine->display ('admin/users.html');
         	break;
 
 		case "frontpage":
 		default:
-			$papyrine->display ('frontpage.html');
+			$papyrine->display ('default/frontpage.html');
 			break;
 	}
 

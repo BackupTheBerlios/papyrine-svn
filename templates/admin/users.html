@@ -1,0 +1,75 @@
+{include file="admin/header.html"}
+{papyrine_getusers assign="users"}
+<table>
+	<tr>
+		<th>Nickname</th>
+		<th>Firstname</th>
+		<th>Lastname</th>
+		<th>Email</th>
+	</tr>
+{if count ($users) <= 0}
+	<tr>
+		<td colspan="4">There are no users</td>
+	</tr>
+{else}
+  {foreach from=$users item=user}
+	<tr>
+		<td>{$user.nickname}</td>
+		<td>{$user.firstname}</td>
+		<td>{$user.lastname}</td>
+		<td>{$user.email}</td>
+	</tr>
+  {/foreach}
+{/if}
+</table>
+<form action="/papyrine/admin/users" method="post">
+<table>
+	<caption>Create a new user</caption>
+	<tr>
+		<td>
+			<label for="nickname">Nickname</label>
+		</td>
+		<td>
+			<input type="text" id="nickname" name="nickname" />
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<label for="password">Password</label>
+		</td>
+		<td>
+			<input type="text" id="password" name="password" />
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<label for="firstname">Firstname</label>
+		</td>
+		<td>
+			<input type="text" id="firstname" name="firstname" />
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<label for="lastname">Lastname</label>
+		</td>
+		<td>
+			<input type="text" id="lastname" name="lastname" />
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<label for="email">Email</label>
+		</td>
+		<td>
+			<input type="text" id="email" name="email" />
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<input type="submit" name="Submit" value="Submit" />
+		</td>
+	</tr>
+</table>
+</form>
+{include file="admin/footer.html"}

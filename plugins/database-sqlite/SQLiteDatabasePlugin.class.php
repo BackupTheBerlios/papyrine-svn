@@ -29,7 +29,7 @@
  * @package Papyrine
  * @subpackage SQLiteDatabasePlugin
  */
-class SQLiteDatabasePlugin extends PapyrineDatabasePlugin
+class SQLiteDatabasePlugin implements PapyrineDatabasePlugin
 {
 	/**
 	 * Our prized database connection.
@@ -43,19 +43,13 @@ class SQLiteDatabasePlugin extends PapyrineDatabasePlugin
 		global $papyrine;
 
 		$this->connection = new SQLiteDatabase ("/var/www/localhost/htdocs/papyrine/data/papyrine.sqlite"); 
-		
-		$this->Blog_CreateTable ();
-		$this->Category_CreateTable ();
-		$this->Comment_CreateTable ();
-		$this->Entry_CreateTable ();
-	}
 
-   	/**
-   	 * The class destructor, closes the database connection if open.
-   	 */
-	function __destruct () 
-	{
-		$this->connection->close ();
+		// If first run
+		//$this->Blog_CreateTable ();
+		//$this->Category_CreateTable ();
+		//$this->Comment_CreateTable ();
+		//$this->Entry_CreateTable ();
+		//$this->User_CreateTable ();
 	}
 
 	public function GetBlog (integer $id)
@@ -68,14 +62,32 @@ class SQLiteDatabasePlugin extends PapyrineDatabasePlugin
 		return new SQLitePapyrineUser ($id);
 	}
 
+	public function GetUsers ($as_array = false)
+	{
+		$sql = sprintf (
+			" SELECT * FROM %s",
+			SQLitePapyrineUser::TABLE
+		);
+
+		if ($as_array)
+			return $this->connection->arrayQuery ($sql, SQLITE_ASSOC);
+
+		$result = $this->connection->unbufferedQuery ($sql);
+
+		$output = array ();
+
+		foreach ($result as $row)
+			$output [] = new SQLitePapyrineUser ($row ["id"]);
+	}
+
 	public function CreateBlog (string $title)
 	{
 		return SQLitePapyrineBlog::Create ($title);
 	}
 
-	public function CreateUser (string $nickname, string $password, 
-	                            string $firstname, string $lastname,
-	                            string $email)
+	public function CreateUser ($nickname, $password, 
+	                            $firstname, $lastname,
+	                            $email)
 	{
 		return SQLitePapyrineUser::Create ($nickname, $password, $firstname, 
 		                                   $lastname, $email);
@@ -129,63 +141,54 @@ class SQLiteDatabasePlugin extends PapyrineDatabasePlugin
 	public function Entry_CreateTable ()
 	{
 		$sql = sprintf (
-			"CREATE TABLE %s (                       " .
-			" id INTEGER PRIMARY KEY,                " .
-			" blog INTEGER NOT NULL,                 " .
-			" title text NOT NULL,                   " .
-			" linktitle text NOT NULL,               " .
-			" summary text NOT NULL,                 " .
-			" body text NOT NULL,                    " .
-			" created timestamp(14) NOT NULL,        " .
-			" modified timestamp(14) NOT NULL,       " .
-			" status INTEGER NOT NULL,               " .
-			" owner INTEGER NOT NULL,                " .
-			" onfrontpage INTEGER NOT NULL,          " .
-			" allowcomments INTEGER NOT NULL,        " .
-			" autodisable timestamp(14) NOT NULL,    " .
-			" comments INTEGER NOT NULL default '0', " .
-			")                                       " ,
+			"CREATE TABLE %s (                      " .
+			" id INTEGER PRIMARY KEY,               " .
+			" blog INTEGER NOT NULL,                " .
+			" title text NOT NULL,                  " .
+			" linktitle text NOT NULL,              " .
+			" summary text NOT NULL,                " .
+			" body text NOT NULL,                   " .
+			" created timestamp(14) NOT NULL,       " .
+			" modified timestamp(14) NOT NULL,      " .
+			" status INTEGER NOT NULL,              " .
+			" owner INTEGER NOT NULL,               " .
+			" onfrontpage INTEGER NOT NULL,         " .
+			" allowcomments INTEGER NOT NULL,       " .
+			" autodisable timestamp(14) NOT NULL,   " .
+			" comments INTEGER NOT NULL default '0' " .
+			")                                      " ,
 			SQLitePapyrineEntry::TABLE
 		);
 
 		$this->connection->unbufferedQuery ($sql);
 	}
 
-/*
-	public function EntryPopulateData ($params, &$output)
+	public function User_CreateTable ()
 	{
-		$output = $this->database->getRow (
-			" SELECT * FROM ! " .
-			" WHERE blog = ?  " .
-			" AND ! = ?       " .
-			" LIMIT 1         " ,
-			array (
-				self::TABLES ["entries"],
-				$params ["blog"],
-				(is_numeric ($params ["id"]) ? "id" : "linktitle"),
-				$id
-			),
-			DB_FETCHMODE_ASSOC
-		);
-	}
-
-	public function EntryDelete ($params, &$output)
-	{
-		$result = $this->database->query (
-			" DELETE FROM ! " .
-			" WHERE id = ?  " .
-			" LIMIT 1       " ,
-			array (
-				self::TABLES ["entries"],
-				$this->params ["id"]
-			)
+		$sql = sprintf (
+			"CREATE TABLE %s (         " .
+			" id INTEGER PRIMARY KEY,  " .
+			" nickname text NOT NULL,  " .
+			" password text NOT NULL,  " .
+			" firstname text NOT NULL, " .
+			" lastname text NOT NULL,  " .
+			" email text NOT NULL      " .
+			")                         " ,
+			SQLitePapyrineUser::TABLE
 		);
 
-		$result->free ();
-
-		$output = !DB::isError ($result);
+		$this->connection->unbufferedQuery ($sql);
 	}
-*/
+
+	public function Import (string $file)
+	{
+		// Takes an RSS (RDF?) file and imports it
+	}
+
+	public function Export ()
+	{
+		// Export the current data as RSS (RDF?)
+	}
 }
 
 ?>

@@ -32,7 +32,7 @@
  * @package Papyrine
  * @subpackage SQLiteDatabasePlugin
  */
-class SQLitePapyrineComment extends PapyrineComment
+class SQLitePapyrineComment implements PapyrineComment
 {
 	const TABLE = 'papyrine_comments';
 	private $_id;

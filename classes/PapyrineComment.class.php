@@ -32,33 +32,33 @@
  * @package Papyrine
  * @subpackage Classes
  */
-abstract class PapyrineComment
+interface PapyrineComment
 {
 	// General functions.
-	abstract public function __construct (integer $id);
+	public function __construct (integer $id);
 
 	// Functions to fetch information.
-	abstract public function GetID ();
-	abstract public function GetEntry ();
-	abstract public function GetBody ();
-	abstract public function GetOwnerName ();
-	abstract public function GetOwnerEmail ();
-	abstract public function GetStatus ();
-	abstract public function GetCreated ();
+	public function GetID ();
+	public function GetEntry ();
+	public function GetBody ();
+	public function GetOwnerName ();
+	public function GetOwnerEmail ();
+	public function GetStatus ();
+	public function GetCreated ();
 
 	// Functions to set information.
-	abstract public function SetBody (string $body);
-	abstract public function SetOwnerName (string $name);
-	abstract public function SetOwnerEmail (string $email);
-	abstract public function SetStatus (integer $status);
+	public function SetBody (string $body);
+	public function SetOwnerName (string $name);
+	public function SetOwnerEmail (string $email);
+	public function SetStatus (integer $status);
 
 	// Functions to create.
-	abstract public static function Create (integer $entry, string $body, 
-	                                        string $owner_name, 
-	                                        string $owner_email);
+	public static function Create (integer $entry, string $body, 
+	                               string $owner_name, 
+	                               string $owner_email);
 
 	// Functions to delete.
-	abstract public function Delete ();
+	public function Delete ();
 }
 
 ?>

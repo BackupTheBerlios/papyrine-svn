@@ -32,13 +32,13 @@
  * @package Papyrine
  * @subpackage SQLiteDatabasePlugin
  */
-class SQLitePapyrineBlog implements PapyrineBlog
+class SQLitePapyrineUser implements PapyrineUser
 {
-	const TABLE = 'papyrine_blogs';
+	const TABLE = 'papyrine_users';
 	private $_id;
 	private $_data = false;
 
-	function __construct ($id)
+	function __construct (integer $id)
 	{
 		$this->_id = $id;
 	}
@@ -48,10 +48,10 @@ class SQLitePapyrineBlog implements PapyrineBlog
 		global $papyrine;
 
 		$sql = sprintf (
-			" SELECT id, title " .
-			" FROM %s WHERE    " .
-			" id = %s          " .
-			" LIMIT 1          " ,
+			" SELECT id, nickname, password, firstname, lastname, email " .
+			" FROM %s WHERE                                             " .
+			" id = %s                                                   " .
+			" LIMIT 1                                                   " ,
 			self::TABLE,
 			$this->_id
 		);
@@ -82,51 +82,26 @@ class SQLitePapyrineBlog implements PapyrineBlog
 	 * @param string $title New blog's title.
 	 * @return integer
 	 */
-	public static function Create (string $title)
+	public static function Create ($nickname,
+	                               $password, $firstname,
+	                               $lastname, $email)
 	{
 		global $papyrine;
 
 		$sql = sprintf (
-			"INSERT INTO %s " .
-			" (title)       " .
-			"VALUES         " .
-			" ('%s')        " ,
+			"INSERT INTO %s                                    " .
+			" (nickname, password, firstname, lastname, email) " .
+			"VALUES                                            " .
+			" ('%s', '%s', '%s', '%s', '%s')                   " ,
 			self::TABLE,
-			sqlite_escape_string ($title)
+			sqlite_escape_string ($nickname),
+			sqlite_escape_string ($password),
+			sqlite_escape_string ($firstname),
+			sqlite_escape_string ($lastname),
+			sqlite_escape_string ($email)
 		);
 
 		return $papyrine->database->connection->unbufferedQuery ($sql);
-	}
-
-	public function CreateEntry (string $title, string $summary, string $body,
-	                             integer  $owner, boolean $status = true,
-	                             boolean $onfrontpage = true, 
-	                             boolean $allowcomments = true, 
-	                             boolean $autodisable = false)
-	{
-		return SQLitePapyrineEntry::Create ($this->GetID (), $title, $summary, 
-	                                        $body, $owner, $status, $onfrontpage,
-	                                        $allowcomments, $autodisable);
-	}
-
-	public function CreateCategory (string $title)
-	{
-		return SQLitePapyrineCategory::Create ($this->GetID (), $title);
-	}
-
-	public function GetEntry (integer $id)
-	{
-		return new SQLitePapyrineEntry ($this->GetID (), $id);
-	}
-
-	public function GetCategory (integer $id)
-	{
-		return new SQLitePapyrineCategory ($this->GetID (), $id);
-	}
-
-	public function GetComment (integer $id)
-	{
-		return new SQLitePapyrineComment ($this->GetID (), $id);
 	}
 
 	public function GetID ()
@@ -134,18 +109,54 @@ class SQLitePapyrineBlog implements PapyrineBlog
 		return $this->__get ("id");
 	}
 
-	public function GetTitle ()
+	public function GetNickname ()
 	{
-		return $this->__get ("title");
+		return $this->__get ("nickname");
 	}
 
-	public function SetTitle (string $title)
+	public function GetPassword ()
 	{
-		return $this->__set ("title", $title);
+		return $this->__get ("password");
 	}
 
-	public function GetEntries ()
+	public function GetFirstName ()
 	{
+		return $this->__get ("firstname");
+	}
+
+	public function GetLastName ()
+	{
+		return $this->__get ("lastname");
+	}
+
+	public function GetEmail ()
+	{
+		return $this->__get ("email");
+	}
+
+	public function SetNickname (string $nickname)
+	{
+		return $this->__set ("nickname", $nickname);
+	}
+
+	public function SetPassword (string $password)
+	{
+		return $this->__set ("password", $password);
+	}
+
+	public function SetFirstName (string $firstname)
+	{
+		return $this->__set ("firstname", $firstname);
+	}
+
+	public function SetLastName (string $lastname)
+	{
+		return $this->__set ("lastname", $lastname);
+	}
+
+	public function SetEmail (string $email)
+	{
+		return $this->__set ("email", $email);
 	}
 
 	/**

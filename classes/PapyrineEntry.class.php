@@ -32,50 +32,50 @@
  * @package Papyrine
  * @subpackage Classes
  */
-abstract class PapyrineEntry
+interface PapyrineEntry
 {
 	// General functions.
-	abstract public function __construct (integer $blog, integer $id);
+	public function __construct (integer $blog, integer $id);
 
 	// Functions to fetch information.
-	abstract public function GetID ();
-	abstract public function GetTitle ();
-	abstract public function GetSummary ();
-	abstract public function GetBody ();
-	abstract public function GetOwner ();
-	abstract public function GetStatus ();
-	abstract public function GetOnFrontpage ();
-	abstract public function GetAllowComments ();
-	abstract public function GetAutoDisable ();
-	abstract public function GetCategories ();
-	abstract public function GetComments ();
-	abstract public function GetNext ();
-	abstract public function GetPrevious ();
-	abstract public function AddCategory (integer $id);
-	abstract public function RemoveCategory (integer $id);
+	public function GetID ();
+	public function GetTitle ();
+	public function GetSummary ();
+	public function GetBody ();
+	public function GetOwner ();
+	public function GetStatus ();
+	public function GetOnFrontpage ();
+	public function GetAllowComments ();
+	public function GetAutoDisable ();
+	//abstract public function GetCategories ();
+	//abstract public function GetComments ();
+	//abstract public function GetNext ();
+	//abstract public function GetPrevious ();
+	//abstract public function AddCategory (integer $id);
+	//abstract public function RemoveCategory (integer $id);
 
 	// Functions to set information.
-	abstract public function SetTitle (string $title);
-	abstract public function SetSummary (string $summary);
-	abstract public function SetBody (string $body);
-	abstract public function SetOwner (integer $owner);
-	abstract public function SetStatus (integer $title);
-	abstract public function SetOnFrontpage (integer $title);
-	abstract public function SetAllowComment (integer $title);
-	abstract public function SetAutoDisable (integer $title);
+	public function SetTitle (string $title);
+	public function SetSummary (string $summary);
+	public function SetBody (string $body);
+	public function SetOwner (integer $owner);
+	public function SetStatus (integer $status);
+	public function SetOnFrontpage (integer $onfrontpage);
+	public function SetAllowComments (integer $allowcomments);
+	public function SetAutoDisable (integer $autodisable);
 
 	// Functions to create.
-	abstract public static function Create (string $title, string $summary, 
-	                                        string $body, integer $owner, 
-	                                        boolean $status = true, 
-	                                        boolean $onfrontpage = true, 
-	                                        boolean $allowcomments = true, 
-	                                        boolean $autodisable = false);
-	abstract public function CreateComment (string $body, string $owner_name,
-	                                        string $owner_email)
+	public static function Create (string $title, string $summary, 
+	                               string $body, integer $owner, 
+	                               boolean $status = true, 
+	                               boolean $onfrontpage = true, 
+	                               boolean $allowcomments = true, 
+	                               boolean $autodisable = false);
+	//abstract public function CreateComment (string $body, string $owner_name,
+	//                                        string $owner_email)
 
 	// Functions to delete.
-	abstract public function Delete ();
+	public function Delete ();
 }
 
 ?>

@@ -32,15 +32,18 @@
  * @package Papyrine
  * @subpackage SQLiteDatabasePlugin
  */
-class SQLitePapyrineEntry extends PapyrineEntry
+class SQLitePapyrineEntry implements PapyrineEntry
 {
 	const TABLE = 'papyrine_entries';
 	private $_id;
 	private $_data = false;
 
-	function __construct (integer $id)
+	function __construct (integer $blog, string $id)
 	{
-		$this->_id = $id;
+		$this->_id = array (
+			"blog" => $blog,
+			"id"   => $id
+		);
 	}
 
 	private function _Populate ()
@@ -51,9 +54,10 @@ class SQLitePapyrineEntry extends PapyrineEntry
 			" SELECT                                                     " .
 			"  id, entry, body, owner_name, owner_email, status, created " .
 			" FROM %s WHERE                                              " .
-			"  id = %s                                                   " .
+			"  blog = %s AND id = %s                                     " .
 			" LIMIT 1                                                    " ,
 			self::TABLE,
+			$this->_id ["blog"],
 			$this->_id ["id"]
 		);
 
@@ -77,28 +81,46 @@ class SQLitePapyrineEntry extends PapyrineEntry
 		//
 	}
 
-	/**
-	 * Create a new comment.
-	 */
-	public static function Create (integer $entry, string $body, 
-	                               string $owner_name, string $owner_email)
+	public static function Create (string $title, string $summary, 
+	                               string $body, integer $owner, 
+	                               boolean $status = true, 
+	                               boolean $onfrontpage = true, 
+	                               boolean $allowcomments = true, 
+	                               boolean $autodisable = false)
 	{
-		global $papyrine;
-
-		$sql = sprintf (
-			"INSERT INTO %s                                           " .
-			" (entry, body, owner_name, owner_email, status, created) " .
-			"VALUES                                                   " .
-			" (%s, '%s', '%s', '%s', %s, NOW())                       " ,
-			self::TABLE,
-			$entry,
-			sqlite_escape_string ($body),
-			sqlite_escape_string ($owner_name),
-			sqlite_escape_string ($owner_email),
-			0
+		/* Generate the query and insert into the database.
+		$result = $database->query (
+			"INSERT INTO ! SET   " .
+			" blog = ?,          " .
+			" title = ?,         " .
+			" linktitle = ?,     " .
+			" summary = ?,       " .
+			" body = ?,          " .
+			" owner = ?,         " .
+			" status = ?,        " .
+			" onfrontpage = ?,   " .
+			" allowcomments = ?, " .
+			" autodisable = ?,   " .
+			" created = NOW(),   " .
+			" modified = NOW()   " ,
+			array (
+				self::TABLE,
+				$blog,
+				$title,
+				$title,
+				$summary,
+				$body,
+				$owner,
+				($status ? 1 : 0),
+				($onfrontpage ? 1 : 0),
+				($allowcomments ? 1 : 0),
+				($autodisable ? "FROM_UNIXTIME(" . $autodisable . ")" : 0)
+			)
 		);
 
-		return $papyrine->database->connection->unbufferedQuery ($sql);
+		$result->free ();
+
+		return !DB::isError ($result);*/
 	}
 
 	public function GetID ()
@@ -174,6 +196,11 @@ class SQLitePapyrineEntry extends PapyrineEntry
 	public function SetOnFrontpage (integer $onfrontpage)
 	{
 		return $this->__set ("onfrontpage", $onfrontpage);
+	}
+
+	public function SetAllowComments (integer $allowcomments)
+	{
+		return $this->__set ("allowcomments", $allowcomments);
 	}
 
 	public function SetAutoDisable (integer $autodisable)
@@ -281,45 +308,6 @@ class SQLitePapyrineEntry extends PapyrineEntry
 
 		return new PapyrineEntry ($this->database,
 		                          $this->database->getOne ($sql, $params));
-	}
-
-	public static function Create (&$database, $blog, $title, $summary, $body, 
-	                               $owner, $status = true, $onfrontpage = true,
-	                               $allowcomments = true, $autodisable = false)
-	{
-		// Generate the query and insert into the database.
-		$result = $database->query (
-			"INSERT INTO ! SET   " .
-			" blog = ?,          " .
-			" title = ?,         " .
-			" linktitle = ?,     " .
-			" summary = ?,       " .
-			" body = ?,          " .
-			" owner = ?,         " .
-			" status = ?,        " .
-			" onfrontpage = ?,   " .
-			" allowcomments = ?, " .
-			" autodisable = ?,   " .
-			" created = NOW(),   " .
-			" modified = NOW()   " ,
-			array (
-				self::TABLE,
-				$blog,
-				$title,
-				$title,
-				$summary,
-				$body,
-				$owner,
-				($status ? 1 : 0),
-				($onfrontpage ? 1 : 0),
-				($allowcomments ? 1 : 0),
-				($autodisable ? "FROM_UNIXTIME(" . $autodisable . ")" : 0)
-			)
-		);
-
-		$result->free ();
-
-		return !DB::isError ($result);
 	}
 */
 ?>

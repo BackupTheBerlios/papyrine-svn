@@ -32,7 +32,7 @@
  * @package Papyrine
  * @subpackage SQLiteDatabasePlugin
  */
-class SQLitePapyrineCategory extends PapyrineCategory
+class SQLitePapyrineCategory implements PapyrineCategory
 {
 	const TABLE = 'papyrine_categories';
 	private $_id;

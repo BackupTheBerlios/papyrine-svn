@@ -26,44 +26,16 @@
  */
 
 /**
+ * Decribes a Papyrine blog and must be extended by a database implementation
+ * plugin.
+ *
  * @author Thomas Reynolds <thomasr@infograph.com>
  * @package Papyrine
  * @subpackage Classes
  */
-
-class PapyrinePlugin
+interface PapyrineModifier
 {
-	/**
-	 * Our database connection.
-	 *
-	 * @var mixed 
-	 */
-	protected $database;
-
-	/**
-	 * Constructor, sets up our table, database and empty array.
-	 *
-	 * @param string $table Database table to access.
-	 * @param mixed $database Reference for already opened database.
-	 * @uses Papyrine::connect
-	 */
-	function __construct () 
-	{
-		$this->database = Papyrine::connect (
-			"PapyrinePlugin" . $papyrine->GetPluginID ($this) . ".db"
-		);
-	}
-
-	/**
-	 * Destructor called when this object is done being used. Synchronizes
-	 * the object with the database if needed.
-	 *
-	 * @uses DB_common::disconnect
-	 */
-	function __destruct () 
-	{
-		$this->database->disconnect ();
-	}
+	public static function ModifyText (string $text);
 }
 
 ?>
