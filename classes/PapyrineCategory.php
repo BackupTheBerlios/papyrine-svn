@@ -34,20 +34,18 @@
  */
 interface PapyrineCategory
 {
-	public static function create( $title );
+	public static function create ($title);
 
 	// General functions.
-	public function __construct( $id );
+	public function __construct ($id);
 
 	// Functions to fetch information.
-	public function getID();
-	public function getTitle();
-	public function getBlog();
-	public function getEntries( $limit = false );
+	public function getID ();
+	public function getTitle ();
+	public function getEntries ($limit = false);
 
 	// Functions to set information.
-	public function setTitle( $title );
-	public function setBlog( $blog );
+	public function setTitle ($title);
 
 	// Functions to delete.
 	public function delete();

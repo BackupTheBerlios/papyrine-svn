@@ -29,8 +29,8 @@ class EntryCreateForm extends ActionForm
 {
 	function validate (ActionMapping $map)
 	{
-		if (!isset ($this->title) || 
-		    !isset ($this->body))
+		if (empty ($this->title) || 
+		    empty ($this->body))
 			return false;
 
 		return true;

@@ -25,18 +25,19 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  */
 
-class EntryAdministrationAction extends Action 
-{	
-	function execute (ActionMapping $map, ActionForm $form, Request $req)
+class CategoryCreateForm extends ActionForm 
+{
+	function validate (ActionMapping $map)
 	{
-		global $papyrine;
+		if (empty ($this->title))
+			return false;
 
-		$papyrine->entries =& $papyrine->getEntries();
+		return true;
+	}
 
-		header("Content-Type: application/xhtml+xml;charset=UTF-8");
-		$papyrine->display ('admin/header.html');
-		$papyrine->display ($map->getParameter());
-		$papyrine->display ('admin/footer.html');
+	function settitle ($title)
+	{
+		$this->title = $title;
 	}
 }	
 ?>

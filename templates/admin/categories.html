@@ -1,0 +1,29 @@
+<table>
+	<tr>
+		<th>Title</th>
+	</tr>
+	<?php foreach ($this->categories as $category): ?>
+		<tr>
+			<td><?php echo $category->title ?></td>
+			<td><input type="submit" name="delete" value="Delete" /></td>
+		</tr>
+  	<?php endforeach; ?>
+</table>
+<form action="<?php echo SITE ?>administration/category-create" method="post">
+<table>
+	<caption>Create a new user</caption>
+	<tr>
+		<td>
+			<label for="title">Title</label>
+		</td>
+		<td>
+			<input type="text" id="title" name="title" />
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<input type="submit" name="Submit" value="Submit" />
+		</td>
+	</tr>
+</table>
+</form>

@@ -30,10 +30,10 @@ class UserCreateForm extends ActionForm
 	function validate (ActionMapping $map)
 	{
 		if (
-		    !isset ($this->email)           || 
-		    !isset ($this->password)        || 
-		    !isset ($this->repeat_password) || 
-		    !isset ($this->name))
+		    empty ($this->email)           || 
+		    empty ($this->password)        || 
+		    empty ($this->repeat_password) || 
+		    empty ($this->name))
 			return false;
 
 		if ($this->password != $this->repeat_password)

@@ -101,6 +101,21 @@ final class Papyrine extends Savant2
 	                                         $status = true);
 	}
 
+	public function getCategory ($id)
+	{
+		return $this->database->getCategory ($id);
+	}
+
+	public function getCategories ()
+	{
+		return $this->database->getCategories ();
+	}
+
+	public function createCategory ($title)
+	{
+		return $this->database->createCategory ($title);
+	}
+
 	public function emailExists ($email)
 	{
 		return $this->database->emailExists ($email);

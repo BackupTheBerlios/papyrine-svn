@@ -90,11 +90,6 @@ class SQLiteCategory extends SQLiteAbstraction implements PapyrineCategory
 		return $this->__get( "title" );
 	}
 
-	public function getBlog()
-	{
-		return new SQLiteBlog( $this->__get ("blog") );
-	}
-
 	public function getEntries( $limit = false )
 	{
 	}
@@ -102,11 +97,6 @@ class SQLiteCategory extends SQLiteAbstraction implements PapyrineCategory
 	public function setTitle( $title )
 	{
 		return $this->__set( "title", $title );
-	}
-
-	public function setBlog( $blog )
-	{
-		return $this->__set("title", $blog );
 	}
 }
 

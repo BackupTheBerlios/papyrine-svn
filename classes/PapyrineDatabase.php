@@ -37,6 +37,11 @@ interface PapyrineDatabase
 	public function getEntry ($id);
 	public function getEntries ();
 	public function createEntry ($title, $body, $owner, $status = true);
+
+	public function getCategory ($id);
+	public function getCategories ();
+	public function createCategory ($title);
+
 	public function emailExists ($email);
 	public function import ($file);
 	public function export ();

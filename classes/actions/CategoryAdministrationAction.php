@@ -25,13 +25,13 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  */
 
-class EntryAdministrationAction extends Action 
+class CategoryAdministrationAction extends Action 
 {	
 	function execute (ActionMapping $map, ActionForm $form, Request $req)
 	{
 		global $papyrine;
 
-		$papyrine->entries =& $papyrine->getEntries();
+		$papyrine->categories =& $papyrine->getCategories();
 
 		header("Content-Type: application/xhtml+xml;charset=UTF-8");
 		$papyrine->display ('admin/header.html');

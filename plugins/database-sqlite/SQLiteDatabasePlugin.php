@@ -116,12 +116,39 @@ class SQLiteDatabasePlugin implements PapyrineDatabase
 		return SQLiteEntry::create ($title, $body, $owner, $status = true);
 	}
 
+	public function getCategory ($id)
+	{
+		return new SQLiteCategory ($id);
+	}
+
+	public function getCategories ()
+	{
+		$sql = sprintf (
+			" SELECT * FROM %s",
+			SQLiteCategory::TABLE
+		);
+
+		$result = $this->connection->unbufferedQuery ($sql);
+
+		$output = array ();
+
+		foreach ($result as $row) {
+			$output [] = new SQLiteCategory ($row ["id"]);
+		}
+
+		return $output;
+	}
+
+	public function createCategory ($title)
+	{
+		return SQLiteCategory::create ($title);
+	}
+
 	public function Category_CreateTable ()
 	{
 		$sql = sprintf (
 			"CREATE TABLE %s (        " .
 			" id INTEGER PRIMARY KEY, " .
-			" blog INTEGER NOT NULL,  " .
 			" title text NOT NULL     " .
 			")                        " ,
 			SQLiteCategory::TABLE

@@ -25,18 +25,15 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  */
 
-class EntryAdministrationAction extends Action 
+class CategoryCreateAction extends Action 
 {	
 	function execute (ActionMapping $map, ActionForm $form, Request $req)
 	{
 		global $papyrine;
 
-		$papyrine->entries =& $papyrine->getEntries();
+		$result = $papyrine->createCategory ($form->title);
 
-		header("Content-Type: application/xhtml+xml;charset=UTF-8");
-		$papyrine->display ('admin/header.html');
-		$papyrine->display ($map->getParameter());
-		$papyrine->display ('admin/footer.html');
+		header ('Location: ' . SITE . 'administration/categories');
 	}
 }	
 ?>

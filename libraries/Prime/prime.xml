@@ -4,6 +4,7 @@
 	<forms>
 		<form name="UserCreate" class="UserCreateForm" />
 		<form name="EntryCreate" class="EntryCreateForm" />
+		<form name="CategoryCreate" class="CategoryCreateForm" />
 	</forms>
 	
 	<!--// Global Forwards //-->
@@ -48,6 +49,17 @@
 			name="EntryCreate" 
 			class="EntryCreateAction"
 			form="EntryCreate" 
+			validate="true" >
+		</action>
+		<action 
+			name="CategoryAdministration" 
+			parameter="admin/categories.html" 
+			class="CategoryAdministrationAction" >
+		</action>
+		<action 
+			name="CategoryCreate" 
+			class="CategoryCreateAction"
+			form="CategoryCreate" 
 			validate="true" >
 		</action>
 	</actions>
