@@ -1,5 +1,9 @@
 <?php
 
+	// Security
+	ini_set ("register_globals", off);
+	ini_set ("allow_url_fopen",  off);
+
 	/**
 	 * Autoload classes as needed.
 	 * FIXME: Much better loading code!

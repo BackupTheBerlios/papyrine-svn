@@ -34,20 +34,20 @@
  */
 abstract class PapyrineCategory
 {
-	abstract public static function Create ($blog, $title);
+	abstract public static function Create (integer $blog, string $title);
 
 	// General functions.
-	abstract public function __construct ($blog, $id);
+	abstract public function __construct (integer $blog, string $id);
 
 	// Functions to fetch information.
 	abstract public function GetID ();
 	abstract public function GetTitle ();
 	abstract public function GetBlog ();
-	abstract public function GetEntries ($limit = false);
+	abstract public function GetEntries (integer $limit = false);
 
 	// Functions to set information.
-	abstract public function SetTitle ($title);
-	abstract public function SetBlog ($blog);
+	abstract public function SetTitle (integer $title);
+	abstract public function SetBlog (integer $blog);
 
 	// Functions to delete.
 	abstract public function Delete ();

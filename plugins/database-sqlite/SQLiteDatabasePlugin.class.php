@@ -46,6 +46,7 @@ class SQLiteDatabasePlugin extends PapyrineDatabasePlugin
 		
 		$this->Blog_CreateTable ();
 		$this->Category_CreateTable ();
+		$this->Comment_CreateTable ();
 	}
 
    	/**
@@ -56,23 +57,24 @@ class SQLiteDatabasePlugin extends PapyrineDatabasePlugin
 		$this->connection->close ();
 	}
 
-	public function GetBlog ($id)
+	public function GetBlog (integer $id)
 	{
 		return new SQLitePapyrineBlog ($id);
 	}
 
-	public function GetUser ($id)
+	public function GetUser (integer $id)
 	{
 		return new SQLitePapyrineUser ($id);
 	}
 
-	public function CreateBlog ($title)
+	public function CreateBlog (string $title)
 	{
 		return SQLitePapyrineBlog::Create ($title);
 	}
 
-	public function CreateUser ($nickname, $password, $firstname, $lastname,
-	                            $email)
+	public function CreateUser (string $nickname, string $password, 
+	                            string $firstname, string $lastname,
+	                            string $email)
 	{
 		return SQLitePapyrineUser::Create ($nickname, $password, $firstname, 
 		                                   $lastname, $email);
@@ -100,6 +102,24 @@ class SQLiteDatabasePlugin extends PapyrineDatabasePlugin
 			" title text NOT NULL     " .
 			")                        " ,
 			SQLitePapyrineCategory::TABLE
+		);
+
+		$this->connection->unbufferedQuery ($sql);
+	}
+
+	public function Comment_CreateTable ()
+	{
+		$sql = sprintf (
+			"CREATE TABLE %s (          " .
+			" id INTEGER PRIMARY KEY,   " .
+			" entry INTEGER NOT NULL,   " .
+			" body text NOT NULL,       " .
+			" created text NOT NULL,    " .
+			" status INTEGER NOT NULL,  " .
+			" owner_name text NOT NULL, " .
+			" owner_email text NOT NULL " .
+			")                          " ,
+			SQLitePapyrineComment::TABLE
 		);
 
 		$this->connection->unbufferedQuery ($sql);
