@@ -8,6 +8,5 @@
 		<email>thomasr@infograph.com</email>
 	</author>
 	<class modifier="true">SimplePlugin.class.php</class>
-	<smarty provided="true">Smarty/</smarty>
-	<templates provided="false" />
+	<smarty>Smarty/</smarty>
 </plugin>

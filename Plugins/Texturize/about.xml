@@ -9,6 +9,5 @@
 		<email>thomasr@infograph.com</email>
 	</author>
 	<class modifier="true">TexturizePlugin.class.php</class>
-	<smarty provided="true">Smarty/</smarty>
-	<templates provided="false" />
+	<smarty>Smarty/</smarty>
 </plugin>

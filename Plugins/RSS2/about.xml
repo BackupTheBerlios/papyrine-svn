@@ -2,28 +2,28 @@
 <plugin>
 	<name>RSS 2.0 Syndication Plugin</name>
 	<description>Provides various feeds in the RSS 2.0 format</description>
-	<website>rss</website>
+	<website>http://blogs.law.harvard.edu/tech/rss</website>
 	<version>0.1</version>
 	<author>
 		<name>Thomas Reynolds</name>
 		<email>thomasr@infograph.com</email>
 	</author>
-	<class modifier="true">RSS2Plugin.class.php</class>
-	<templates location="Templates/">
-		<feed_recent>recent_rss_20.xml</feed_recent>
-		<feed_category>recent_rss_20.xml</feed_category>
-	</templates>
+	<class>RSS2Plugin.class.php</class>
 	<layout>
 		<node id="root">
 			<node id="categories">
 				<node id="archive-by-category">
 					<node id="feeds">
-						<node id="category-feed-rss10" identifier="rss10" />
+						<node id="category-feed-rss10" 
+						      template="Templates/category_rss_20.xml"
+							  identifier="rss10" />
 					</node>
 				</node>
 			</node>
 			<node id="feeds">
-				<node id="recent-feed-rss10" identifier="rss10" />
+				<node id="recent-feed-rss10" 
+				      template="Templates/recent_rss_20.xml" 
+				      identifier="rss10" />
 			</node>
 		</node>
 	</layout>

@@ -1,13 +1,13 @@
-<?xml version='1.0' standalone='yes'?>
+<?xml version='1.0' xmlns="plugin.rng">
 <plugin>
 	<name>BBCode Modifier Plugin</name>
 	<description>Coverts from BBCode markup to XHTML</description>
+	<website>www.phpbb.com/phpBB/faq.php?mode=bbcode</website>
 	<version>0.1</version>
 	<author>
 		<name>Thomas Reynolds</name>
 		<email>thomasr@infograph.com</email>
 	</author>
 	<class modifier="true">BBCodePlugin.class.php</class>
-	<smarty provided="true">Smarty/</smarty>
-	<templates provided="false" />
+	<smarty>Smarty/</smarty>
 </plugin>

@@ -1,7 +1,7 @@
 <?xml version='1.0' standalone='yes'?>
 <plugin>
 	<name>AllConsuming Reading Lists Plugin</name>
-	<description>Display various reading lists from allconsuming.net</description>
+	<description>Display reading lists from allconsuming.net</description>
 	<website>http://allconsuming.net</website>
 	<version>0.1</version>
 	<author>
@@ -9,10 +9,6 @@
 		<email>thomasr@infograph.com</email>
 	</author>
 	<class>AllConsumingPlugin.class.php</class>
-	<smarty provided="true">Smarty/</smarty>
-	<templates provided="false" />
-	<modifiers provided="false" />
-	<options>
-		<username>JediJawa</username>
-	</options>
+	<smarty>Smarty/</smarty>
+	<option id="username">JediJawa</option>
 </plugin>

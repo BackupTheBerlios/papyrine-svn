@@ -1,14 +1,13 @@
 <?xml version='1.0' xmlns="plugin.rng">
 <plugin>
-	<name>Texturize Modifier Plugin</name>
-	<description>Coverts from Texturize markup to XHTML</description>
-	<website>http://photomatt.net/tools/texturize/</website>
+	<name>Wiki Modifier Plugin</name>
+	<description>Coverts from Wiki markup to XHTML</description>
+	<website>http://c2.com/cgi/wiki</website>
 	<version>0.1</version>
 	<author>
 		<name>Thomas Reynolds</name>
 		<email>thomasr@infograph.com</email>
 	</author>
-	<class modifier="true">TexturizePlugin.class.php</class>
-	<smarty provided="true">Smarty/</smarty>
-	<templates provided="false" />
+	<class modifier="true">WikiPlugin.class.php</class>
+	<smarty>Smarty/</smarty>
 </plugin>

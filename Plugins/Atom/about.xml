@@ -1,8 +1,8 @@
 <?xml version='1.0' xmlns="plugin.rng">
 <plugin>
 	<name>Atom 0.3 Syndication Plugin</name>
-	<description>Provides recent posts and per-category feeds in the Atom 0.3 format</description>
-	<website>atom</website>
+	<description>Recent posts and category feeds in Atom 0.3</description>
+	<website>http://www.atomenabled.org/</website>
 	<version>0.1</version>
 	<author>
 		<name>Thomas Reynolds</name>

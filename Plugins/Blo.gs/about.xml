@@ -1,4 +1,4 @@
-<?xml version='1.0' standalone='yes'?>
+<?xml version='1.0' xmlns="plugin.rng">
 <plugin>
 	<version>0.1</version>
 	<name>Blo.gs Blogroll Plugin</name>
@@ -9,8 +9,6 @@
 		<email>thomasr@infograph.com</email>
 	</author>
 	<class>BlogsPlugin.class.php</class>
-	<smarty provided="true">Smarty/</smarty>
-	<options>
-		<userid>4829</userid>
-	</options>
+	<smarty>Smarty/</smarty>
+	<option id="userid">4829</option>
 </plugin>

@@ -1,20 +1,15 @@
-<?xml version='1.0' standalone='yes'?>
+<?xml version='1.0' xmlns="plugin.rng">
 <plugin>
 	<name>Del.icio.us Bookmark Plugin</name>
 	<description>Display links from del.icio.us</description>
 	<website>http://del.icio.us/</website>
 	<version>0.1</version>
-	<api>0.1</api>
 	<author>
 		<name>Thomas Reynolds</name>
 		<email>thomasr@infograph.com</email>
 	</author>
 	<class>DeliciousPlugin.class.php</class>
-	<smarty provided="true">Smarty/</smarty>
-	<templates provided="true">Templates/</templates>
-	<modifiers provided="true">Modifiers/</modifiers>
-	<options>
-		<username>JediJawa</username>
-		<password>jedi1</password>
-	</options>
+	<smarty>Smarty/</smarty>
+	<option id="username">JediJawa</option>
+	<option id="password">jedi1</option>
 </plugin>
