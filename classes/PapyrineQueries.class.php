@@ -57,38 +57,6 @@ class MySQL extends PapyrinePlugin
 		" WHERE id = %s                       " .
 		" LIMIT 1                             " ;
 
-	const CATEGORY_POPULATE_DATA = 
-		" SELECT * FROM %s                    " .
-		" WHERE blog = %s                     " .
-		" AND id = %s                         " .
-		" LIMIT 1                             " ;
-
-	const CATEGORY_GET_ENTRIES = 
-		" SELECT !.id FROM !, !               " .
-		" WHERE !.category = ?                " .
-		" AND !.id = !.entry                  " .
-		" ORDER BY !.created ASC              " .
-		" !                                   " ;
-
-	const CATEGORY_CREATE_TABLE = 
-		"CREATE TABLE ! (                     " .
-		" id int(11) NOT NULL auto_increment, " .
-		" blog int(11) NOT NULL,              " .
-		" title text NOT NULL,                " .
-		" PRIMARY KEY (id),                   " .
-		" FULLTEXT KEY body (title)           " .
-		") TYPE=MyISAM;                       " ;
-
-	const CATEGORY_CREATE_NEW = 
-		"INSERT INTO ! SET                    " .
-		" blog = ?,                           " .
-		" title = ?                           " ;
-
-	const CATEGORY_DELETE = 
-		" DELETE FROM !                       " .
-		" WHERE id = ?                        " .
-		" LIMIT 1                             " ;
-
 	const CATEGORY_RELATIONSHIP_POPULATE_DATA = 
 		" SELECT * FROM %s                    " .
 		" WHERE entry = %s                    " .

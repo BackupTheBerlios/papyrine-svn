@@ -35,19 +35,29 @@
  */
 abstract class PapyrineBlog
 {
-	abstract public static function Create ($title);
+	// General functions.
 	abstract public function __construct ($id);
+
+	// Functions to fetch information.
 	abstract public function GetID ();
-	abstract public function SetTitle ($title);
-	abstract public function GetTitle ();
-	abstract public function CreateEntry ($title, $summary, $body, $owner, 
-	                                      $status, $onfrontpage, $allowcomments,
-	                                      $autodisable);
-	abstract public function CreateCategory ($title);
+	abstract public function GetTitle (););
 	abstract public function GetEntry ($id);
 	abstract public function GetCategory ($id);
 	abstract public function GetComment ($id);
 	abstract public function GetEntries ();
+
+	// Functions to set information.
+	abstract public function SetTitle ($title);
+
+	// Functions to create.
+	abstract public static function Create ($title);
+	abstract public function CreateEntry ($title, $summary, $body, $owner, 
+	                                      $status = true, $onfrontpage = true, 
+	                                      $allowcomments = true, 
+	                                      $autodisable = false);
+	abstract public function CreateCategory ($title);
+
+	// Functions to delete.
 	abstract public function Delete ();
 }
 

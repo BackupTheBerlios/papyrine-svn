@@ -27,7 +27,7 @@
 /**
  * @author Thomas Reynolds <thomasr@infograph.com>
  * @package Papyrine
- * @subpackage Plugins
+ * @subpackage SQLiteDatabasePlugin
  */
 class SQLiteDatabasePlugin extends PapyrineDatabasePlugin
 {
@@ -44,7 +44,8 @@ class SQLiteDatabasePlugin extends PapyrineDatabasePlugin
 
 		$this->connection = new SQLiteDatabase ("/var/www/localhost/htdocs/papyrine/data/papyrine.sqlite"); 
 		
-		$this->_init ();
+		$this->Blog_CreateTable ();
+		$this->Category_CreateTable ();
 	}
 
    	/**
@@ -52,13 +53,7 @@ class SQLiteDatabasePlugin extends PapyrineDatabasePlugin
    	 */
 	function __destruct () 
 	{
-		$this->connection->close;
-	}
-
-	private function _init ()
-	{
-		$this->Blog_CreateTable ();
-		$this->Category_CreateTable ();
+		$this->connection->close ();
 	}
 
 	public function GetBlog ($id)
@@ -93,7 +88,7 @@ class SQLiteDatabasePlugin extends PapyrineDatabasePlugin
 			SQLitePapyrineBlog::TABLE
 		);
 
-		$this->connection->query ($sql);
+		$this->connection->unbufferedQuery ($sql);
 	}
 
 	public function Category_CreateTable ()
@@ -107,7 +102,7 @@ class SQLiteDatabasePlugin extends PapyrineDatabasePlugin
 			SQLitePapyrineCategory::TABLE
 		);
 
-		$this->connection->query ($sql);
+		$this->connection->unbufferedQuery ($sql);
 	}
 
 /*

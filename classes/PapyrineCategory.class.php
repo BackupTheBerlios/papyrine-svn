@@ -32,151 +32,25 @@
  * @package Papyrine
  * @subpackage Classes
  */
-class PapyrineCategory extends PapyrineObject
+abstract class PapyrineCategory
 {
-	/**
-	 * Name of the database table to map this object to.
-	 *
-	 * @var string 
-	 */
-	const TABLE = "papyrine_categories";
+	abstract public static function Create ($blog, $title);
 
-	/**
-	 * PapyrineCategory constructor.
-	 *
-	 * @param integer $id Category's unique id.
-	 * @param mixed $database Reference for already opened database.
-	 * @uses PapyrineCategory::TABLE
-	 */
-	function __construct (&$database, $blog, $id) 
-	{
-		// Initialize PapyrineObject.
-		parent::_construct ($database, self::TABLE);
+	// General functions.
+	abstract public function __construct ($blog, $id);
 
-		// How to populate data.
-		$this->sql = Papyrine::GetQuery (
-			PapyrineQueries::CATEGORY_POPULATE_DATA,
-			array (
-				self::TABLE,
-				$blog,
-				$id
-			)
-		);
-	}
+	// Functions to fetch information.
+	abstract public function GetID ();
+	abstract public function GetTitle ();
+	abstract public function GetBlog ();
+	abstract public function GetEntries ($limit = false);
 
-	/**
-	 * Get an array of entries associated with this category.
-	 * 
-	 * @param integer $limit Maximum entries to be returned.
-	 * @return array
-	 * @uses PapyrineEntry::TABLE
-	 * @uses PapyrineCategoryRelationship::TABLE
-	 */
-	public function GetEntries ($limit = false)
-	{
-		// Query the database.
-		$result = $this->database->query (
-			PapyrineQueries::CATEGORY_GET_ENTRIES,
-			array (
-				PapyrineEntry::TABLE,
-				PapyrineEntry::TABLE,
-				PapyrineCategoryRelationship::TABLE,
-				PapyrineCategoryRelationship::TABLE,
-				$this->data["id"]
-				PapyrineEntry::TABLE,
-				PapyrineCategoryRelationship::TABLE,
-				PapyrineEntry::TABLE,
-				($limit ? "LIMIT {$limit}" : "")
-			)
-		);
+	// Functions to set information.
+	abstract public function SetTitle ($title);
+	abstract public function SetBlog ($blog);
 
-		// Initialize an empty array.
-		$entries = array ();
-
-		// For each entry, add an object for it to the output array.
-		while ($row =& $result->fetchRow ()) 
-			$entries [] = new PapyrineEntry ($this->database, $row ["id"]);
-
-		// Free the result now that we don't need it.
-		$result->free ();
-
-		// Return our output array.
-		return $entries;
-	}
-
-	/**
-	 * Create the database table. For Papyrine installation only.
-	 *
-	 * @param mixed $database Reference for an already opened database.
-	 * @uses PapyrineCategory::TABLE
-	 */
-	public static function CreateTable (&$database)
-	{
-		// Query the database.
-		$result = $database->query (
-			PapyrineQueries::CATEGORY_CREATE_TABLE,
-			array (
-				self::TABLE
-			)
-		);
-
-		// Free the unneeded result.
-		$result->free ();
-
-		// Return true/false depending on the success of the query.
-		return !DB::isError ($result);
-	}
-
-	/**
-	 * Create a new category.
-	 *
-	 * @param mixed $database Reference for already opened database.
-	 * @param integer $blog Unique id of this blog.
-	 * @param string $title New category's title.
-	 * @return integer
-	 * @uses PapyrineCategory::TABLE
-	 */
-	public static function Create (&$database, $blog, $title)
-	{
-		// Generate the query and insert into the database.
-		$result = $database->query (
-			PapyrineQueries::CATEGORY_CREATE_NEW,
-			array (
-				self::TABLE,
-				$blog,
-				$title
-			)
-		);
-
-		// Free the unneeded result.
-		$result->free ();
-
-		// Return true/false depending on the success of the query.
-		return !DB::isError ($result);
-	}
-
-	/**
-	 * Delete the category.
-	 *
-	 * @uses PapyrineCategory::TABLE
-	 */
-	public function Delete ()
-	{
-		// Query the database.
-		$result = $this->database->query (
-			PapyrineQueries::CATEGORY_DELETE,
-			array (
-				self::TABLE,
-				$this->data["id"]
-			)
-		);
-
-		// Free the unneeded result.
-		$result->free ();
-
-		// Return true/false depending on the success of the query.
-		return !DB::isError ($result);
-	}
+	// Functions to delete.
+	abstract public function Delete ();
 }
 
 ?>
