@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Papyrine is a weblogging system built using PHP5 and Smarty.
+ * BreadcrumbPlugin adds a breadcrumb to Papyrine.
  * Copyright (C) 2004 Thomas Reynolds
  * 
  * This program is free software; you can redistribute it and/or
@@ -19,50 +19,60 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  * @package Papyrine
- * @subpackage Classes
+ * @subpackage Plugins
  * @author Thomas Reynolds <thomasr@infograph.com>
- * @version 0.1
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  */
 
 /**
  * @author Thomas Reynolds <thomasr@infograph.com>
  * @package Papyrine
- * @subpackage Classes
+ * @subpackage Plugins
  */
-
-class PapyrinePlugin
+class BreadcrumbPlugin extends PapyrinePlugin
 {
-	/**
-	 * Our database connection.
-	 *
-	 * @var mixed 
-	 */
-	protected $database;
-
-	/**
-	 * Constructor, sets up our table, database and empty array.
-	 *
-	 * @param string $table Database table to access.
-	 * @param mixed $database Reference for already opened database.
-	 * @uses Papyrine::connect
-	 */
-	function __construct () 
+	function __construct ()
 	{
-		$this->database = Papyrine::connect (
-			"PapyrinePlugin" . $papyrine->GetPluginID ($this) . ".db"
-		);
 	}
 
 	/**
-	 * Destructor called when this object is done being used. Synchronizes
-	 * the object with the database if needed.
+	 * Get an array with the breadcrumb for the current page.
 	 *
-	 * @uses DB_common::disconnect
+	 * @return array
 	 */
-	function __destruct () 
+	public static function BuildCrumbs ()
 	{
-		$this->database->disconnect ();
+		// Initialize our output array.
+		$crumbs = array ();
+
+		// Get an array of the various "layers" of the current page.
+		$parts = explode ("/", URL);
+
+		// For each part of the URL.
+		for ($i = 0; $i < count ($parts); $i++)
+		{
+			// Get the possible options for this level.
+			$options = GetPossibilitiesAtLevel ($i);
+
+			// For each of the options
+			foreach ($options as $option)
+			{
+				// Check which option for this level works.
+				if (str_reg ($option, $part))
+				{
+					// Add the level to the output crumbs.
+					$crumbs [] = array (
+						"title" => ,
+						"url"   =>
+					);
+
+					continue;
+				}
+			}
+		}
+
+		// Return the breadcrumbs.
+		return $crumbs;
 	}
 }
 

@@ -39,19 +39,19 @@ class PapyrineUser extends PapyrineObject
 	 *
 	 * @var string 
 	 */
-	const table = "papyrine_users";
+	const TABLE = "papyrine_users";
 
 	/**
 	 * PapyrineUser constructor.
 	 *
 	 * @param integer|string $id User's unique id or username.
 	 * @param mixed $database Reference for already opened database.
-	 * @uses PapyrineUser::table
+	 * @uses PapyrineUser::TABLE
 	 */
 	function __construct (&$database, $id) 
 	{
 		// Initial PapyrineObject.
-		parent::__construct ($database, self::table);
+		parent::__construct ($database, self::TABLE);
 
 		$this->id = $id;
 	}
@@ -59,7 +59,7 @@ class PapyrineUser extends PapyrineObject
 	/**
 	 * Populate the object when we need it.
 	 * 
-	 * @uses PapyrineUser::table
+	 * @uses PapyrineUser::TABLE
 	 * @uses DB_common::getRow
 	 */
 	function __get ($var)
@@ -71,7 +71,7 @@ class PapyrineUser extends PapyrineObject
 				" WHERE ! = %s    " .
 				" LIMIT 1         " ,
 				array (
-					self::table,
+					self::TABLE,
 					(is_numeric ($this->id) ? "id" : "nickname"),
 					$this->id
 				),
@@ -87,7 +87,7 @@ class PapyrineUser extends PapyrineObject
 	 *
 	 * @param mixed $database Reference for already opened database.
 	 * @return boolean
-	 * @uses PapyrineUser::table
+	 * @uses PapyrineUser::TABLE
 	 * @uses DB::isError
 	 * @uses DB_common::query
 	 * @uses DB_result::free
@@ -109,7 +109,7 @@ class PapyrineUser extends PapyrineObject
 			" PRIMARY KEY (id)                           " .
 			") TYPE=MyISAM;                              " ,
 			array (
-				self::table
+				self::TABLE
 			)
 		);
 
@@ -129,7 +129,7 @@ class PapyrineUser extends PapyrineObject
 	 * @param string $lastname New user's last name.
 	 * @param string $email New user's email address.
 	 * @return boolean
-	 * @uses PapyrineUser::table
+	 * @uses PapyrineUser::TABLE
 	 * @uses DB::isError
 	 * @uses DB_common::query
 	 * @uses DB_result::free
@@ -147,7 +147,7 @@ class PapyrineUser extends PapyrineObject
 			" lastname = ?,    " .
 			" email = ?        " ,
 			array (
-				self::table,
+				self::TABLE,
 				$blog,
 				$nickname,
 				md5 ($password),
@@ -177,7 +177,7 @@ class PapyrineUser extends PapyrineObject
 	 * Delete the user.
 	 *
 	 * @return boolean
-	 * @uses PapyrineUser::table
+	 * @uses PapyrineUser::TABLE
 	 * @uses DB::isError
 	 * @uses DB_common::query
 	 * @uses DB_result::free
@@ -189,7 +189,7 @@ class PapyrineUser extends PapyrineObject
 			" WHERE id = ?  " .
 			" LIMIT 1       " ,
 			array (
-				self::table,
+				self::TABLE,
 				$this->data["id"]
 			)
 		);

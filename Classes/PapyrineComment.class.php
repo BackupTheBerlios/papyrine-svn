@@ -39,19 +39,19 @@ class PapyrineComment extends PapyrineObject
 	 *
 	 * @var string 
 	 */
-	const table = "papyrine_comments";
+	const TABLE = "papyrine_comments";
 
 	/**
 	 * PapyrineComment constructor.
 	 *
 	 * @param integer $id Comment's unique id.
 	 * @param mixed $database Reference for already opened database.
-	 * @uses PapyrineComment::table
+	 * @uses PapyrineComment::TABLE
 	 */
 	function __construct (&$database, $id) 
 	{
 		// Initial PapyrineObject.
-		parent::_construct ($database, self::table);
+		parent::_construct ($database, self::TABLE);
 
 		$this->id = $id;
 	}
@@ -59,7 +59,7 @@ class PapyrineComment extends PapyrineObject
 	/**
 	 * Populate the object when we need it.
 	 *
-	 * @uses PapyrineComment::table
+	 * @uses PapyrineComment::TABLE
 	 * @uses DB_result::getRow
 	 */
 	function __get ($var)
@@ -71,7 +71,7 @@ class PapyrineComment extends PapyrineObject
 				" WHERE id = ?    " .
 				" LIMIT 1         " ,
 				array (
-					self::table,
+					self::TABLE,
 					$this->id
 				),
 				DB_FETCHMODE_ASSOC
@@ -96,7 +96,7 @@ class PapyrineComment extends PapyrineObject
 	 *
 	 * @param mixed $database Reference for already opened database.
 	 * @return boolean
-	 * @uses PapyrineComment::table
+	 * @uses PapyrineComment::TABLE
 	 * @uses DB::isError
 	 * @uses DB_common::query
 	 * @uses DB_result::free
@@ -116,7 +116,7 @@ class PapyrineComment extends PapyrineObject
 			" FULLTEXT KEY body (body)            " .
 			") TYPE=MyISAM;                       " ,
 			array (
-				self::table
+				self::TABLE
 			)
 		);
 
@@ -134,7 +134,7 @@ class PapyrineComment extends PapyrineObject
 	 * @param string $owner_name New comments's creator.
 	 * @param string $owner_email New comments's creator's email.
 	 * @return boolean
-	 * @uses PapyrineComment::table
+	 * @uses PapyrineComment::TABLE
 	 * @uses DB::isError
 	 * @uses DB_common::query
 	 * @uses DB_common::quoteSmart
@@ -163,7 +163,7 @@ class PapyrineComment extends PapyrineObject
 			" status = ?,      " .
 			" created = NOW()  " ,
 			array (
-				self::table,
+				self::TABLE,
 				$post,
 				$body, 
 				$owner_name, 
@@ -181,8 +181,8 @@ class PapyrineComment extends PapyrineObject
 	 * Delete the entry and decrement the entry comments counter.
 	 *
 	 * @return boolean
-	 * @uses PapyrineEntry::table
-	 * @uses PapyrineComment::table
+	 * @uses PapyrineEntry::TABLE
+	 * @uses PapyrineComment::TABLE
 	 * @uses DB::isError
 	 * @uses DB_common::query
 	 * @uses DB_result::free
@@ -196,7 +196,7 @@ class PapyrineComment extends PapyrineObject
 			" WHERE id = ?            " .
 			" LIMIT 1                 " ,
 			array (
-				PapyrineEntry::table,
+				PapyrineEntry::TABLE,
 				$this->data["entry"]
 			)
 		);
@@ -211,7 +211,7 @@ class PapyrineComment extends PapyrineObject
 				" WHERE id = ?  " .
 				" LIMIT 1       " ,
 				array (
-					PapyrineComment::table,
+					self::TABLE,
 					$this->data["id"]
 				)
 			);

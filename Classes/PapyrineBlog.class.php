@@ -25,44 +25,47 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  */
 
-/**
- * @author Thomas Reynolds <thomasr@infograph.com>
- * @package Papyrine
- * @subpackage Classes
- */
-
-class PapyrinePlugin
-{
 	/**
-	 * Our database connection.
+	 * Create a new category.
 	 *
-	 * @var mixed 
+	 * @param string $title The category's title.
+	 * @return integer
 	 */
-	protected $database;
-
-	/**
-	 * Constructor, sets up our table, database and empty array.
-	 *
-	 * @param string $table Database table to access.
-	 * @param mixed $database Reference for already opened database.
-	 * @uses Papyrine::connect
-	 */
-	function __construct () 
+	public function CreateCategory ($title)
 	{
-		$this->database = Papyrine::connect (
-			"PapyrinePlugin" . $papyrine->GetPluginID ($this) . ".db"
+		return PapyrineCategory::Create (
+			$this->database, 
+			$this->data["id"],
+			$title
 		);
 	}
 
 	/**
-	 * Destructor called when this object is done being used. Synchronizes
-	 * the object with the database if needed.
+	 * Get a category by id.
 	 *
-	 * @uses DB_common::disconnect
+	 * @param integer $id Category's unique id.
+	 * @return PapyrineCategory
 	 */
-	function __destruct () 
+	public function GetCategory ($id)
 	{
-		$this->database->disconnect ();
+		return new PapyrineCategory ($this->database, $this->id, $id);
+	}
+
+	/**
+	 * Create a new category for this blog.
+	 *
+	 * @param mixed $database Reference for already opened database.
+	 * @param string $title New category's title.
+	 * @return integer
+	 * @uses PapyrineCategory::Create
+	 */
+	public static function CreateCategory (&$database, $title)
+	{
+		return PapyrineCategory::Create (
+			$database, 
+			$this->id,
+			$title
+		);
 	}
 }
 

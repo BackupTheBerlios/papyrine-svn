@@ -39,93 +39,111 @@ class PapyrineCategory extends PapyrineObject
 	 *
 	 * @var string 
 	 */
-	const table = "papyrine_categories";
+	const TABLE = "papyrine_categories";
 
 	/**
 	 * PapyrineCategory constructor.
 	 *
 	 * @param integer $id Category's unique id.
 	 * @param mixed $database Reference for already opened database.
-	 * @uses PapyrineCategory::table
+	 * @uses PapyrineCategory::TABLE
 	 */
-	function __construct (&$database, $id) 
+	function __construct (&$database, $blog, $id) 
 	{
-		// Initial PapyrineObject.
-		parent::_construct ($database, self::table);
+		// Initialize PapyrineObject.
+		parent::_construct ($database, self::TABLE);
 
-		$this->id = $id;
+		// Set our unique id for when we actually need to fetch from the table.
+		$this->id = array
+			"blog" => $blog,
+			"id"   => $id
+		);
 	}
 
 	/**
-	 * Populate the object when we need it.
+	 * Populate the object's data store when needed.
 	 *
-	 * @uses PapyrineCategory::table
+	 * @uses PapyrineCategory::TABLE
+	 * @uses PapyrineObject::__get
 	 * @uses DB_common::getRow
 	 */
 	function __get ($var)
 	{
+		// If the data has not yet been fetched.
 		if (!$this->data)
 		{
+			// Query the database.
 			$this->data = $this->database->getRow (
-				" SELECT * FROM %s " .
-				" WHERE id = %s    " .
-				" LIMIT 1          " ,
+				" SELECT * FROM ! " .
+				" WHERE blog = ?  " .
+				" AND id = ?      " .
+				" LIMIT 1         " ,
 				array (
-					self::table,
-					$this->id
+					self::TABLE,
+					$this->id ["blog"],
+					$this->id ["id"]
 				),
 				DB_FETCHMODE_ASSOC
 			);
 		}
 
+		// Use the PapyrineObject's function to return the needed value.
 		return parent::__get ($var);
 	}
 
 	/**
-	 * Get an array of entries for this category.
+	 * Get an array of entries associated with this category.
 	 * 
+	 * @param integer $limit Maximum entries to be returned.
 	 * @return array
-	 * @uses PapyrineEntry::table
-	 * @uses PapyrineCategoryRelationship::table
+	 * @uses PapyrineEntry::TABLE
+	 * @uses PapyrineCategoryRelationship::TABLE
 	 */
-	public function GetEntries ($limit = 10)
+	public function GetEntries ($limit = false)
 	{
+		// Query the database.
 		$result = $this->database->query (
 			" SELECT !.id FROM !, !  " .
 			" WHERE !.category = ?   " .
 			" AND !.id = !.entry     " .
 			" ORDER BY !.created ASC " .
-			" LIMIT !                " ,
+			" !                      " ,
 			array (
-				PapyrineEntry::table,
-				PapyrineEntry::table,
-				PapyrineCategoryRelationship::table,
-				PapyrineCategoryRelationship::table,
+				PapyrineEntry::TABLE,
+				PapyrineEntry::TABLE,
+				PapyrineCategoryRelationship::TABLE,
+				PapyrineCategoryRelationship::TABLE,
 				$this->data["id"]
-				PapyrineEntry::table,
-				PapyrineCategoryRelationship::table,
-				PapyrineEntry::table,
-				$limit
+				PapyrineEntry::TABLE,
+				PapyrineCategoryRelationship::TABLE,
+				PapyrineEntry::TABLE,
+				($limit ? "LIMIT {$limit}" : "")
 			)
 		);
 
+		// Initialize an empty array.
 		$entries = array ();
-		while ($row =& $result->fetchRow ()) 
-			$entries[] = new PapyrineEntry ($this->database, $row ["id"]);
 
+		// For each entry, add an object for it to the output array.
+		while ($row =& $result->fetchRow ()) 
+			$entries [] = new PapyrineEntry ($this->database, $row ["id"]);
+
+		// Free the result now that we don't need it.
 		$result->free ();
 
+		// Return our output array.
 		return $entries;
 	}
 
 	/**
 	 * Create the database table. For Papyrine installation only.
 	 *
-	 * @param mixed $database Reference for already opened database.
-	 * @uses PapyrineCategory::table
+	 * @param mixed $database Reference for an already opened database.
+	 * @uses PapyrineCategory::TABLE
 	 */
 	public static function CreateTable (&$database)
 	{
+		// Query the database.
 		$result = $database->query (
 			"CREATE TABLE ! (                     " .
 			" id int(11) NOT NULL auto_increment, " .
@@ -135,12 +153,14 @@ class PapyrineCategory extends PapyrineObject
 			" FULLTEXT KEY body (title)           " .
 			") TYPE=MyISAM;                       " ,
 			array (
-				self::table
+				self::TABLE
 			)
 		);
 
+		// Free the unneeded result.
 		$result->free ();
 
+		// Return true/false depending on the success of the query.
 		return !DB::isError ($result);
 	}
 
@@ -151,7 +171,7 @@ class PapyrineCategory extends PapyrineObject
 	 * @param integer $blog Unique id of this blog.
 	 * @param string $title New category's title.
 	 * @return integer
-	 * @uses PapyrineCategory::table
+	 * @uses PapyrineCategory::TABLE
 	 */
 	public static function Create (&$database, $blog, $title)
 	{
@@ -161,36 +181,41 @@ class PapyrineCategory extends PapyrineObject
 			" blog = ?,        " .
 			" title = ?        " ,
 			array (
-				self::table,
+				self::TABLE,
 				$blog,
 				$title
 			)
 		);
 
+		// Free the unneeded result.
 		$result->free ();
 
+		// Return true/false depending on the success of the query.
 		return !DB::isError ($result);
 	}
 
 	/**
 	 * Delete the category.
 	 *
-	 * @uses PapyrineCategory::table
+	 * @uses PapyrineCategory::TABLE
 	 */
 	public function Delete ()
 	{
+		// Query the database.
 		$result = $this->database->query (
 			" DELETE FROM ! " .
 			" WHERE id = ?  " .
 			" LIMIT 1       " ,
 			array (
-				PapyrineCategory::table,
+				self::TABLE,
 				$this->data["id"]
 			)
 		);
 
+		// Free the unneeded result.
 		$result->free ();
 
+		// Return true/false depending on the success of the query.
 		return !DB::isError ($result);
 	}
 }

@@ -39,7 +39,7 @@ class PapyrineCategoryRelationship extends PapyrineObject
 	 *
 	 * @var string 
 	 */
-	const table = "papyrine_comment_relationships";
+	const TABLE = "papyrine_comment_relationships";
 
 	/**
 	 * PapyrineCategoryRelationship constructor.
@@ -47,12 +47,12 @@ class PapyrineCategoryRelationship extends PapyrineObject
 	 * @param integer $entry Entry's unique id.
 	 * @param integer $comment Entry's unique id.
 	 * @param mixed $database Reference for already opened database.
-	 * @uses PapyrineCategoryRelationship::table
+	 * @uses PapyrineCategoryRelationship::TABLE
 	 */
 	function __construct (&$database, $entry, $category) 
 	{
 		// Initial PapyrineObject.
-		parent::_construct ($database, self::table);
+		parent::_construct ($database, self::TABLE);
 
 		$this->id = array (
 			"entry"    => $entry,
@@ -76,7 +76,7 @@ class PapyrineCategoryRelationship extends PapyrineObject
 				" AND category = ? " .
 				" LIMIT 1          " ,
 				array (
-					self::table,
+					self::TABLE,
 					$this->id["entry"],
 					$this->id["category"]
 				),
@@ -112,7 +112,7 @@ class PapyrineCategoryRelationship extends PapyrineObject
 	 *
 	 * @param mixed $database Reference for already opened database.
 	 * @return boolean
-	 * @uses PapyrineCategoryRelationship::table
+	 * @uses PapyrineCategoryRelationship::TABLE
 	 * @uses DB::isError
 	 * @uses DB_common::query
 	 * @uses DB_result::free
@@ -125,7 +125,7 @@ class PapyrineCategoryRelationship extends PapyrineObject
 			" category int(11) NOT NULL " .
 			") TYPE=MyISAM;             " ,
 			array (
-				self::table
+				self::TABLE
 			)
 		);
 
@@ -141,7 +141,7 @@ class PapyrineCategoryRelationship extends PapyrineObject
 	 * @param integer $entry Unique id of the entry to relate to.
 	 * @param integer $category Unique id of the category to relate to.
 	 * @return boolean
-	 * @uses PapyrineCategoryRelationship::table
+	 * @uses PapyrineCategoryRelationship::TABLE
 	 * @uses DB::isError
 	 * @uses DB_common::query
 	 * @uses DB_result::free
@@ -154,7 +154,7 @@ class PapyrineCategoryRelationship extends PapyrineObject
 			" entry = ?,       " .
 			" category = ?     " ,
 			array (
-				self::table,
+				self::TABLE,
 				$entry,
 				$category
 			)
@@ -169,7 +169,7 @@ class PapyrineCategoryRelationship extends PapyrineObject
 	 * Delete the relationship.
 	 *
 	 * @return boolean
-	 * @uses PapyrineCategoryRelationship::table
+	 * @uses PapyrineCategoryRelationship::TABLE
 	 * @uses DB::isError
 	 * @uses DB_common::query
 	 * @uses DB_result::free
@@ -182,7 +182,7 @@ class PapyrineCategoryRelationship extends PapyrineObject
 			" AND category = ? " .
 			" LIMIT 1          " ,
 			array (
-				self::table,
+				self::TABLE,
 				$this->data["entry"],
 				$this->data["category"]
 			)

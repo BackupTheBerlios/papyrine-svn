@@ -1,0 +1,12 @@
+<?xml version='1.0' xmlns="plugin.rng">
+<plugin>
+	<name>Breadcrumb Plugin</name>
+	<description>A smarty function to display a breadcrumb.</description>
+	<version>0.1</version>
+	<author>
+		<name>Thomas Reynolds</name>
+		<email>thomasr@infograph.com</email>
+	</author>
+	<class>BreadcrumbPlugin.class.php</class>
+	<smarty>Smarty/</smarty>
+</plugin>

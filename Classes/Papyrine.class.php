@@ -131,14 +131,17 @@ class Papyrine extends Smarty
 	/**
 	 * Create a new category.
 	 *
+	 * @param string $blog The blog to create a category for.
 	 * @param string $title The category's title.
 	 * @return integer
+	 * @uses PapyrineBlog::CreateCategory
 	 */
-	public function CreateCategory ($title)
+	public function CreateCategory ($blog, $title)
 	{
-		return PapyrineCategory::Create (
-			$this->database, 
-			$this->data["id"],
+		$blog = new PapyrineBlog ($this->database, $blog);
+
+		return $blog->CreateCategory (
+			$this->database,
 			$title
 		);
 	}
@@ -146,12 +149,15 @@ class Papyrine extends Smarty
 	/**
 	 * Get a category by id.
 	 *
+	 * @param string $blog The blog to get a category for.
 	 * @param integer $id Category's unique id.
 	 * @return PapyrineCategory
 	 */
-	public function GetCategory ($id)
+	public function GetCategory ($blog, $id)
 	{
-		return new PapyrineCategory ($this->database, $id);
+		$blog = new PapyrineBlog ($this->database, $blog);
+
+		return $blog->GetCategory ($this->database, $id);
 	}
 
 	/**
@@ -227,7 +233,7 @@ class Papyrine extends Smarty
 	 * @param integer $limit Total number of entries to return.
 	 * @param integer $frontpage Should we show non-frontpage entries.
 	 * @return array
-	 * @uses PapyrineEntry::table
+	 * @uses PapyrineEntry::TABLE
 	 */
 	public function GetEntries ($status, $limit = 10, $frontpage = true)
 	{
@@ -237,7 +243,7 @@ class Papyrine extends Smarty
 			" %s                   " .
 			" ORDER BY created ASC " .
 			" LIMIT %s             " ,
-			PapyrineEntry::table,
+			PapyrineEntry::TABLE,
 			$this->data["id"],
 			($frontpage ? "AND onfrontpage = 1" : ""),
 			($status != 2 ? "AND status = {$status}" : ""),
@@ -294,7 +300,7 @@ class Papyrine extends Smarty
 	 * Get an array of text modifiers.
 	 *
 	 * @return array
-	 * @uses PapyrinePlugin::table
+	 * @uses PapyrinePlugin::TABLE
 	 */
 	private function GetModifiers ()
 	{
@@ -302,7 +308,7 @@ class Papyrine extends Smarty
 			" SELECT id, name FROM %s " .
 			" WHERE modifier = 1      " .
 			" ORDER BY name ASC       " ,
-			PapyrinePlugin::table)
+			PapyrinePlugin::TABLE)
 		);
 
 		$modifiers = array ();
@@ -316,7 +322,7 @@ class Papyrine extends Smarty
 	 * Get an array of feed syndicators.
 	 *
 	 * @return array
-	 * @uses PapyrinePlugin::table
+	 * @uses PapyrinePlugin::TABLE
 	 */
 	private function GetSyndicators ()
 	{
@@ -324,7 +330,7 @@ class Papyrine extends Smarty
 			" SELECT id FROM %s    " .
 			" WHERE syndicator = 1 " .
 			" ORDER BY name ASC    " ,
-			PapyrinePlugin::table)
+			PapyrinePlugin::TABLE)
 		);
 
 		$syndicators = array ();
@@ -421,6 +427,17 @@ class Papyrine extends Smarty
 		}
 
 		return true;
+	}
+
+	public static function GetFile ($url)
+	{
+		$snoopy = new Snoopy ();
+		$text = $snoopy->fetch ($url);
+
+		// create file (md5 the url for unique name?)
+		// save file
+
+		// return location
 	}
 }
 

@@ -53,7 +53,7 @@ class PapyrinePluginManager extends PapyrineObject
 			" smarty text NOT NULL,               " .
 			" templates text NOT NULL             " .
 			") TYPE=MyISAM;                       " ,
-			PapyrinePlugin::table)
+			PapyrinePlugin::TABLE)
 		);
 	}
 
@@ -72,7 +72,7 @@ class PapyrinePluginManager extends PapyrineObject
 			" syndicator = %s,  " .
 			" smarty = %s,      " .
 			" templates = %s    " .
-			PapyrinePlugin::table,
+			PapyrinePlugin::TABLE,
 			sqlite_escape_string ($name),
 			sqlite_escape_string ($description),
 			sqlite_escape_string ($version),
@@ -88,7 +88,7 @@ class PapyrinePluginManager extends PapyrineObject
 	/**
 	 * Populate the object when we need it.
 	 *
-	 * @uses PapyrineCategory::table
+	 * @uses PapyrineCategory::TABLE
 	 * @uses DB_common::getRow
 	 */
 	function __get ($var)
@@ -100,7 +100,7 @@ class PapyrinePluginManager extends PapyrineObject
 				" WHERE id = %s    " .
 				" LIMIT 1          " ,
 				array (
-					PapyrinePlugin::table,
+					PapyrinePlugin::TABLE,
 					$this->id
 				),
 				DB_FETCHMODE_ASSOC
@@ -114,7 +114,7 @@ class PapyrinePluginManager extends PapyrineObject
 	 * Delete the entry and decrement the entry comments counter.
 	 *
 	 * @return boolean
-	 * @uses PapyrinePlugin::table
+	 * @uses PapyrinePlugin::TABLE
 	 * @uses DB::isError
 	 * @uses DB_common::query
 	 * @uses DB_result::free
@@ -126,7 +126,7 @@ class PapyrinePluginManager extends PapyrineObject
 			" WHERE id = %s  " .
 			" LIMIT 1        " ,
 			array (
-				PapyrinePlugin::table,
+				PapyrinePlugin::TABLE,
 				$this->data["entry"]
 			)
 		);
@@ -143,7 +143,7 @@ class PapyrinePluginManager extends PapyrineObject
 			" WHERE class_name = ? " .
 			" LIMIT 1              " ,
 			array (
-				PapyrinePlugin::table,
+				PapyrinePlugin::TABLE,
 				get_class ($object)
 			)
 		);

@@ -39,19 +39,19 @@ class PapyrineEntry extends PapyrineObject
 	 *
 	 * @var string 
 	 */
-	const table = "papyrine_entries";
+	const TABLE = "papyrine_entries";
 
 	/**
 	 * PapyrineEntry constructor.
 	 *
 	 * @param integer|string $id Entry's unique id.
 	 * @param mixed $database Reference for already opened database.
-	 * @uses PapyrineEntry::table
+	 * @uses PapyrineEntry::TABLE
 	 */
 	function __construct (&$database, $id) 
 	{
 		// Initial PapyrineObject.
-		parent::_construct ($database, self::table);
+		parent::_construct ($database, self::TABLE);
 
 		$this->id = $id;
 	}
@@ -59,7 +59,7 @@ class PapyrineEntry extends PapyrineObject
 	/**
 	 * Populate the object when we need it.
 	 *
-	 * @uses PapyrineEntry::table
+	 * @uses PapyrineEntry::TABLE
 	 * @uses DB_result::getRow
 	 */
 	function __get ($var)
@@ -71,7 +71,7 @@ class PapyrineEntry extends PapyrineObject
 				" WHERE id = ?    " .
 				" LIMIT 1         " ,
 				array (
-					self::table,
+					self::TABLE,
 					$this->id
 				),
 				DB_FETCHMODE_ASSOC
@@ -125,7 +125,7 @@ class PapyrineEntry extends PapyrineObject
 	 * Get an array of comments for this entry.
 	 * 
 	 * @return array
-	 * @uses PapyrineComment::table
+	 * @uses PapyrineComment::TABLE
 	 * @uses DB_common::query
 	 * @uses DB_result::fetchRow
 	 * @uses DB_result::free
@@ -137,7 +137,7 @@ class PapyrineEntry extends PapyrineObject
 			" WHERE entry = ?      " .
 			" ORDER BY created ASC " ,
 			array (
-				PapyrineComment::table,
+				PapyrineComment::TABLE,
 				$this->data["id"]
 			)
 		);
@@ -192,8 +192,8 @@ class PapyrineEntry extends PapyrineObject
 	 * Get an array of categories for this entry.
 	 *
 	 * @return array
-	 * @uses PapyrineCategory::table
-	 * @uses PapyrineCategoryRelationship::table
+	 * @uses PapyrineCategory::TABLE
+	 * @uses PapyrineCategoryRelationship::TABLE
 	 * @uses DB_common::query
 	 * @uses DB_result::fetchRow
 	 * @uses DB_result::free
@@ -206,14 +206,14 @@ class PapyrineEntry extends PapyrineObject
 			" AND !.entry = ?             " .
 			" ORDER BY !.title ASC        " ,
 			array (
-				PapyrineCategoryRelationship::table,
-				PapyrineCategoryRelationship::table,
-				PapyrineCategory::table,
-				PapyrineCategory::table,
-				PapyrineCategoryRelationship::table,
-				PapyrineCategoryRelationship::table,
+				PapyrineCategoryRelationship::TABLE,
+				PapyrineCategoryRelationship::TABLE,
+				PapyrineCategory::TABLE,
+				PapyrineCategory::TABLE,
+				PapyrineCategoryRelationship::TABLE,
+				PapyrineCategoryRelationship::TABLE,
 				$this->data["id"],
-				PapyrineCategory::table
+				PapyrineCategory::TABLE
 			)
 		);
 
@@ -233,6 +233,7 @@ class PapyrineEntry extends PapyrineObject
 	 * Get the entry immediatly after this one.
 	 *
 	 * @return PapyrineEntry
+	 * @uses PapyrineEntry::TABLE
 	 * @uses DB_common::getOne
 	 */
 	public function GetNext ()
@@ -245,7 +246,7 @@ class PapyrineEntry extends PapyrineObject
 		       " LIMIT 1              " ;
 
 		$params = array (
-			self::table,
+			self::TABLE,
 			$this->data["blog"],
 			$this->data["status"],
 			$this->data["created"]
@@ -259,6 +260,7 @@ class PapyrineEntry extends PapyrineObject
 	 * Get the entry immediatly before this one.
 	 *
 	 * @return PapyrineEntry
+	 * @uses PapyrineEntry::TABLE
 	 * @uses DB_common::getOne
 	 */
 	public function GetPrevious ()
@@ -271,7 +273,7 @@ class PapyrineEntry extends PapyrineObject
 		       " LIMIT 1               " ;
 
 		$params = array (
-			PapyrineEntry::table,
+			self::TABLE,
 			$this->data["blog"],
 			$this->data["status"],
 			$this->data["created"]
@@ -286,7 +288,7 @@ class PapyrineEntry extends PapyrineObject
 	 *
 	 * @param mixed $database Reference for already opened database.
 	 * @return boolean
-	 * @uses PapyrineEntry::table
+	 * @uses PapyrineEntry::TABLE
 	 * @uses DB::isError
 	 * @uses DB_common::query
 	 * @uses DB_result::free
@@ -313,7 +315,7 @@ class PapyrineEntry extends PapyrineObject
 			" FULLTEXT KEY body (body)               " .
 			") TYPE=MyISAM;                          " ,
 			array (
-				self::table
+				self::TABLE
 			)
 		);
 
@@ -336,7 +338,7 @@ class PapyrineEntry extends PapyrineObject
 	 * @param integer $allowcomments Should commenting be allowed.
 	 * @param string $autodisable Timestamp to disable comments at.
 	 * @return boolean
-	 * @uses PapyrineEntry::table
+	 * @uses PapyrineEntry::TABLE
 	 * @uses DB::isError
 	 * @uses DB_common::query
 	 * @uses DB_common::quoteSmart
@@ -361,7 +363,7 @@ class PapyrineEntry extends PapyrineObject
 			" created = NOW(),   " .
 			" modified = NOW()   " ,
 			array (
-				self::table,
+				self::TABLE,
 				$blog,
 				$title,
 				$summary,
@@ -383,7 +385,7 @@ class PapyrineEntry extends PapyrineObject
 	 * Delete the entry.
 	 *
 	 * @return boolean
-	 * @uses PapyrineEntry::table
+	 * @uses PapyrineEntry::TABLE
 	 * @uses DB::isError
 	 * @uses DB_common::query
 	 * @uses DB_result::free
@@ -395,7 +397,7 @@ class PapyrineEntry extends PapyrineObject
 			" WHERE id = ?  " .
 			" LIMIT 1       " ,
 			array (
-				PapyrineEntry::table,
+				self::TABLE,
 				$this->data["id"]
 			)
 		);

@@ -4,14 +4,6 @@
 		<element name="name">
 			<text />
 		</element>
-		<zeroOrMore>
-			<element name="description">
-				<text />
-			</element>
-			<element name="website">
-				<text />
-			</element>
-		</zeroOrMore>
 		<element name="version">
 			<text />
 		</element>
@@ -29,26 +21,19 @@
 				<boolean />
 			</attribute>
 		</element>
-		<zeroOrMore>
-			<element name="smarty">
-				<text />
-				<attribute name="provided">
-					<boolean />
-				</attribute>
-			</element>
-			<element name="templates">
-				<attribute name="location">
-					<text />
-				</attribute>
-				<zeroOrMore>
-					<element name="feed_recent">
-						<text />
-					</element>
-					<element name="feed_category">
-						<text />
-					</element>
-				</zeroOrMore>
-			</element>
-		</zeroOrMore>
-	<oneOrMore>
+	</oneOrMore>
+	<zeroOrMore>
+		<element name="description">
+			<text />
+		</element>
+		<element name="website">
+			<text />
+		</element>
+		<element name="smarty">
+			<text />
+			<attribute name="provided">
+				<boolean />
+			</attribute>
+		</element>
+	</zeroOrMore>
 </element>
