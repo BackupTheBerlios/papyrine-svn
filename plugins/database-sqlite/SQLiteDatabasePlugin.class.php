@@ -24,11 +24,6 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  */
 
-/**
- * @author Thomas Reynolds <thomasr@infograph.com>
- * @package Papyrine
- * @subpackage SQLiteDatabasePlugin
- */
 class SQLiteDatabasePlugin implements PapyrineDatabase
 {
 	/**
@@ -40,10 +35,13 @@ class SQLiteDatabasePlugin implements PapyrineDatabase
 
 	function __construct ()
 	{
-		global $papyrine;
+		$this->connection =& new SQLiteDatabase (
+			Papyrine::getFile ("papyrine.sqlite")
+		);
+	}
 
-		$this->connection =& new SQLiteDatabase ("/var/www/localhost/htdocs/papyrine/data/papyrine.sqlite"); 
-
+	public static function install ()
+	{
 		// If first run
 		$this->Blog_CreateTable ();
 		$this->Category_CreateTable ();

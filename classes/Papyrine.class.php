@@ -41,12 +41,18 @@ final class Papyrine
 	 */
 	private $_hooks = array ();
 	private $_smarty = false;
+
 	public $database;
 
 	function __construct ()
 	{
 		// Choose DB from config
-		$this->database =& new SQLiteDatabase;
+		$this->database =& new SQLiteDatabasePlugin;
+	}
+
+	public static function getFile ($file)
+	{
+		return "/var/www/localhost/htdocs/papyrine/data/" . $file;
 	}
 
 	public function RegisterHook ($hook, $function, $object = false)

@@ -5,5 +5,6 @@ RewriteRule		^$ 			/papyrine/libraries/index.php?route=frontpage
 
 
 RewriteRule		^admin(.?)$ /papyrine/libraries/index.php?route=admin
-RewriteRule		^admin/post(.?)$ /papyrine/libraries/index.php?route=post
+RewriteRule		^admin/post(.?)$ /papyrine/libraries/index.php?route=admin_post
 RewriteRule		^admin/users(.?)$ /papyrine/libraries/index.php?route=admin_users
+RewriteRule		^admin/plugins(.?)$ /papyrine/libraries/index.php?route=admin_plugins

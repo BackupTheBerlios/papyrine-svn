@@ -1,0 +1,12 @@
+<?xml version='1.0' xmlns="plugin.rng">
+<plugin>
+	<name>SQLite Database Plugin</name>
+	<description>Support the sqlite db.</description>
+	<version>0.1</version>
+	<author>
+		<name>Thomas Reynolds</name>
+		<email>thomasr@infograph.com</email>
+	</author>
+	<class>SQLiteDatabasePlugin.class.php</class>
+	<provides type="database" />
+</plugin>

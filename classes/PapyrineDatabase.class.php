@@ -26,19 +26,17 @@
  */
 
 /**
- * @author Thomas Reynolds <thomasr@infograph.com>
- * @package Papyrine
- * @subpackage Classes
+ * PapyrineDatabase interface.
  */
-
 interface PapyrineDatabase
 {
-	public function GetBlog (integer $id);
-	public function GetUser (integer $id);
-	public function CreateBlog (string $title);
+	/*public function GetBlog ($id);
+	public function GetUser ($id);
+	public function GetUsers ($as_array);
+	public function CreateBlog ($title);
 	public function CreateUser ($password, $firstname, $lastname, $email);
-	public function Import (string $file);
-	public function Export ();
+	public function Import ($file);
+	public function Export ();*/
 }
 
 ?>

@@ -59,8 +59,12 @@
 			$papyrine->display ('admin/admin.html');
         	break;
 
-		case "post":
+		case "admin_post":
 			$papyrine->display ('admin/post.html');
+        	break;
+
+		case "admin_plugins":
+			$papyrine->display ('admin/plugins.html');
         	break;
 
 		case "admin_users":
