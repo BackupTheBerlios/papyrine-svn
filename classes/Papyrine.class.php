@@ -26,28 +26,21 @@
  */
 
 /**
- * Autoload classes as needed.
- */
-function __autoload ($class)
-{
-	require_once ($class . ".class.php");
-}
-
-/**
  * The central Papyrine object, hands database initialization.
  *
  * @author Thomas Reynolds <thomasr@infograph.com>
  * @package Papyrine
  * @subpackage Classes
  */
-class Papyrine extends Smarty
+class Papyrine
 {
 	/**
 	 * An array of registered hooks.
 	 *
 	 * @var array 
 	 */
-	private $hooks = array ();
+	private $_hooks = array ();
+	private $_smarty = false;
 
 	/**
 	 * If we are going to use smarty, set it up.
@@ -55,45 +48,38 @@ class Papyrine extends Smarty
 	 * @uses PapyrinePlugins::GetSmartyLocations
 	 * @uses PapyrinePlugins::GetTemplateLocations
 	 */
-	public function InitializeSmarty ()
+	private function _InitializeSmarty ()
 	{
-		if (!$this->smarty)
-		{
-			parent:__construct ();
+		$this->_smarty = new Smarty;
 
-			// Make loaded plugins visible.
-			$this->plugins_dir  = array_push (
-				PapyrinePlugins::GetSmartyLocations (), 
-				"Papyrine_plugins/", 
-				"core/", 
-				"plugins/"
-			);
+		// Make loaded plugins visible.
+		$this->_smarty->plugins_dir  = array (
+			"/var/www/localhost/htdocs/papyrine/libraries/smarty_plugins/", 
+			"/var/www/localhost/htdocs/papyrine/libraries/smarty/core/", 
+			"/var/www/localhost/htdocs/papyrine/libraries/smarty/plugins/"
+		);
 
-			// Make loaded plugins visible.
-			$this->template_dir  = array_push (
-				PapyrinePlugins::GetTemplateLocations (), 
-				"Templates/"
-			);
+		// Make loaded plugins visible.
+		$this->_smarty->template_dir  = array (
+			"/var/www/localhost/htdocs/papyrine/templates/default/",
+			"/var/www/localhost/htdocs/papyrine/templates/admin/"
+		);
 
-			$this->compile_dir  = "Data/Compiled/";
-			$this->assign ('database', $this->database);
-			$this->assign ('system', array (
-				'url'     => '',
-				'name'    => 'Papyrine',
-				'version' => 0.1)
-			);
-		}
+		$this->_smarty->compile_dir  = "/var/www/localhost/htdocs/papyrine/data/compiled_templates/";
+		$this->_smarty->assign ('database', $this->database);
+		$this->_smarty->assign ('system', array (
+			'url'     => '',
+			'name'    => 'Papyrine',
+			'version' => 0.1)
+		);
 	}
 
-	public function GetQuery ($ident, $params)
+	public function display ($template)
 	{		
-		return Papyrine::ExecuteHooks (
-			"on_query_fetch", 
-			array (
-				"ident"  => $ident,
-				"params" => $params
-			)
-		);
+		if (!$this->_smarty)
+			$this->_InitializeSmarty ();
+
+		$this->_smarty->display ($template);
 	}
 
 	/**

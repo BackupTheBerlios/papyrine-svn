@@ -1,14 +1,14 @@
-{papyrine_getblog assign="blog"}
+{*papyrine_getblog assign="blog"*}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="Content-Type" content="application/xhtml+xml" />
 	<title>{$blog.title}</title>
 	<link rel="stylesheet" type="text/css" href="style.css" />
-{papyrine_getsyndicators type="recent" assign="syndicators"}
+{*papyrine_getsyndicators type="recent" assign="syndicators"}
 {foreach from=$syndicators item="syndicator"}
 	<link rel="alternate" type="{$syndicator.mime-type}" title="{$syndicator.title}" href="{$syndicator.url}" />
-{/foreach{
+{/foreach*}
 </head>
 <body>
     <div id="banner">
@@ -17,7 +17,7 @@
     </div>
     <div id="content">
         <div class="blog">
-{papyrine_getentries assign="entries" frontpage=true limit=10}
+{*papyrine_getentries assign="entries" frontpage=true limit=10}
 {foreach from=$entries item="entry"}
   {if $entry.newday}
             <h2 class="date">{$entry.posttime|date_format:s2}</h2>
@@ -34,14 +34,14 @@
 
 				&#8226; <a href="{$entry.url}">{$entry.comments} Comments/Trackbacks</a></div>
             </div>
-{/foreach}
+{/foreach*}
         </div>
     </div>
     <div id="links">
         <div class="sidetitle">Sections</div>
         <div class="side">
 
-{papyrine_getcategories assign="categories"}
+{*papyrine_getcategories assign="categories"}
 {foreach from=$categories item="category"}
 			<a href="{$category.url}">{$category.title}</a><br />
 {/foreach}
@@ -71,7 +71,7 @@
 {allconsuming_getlinks assign="links"}
 {foreach from=$links item="link"}
 			<a href="{$link.url}">{$link.title}</a><br />
-{/foreach}
+{/foreach*}
 
         </div>
         <div class="syndicate">

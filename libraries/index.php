@@ -1,57 +1,62 @@
 <?php
 
-	require_once ('Classes/Papyrine.class.php');
+	/**
+	 * Autoload classes as needed.
+	 * FIXME: Much better loading code!
+	 */
+	function __autoload ($class)
+	{
+		ini_set ("include_path", "." . join (array (
+			'/var/www/localhost/htdocs/papyrine/libraries/',
+			'/var/www/localhost/htdocs/papyrine/libraries/smarty/',
+			'/var/www/localhost/htdocs/papyrine/classes/'
+			), ":")
+		);
 
-	$smarty = new Papyrine;
+		require_once ($class . '.class.php');
+	}
+
+	$papyrine = new Papyrine;
 
 	switch ($_REQUEST["route"]) 
 	{
 		case "archive_individual":
-			$smarty->display ('archive_individual.html');
+			$papyrine->display ('archive_individual.html');
         	break;
 		case "archive_daily":
-			$smarty->display ('archive_daily.html');
+			$papyrine->display ('archive_daily.html');
         	break;
 		case "archive_monthly":
-			$smarty->display ('archive_monthly.html');
+			$papyrine->display ('archive_monthly.html');
         	break;
 		case "archive_yearly":
-			$smarty->display ('archive_yearly.html');
+			$papyrine->display ('archive_yearly.html');
         	break;
 		case "xmlrpc":
-			$smarty->display ('xmlrpc.html');
+			$papyrine->display ('xmlrpc.html');
         	break;
 
 		case "category":
-			$smarty->display ('category.html');
+			$papyrine->display ('category.html');
         	break;
 
 		case "feed_recent":
 			$syndicator = handle_feed_template ($_REQUEST ["version"]);
-			$smarty->display ($syndicator->GetRecentFeedTemplate ());
+			$papyrine->display ($syndicator->GetRecentFeedTemplate ());
         	break;
 		case "feed_category":
 			$syndicator = handle_feed_template ($_REQUEST ["version"]);
-			$smarty->display ($syndicator->GetCategoryFeedTemplate ());
+			$papyrine->display ($syndicator->GetCategoryFeedTemplate ());
+        	break;
+
+		case "admin":
+			$papyrine->display ('admin.html');
         	break;
 
 		case "frontpage":
 		default:
-			$smarty->display ('frontpage.html');
+			$papyrine->display ('frontpage.html');
 			break;
-	}
-
-	function handle_feed_template ($type)
-	{
-		if ($syndicator = $smarty->GetSyndicator ($type))
-		{
-			$last_modified = gmdate ("D, d M Y H:i:s \G\M\T", C_LAST_MODIFIED);
-			header ("Last-Modified: " . $last_modified, true);
-			header ("Etag: " . md5($last_modified),     true);
-			header ("Content-Type: " . $syndicator->mime-type, true);
-
-			return $syndicator;
-		}
 	}
 
 ?>
