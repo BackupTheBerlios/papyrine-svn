@@ -49,6 +49,13 @@ class Papyrine extends Smarty
 	 */
 	private $database_con = false;
 
+	/**
+	 * An array of registered hooks.
+	 *
+	 * @var array 
+	 */
+	private $hooks = array ();
+
    	/**
    	 * The class destructor, closes the database connection if open.
    	 */
@@ -380,26 +387,38 @@ class Papyrine extends Smarty
 			Papyrine::RecurseNodes ($subnode, $string, $array);
 	}
 
-	public static function RegisterHook ($hook, $function)
+	public function GetPluginID ($object)
 	{
-		global $papyrine_hooks;
-
-		if (!isset ($papyrine_hooks))
-			$papyrine_hooks = array ();
-
-		// See if the function has already been registered for this hook.
-		if (in_array ($function, $papyrine_hooks [$hook]))
-			return false;
-
-		$papyrine_hooks [$hook] [] = $function;
+		return PapyrinePluginManager::GetID ($this->database, $object);
 	}
 
-	public static function ExecuteHooks ($hook)
+	public function RegisterHook ($hook, $function, $object = false)
 	{
-		global $papyrine_hooks;
+		// See if the function has already been registered for this hook.
+		if (in_array ($function, $this->hooks [$hook]))
+			return false;
 
-		foreach ($papyrine_hooks [$hook] as $function)
-			if (!$function()) return false;
+		$this->hooks [$hook] [] = array (
+			"object"   => $object,
+			"function" => $function
+		);
+	}
+
+	public function ExecuteHooks ($hook_id, &$params)
+	{
+		foreach ($this->hooks [$hook_id] as $hook)
+		{
+			if ($hook ["object"])
+			{
+				if (!$hook ["object"]->$hook ["function"] ($params))
+					return false;
+			}
+			else
+			{
+				if (!$hook ["function"] ($params))
+					return false;
+			}
+		}
 
 		return true;
 	}

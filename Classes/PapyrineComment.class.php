@@ -143,7 +143,14 @@ class PapyrineComment extends PapyrineObject
 	public static function Create (&$database, $entry, $body, $owner_name, 
 	                               $owner_email)
 	{
-		if (!Papyrine::ExecuteHooks ("on_comment_post"))
+		$params = array (
+			"entry" => $entry,
+			"body"  => $body,
+			"name"  => $owner_name,
+			"email" => $owner_email
+		);
+
+		if (!Papyrine::ExecuteHooks ("on_comment_post", $params))
 			return false;
 
 		// Generate the query and insert into the database.

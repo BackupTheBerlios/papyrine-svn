@@ -30,127 +30,40 @@
  * @package Papyrine
  * @subpackage Classes
  */
-class PapyrinePlugin extends PapyrineObject
+
+class PapyrinePlugin
 {
 	/**
-	 * Name of the database table to map this object to.
+	 * Our database connection.
 	 *
-	 * @var string 
+	 * @var mixed 
 	 */
-	const table = "papyrine_plugins";
+	protected $database;
 
 	/**
-	 * PapyrinePlugin constructor.
+	 * Constructor, sets up our table, database and empty array.
 	 *
-	 * @param integer $id Plugin's unique id.
+	 * @param string $table Database table to access.
 	 * @param mixed $database Reference for already opened database.
-	 * @uses PapyrinePlugin::table
 	 */
-	function __construct (&$database, $id) 
+	function __construct () 
 	{
-		// Initial PapyrineObject.
-		parent::_construct ($database, PapyrinePlugin::table);
-
-		$this->id = $id;
-	}
-
-		//$this->database =& Papyrine::connect ("file");
-
-	/**
-	 * Populate the object when we need it.
-	 *
-	 * @uses PapyrineCategory::table
-	 * @uses DB_common::getRow
-	 */
-	function __get ($var)
-	{
-		if (!$this->data)
-		{
-			$this->data = $this->database->getRow (
-				" SELECT * FROM %s " .
-				" WHERE id = %s    " .
-				" LIMIT 1          " ,
-				array (
-					PapyrinePlugin::table,
-					$this->id
-				),
-				DB_FETCHMODE_ASSOC
-			);
-		}
-
-		return parent::__get ($var);
-	}
-
-	public static function CreateTable (&$database)
-	{
-		sqlite_query ($database, sprintf (
-			"CREATE TABLE %s (                    " .
-			" id int(11) NOT NULL auto_increment, " .
-			" name text NOT NULL,                 " .
-			" description text NOT NULL,          " .
-			" version text NOT NULL,              " .
-			" class text NOT NULL,                " .
-			" modifier int(11) NOT NULL,          " .
-			" syndicator int(11) NOT NULL,        " .
-			" smarty text NOT NULL,               " .
-			" templates text NOT NULL             " .
-			") TYPE=MyISAM;                       " ,
-			PapyrinePlugin::table)
-		);
-	}
-
-	public static function Create (&$database, $name, $description, $version,
-	                               $smarty = false, $templates = false, 
-	                               $modifier = false, $syndicator = false)
-	{
-		// Generate the query and insert into the database.
-		return sqlite_query ($database, sprintf (
-			"INSERT INTO %s SET " .
-			" name = %s,        " .
-			" description = %s, " .
-			" version = %s,     " .
-			" class = %s,       " .
-			" modifier = %s,    " .
-			" syndicator = %s,  " .
-			" smarty = %s,      " .
-			" templates = %s    " .
-			PapyrinePlugin::table,
-			sqlite_escape_string ($name),
-			sqlite_escape_string ($description),
-			sqlite_escape_string ($version),
-			sqlite_escape_string ($class),
-			($modifier   ? 1 : 0),
-			($syndicator ? 1 : 0),
-			($smarty     ? sqlite_escape_string ($smarty)    : ""),
-			($templates  ? sqlite_escape_string ($templates) : ""),
-			($modifiers  ? sqlite_escape_string ($modifiers) : "")
+		$this->database = Papyrine::connect (
+			"PapyrinePlugin" . $papyrine->GetPluginID ($this) . ".db"
 		);
 	}
 
 	/**
-	 * Delete the entry and decrement the entry comments counter.
+	 * Destructor called when this object is done being used. Synchronizes
+	 * the object with the database if needed.
 	 *
-	 * @return boolean
-	 * @uses PapyrinePlugin::table
-	 * @uses DB::isError
 	 * @uses DB_common::query
+	 * @uses DB_common::quoteSmart
 	 * @uses DB_result::free
 	 */
-	public function Delete ()
+	function __destruct () 
 	{
-		$result = $this->database->query (
-			" DELETE FROM %s " .
-			" WHERE id = %s  " .
-			" LIMIT 1        " ,
-			array (
-				PapyrinePlugin::table,
-				$this->data["entry"]
-			)
-		);
-
-		$result->free ();
-
-		return !DB::isError ($result);
+		$this->database->disconnect ();
 	}
 }
 

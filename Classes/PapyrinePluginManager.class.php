@@ -30,8 +30,130 @@
  * @package Papyrine
  * @subpackage Classes
  */
-class PapyrinePluginManager
+class PapyrinePluginManager extends PapyrineObject
 {
+	/**
+	 * Name of the database table to map this object to.
+	 *
+	 * @var string 
+	 */
+	const TABLE = "papyrine_plugins";
+
+	public static function CreateTable (&$database)
+	{
+		sqlite_query ($database, sprintf (
+			"CREATE TABLE %s (                    " .
+			" id int(11) NOT NULL auto_increment, " .
+			" name text NOT NULL,                 " .
+			" description text NOT NULL,          " .
+			" version text NOT NULL,              " .
+			" class text NOT NULL,                " .
+			" modifier int(11) NOT NULL,          " .
+			" syndicator int(11) NOT NULL,        " .
+			" smarty text NOT NULL,               " .
+			" templates text NOT NULL             " .
+			") TYPE=MyISAM;                       " ,
+			PapyrinePlugin::table)
+		);
+	}
+
+	public static function Create (&$database, $name, $description, $version,
+	                               $smarty = false, $templates = false, 
+	                               $modifier = false, $syndicator = false)
+	{
+		// Generate the query and insert into the database.
+		return sqlite_query ($database, sprintf (
+			"INSERT INTO %s SET " .
+			" name = %s,        " .
+			" description = %s, " .
+			" version = %s,     " .
+			" class = %s,       " .
+			" modifier = %s,    " .
+			" syndicator = %s,  " .
+			" smarty = %s,      " .
+			" templates = %s    " .
+			PapyrinePlugin::table,
+			sqlite_escape_string ($name),
+			sqlite_escape_string ($description),
+			sqlite_escape_string ($version),
+			sqlite_escape_string ($class),
+			($modifier   ? 1 : 0),
+			($syndicator ? 1 : 0),
+			($smarty     ? sqlite_escape_string ($smarty)    : ""),
+			($templates  ? sqlite_escape_string ($templates) : ""),
+			($modifiers  ? sqlite_escape_string ($modifiers) : "")
+		);
+	}
+
+	/**
+	 * Populate the object when we need it.
+	 *
+	 * @uses PapyrineCategory::table
+	 * @uses DB_common::getRow
+	 */
+	function __get ($var)
+	{
+		if (!$this->data)
+		{
+			$this->data = $this->database->getRow (
+				" SELECT * FROM %s " .
+				" WHERE id = %s    " .
+				" LIMIT 1          " ,
+				array (
+					PapyrinePlugin::table,
+					$this->id
+				),
+				DB_FETCHMODE_ASSOC
+			);
+		}
+
+		return parent::__get ($var);
+	}
+
+	/**
+	 * Delete the entry and decrement the entry comments counter.
+	 *
+	 * @return boolean
+	 * @uses PapyrinePlugin::table
+	 * @uses DB::isError
+	 * @uses DB_common::query
+	 * @uses DB_result::free
+	 */
+	public function Delete ()
+	{
+		$result = $this->database->query (
+			" DELETE FROM %s " .
+			" WHERE id = %s  " .
+			" LIMIT 1        " ,
+			array (
+				PapyrinePlugin::table,
+				$this->data["entry"]
+			)
+		);
+
+		$result->free ();
+
+		return !DB::isError ($result);
+	}
+
+	public static function GetID (&$database, $object)
+	{
+		$result = $database->getOne (
+			" SELECT id FROM !     " .
+			" WHERE class_name = ? " .
+			" LIMIT 1              " ,
+			array (
+				PapyrinePlugin::table,
+				get_class ($object)
+			)
+		);
+
+		if (DB::isError ($result))
+			return false;
+		else
+			return $result;
+	}
+
 	public static function Install (&$database, $file)
 	{
 		$directory = $this->DecompressPlugin ($file);

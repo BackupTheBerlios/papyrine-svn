@@ -10,5 +10,4 @@
 	</author>
 	<class>AllConsumingPlugin.class.php</class>
 	<smarty>Smarty/</smarty>
-	<option id="username">JediJawa</option>
 </plugin>

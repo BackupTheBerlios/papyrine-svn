@@ -1,51 +1,56 @@
 <?php
 
+/**
+ * GoogleRedirectPlugin adds a PageRank stripper to Papyrine.
+ * Copyright (C) 2004 Thomas Reynolds
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @package Papyrine
+ * @subpackage Plugins
+ * @author Thomas Reynolds <thomasr@infograph.com>
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+ */
+
+/**
+ * @author Thomas Reynolds <thomasr@infograph.com>
+ * @package Papyrine
+ * @subpackage Plugins
+ */
+class GoogleRedirectPlugin extends PapyrinePlugin
+{
 	/**
-	 * GoogleRedirectPlugin adds a PageRank stripper to Papyrine.
-	 * Copyright (C) 2004 Thomas Reynolds
-	 * 
-	 * This program is free software; you can redistribute it and/or
-	 * modify it under the terms of the GNU General Public License
-	 * as published by the Free Software Foundation; either version 2
-	 * of the License, or (at your option) any later version.
-	 * 
-	 * This program is distributed in the hope that it will be useful,
-	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
-	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	 * GNU General Public License for more details.
-	 * 
-	 * You should have received a copy of the GNU General Public License
-	 * along with this program; if not, write to the Free Software
-	 * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+	 * The URL we will redirect all of out comment links through.
 	 *
-	 * @package Papyrine
-	 * @subpackage Plugins
-	 * @author Thomas Reynolds <thomasr@infograph.com>
-	 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+	 * @var string 
 	 */
+	const REDIRECT_URL = "http://www.google.com/url?sa=D&q=%s";
 
-	/**
-	 * @author Thomas Reynolds <thomasr@infograph.com>
-	 * @package Papyrine
-	 * @subpackage Plugins
-	 */
-	class GoogleRedirectPlugin extends PapyrinePlugin
+	function __construct ()
 	{
-		const GoogleRedirectURL = "http://www.google.com/url?sa=D&q=%s";
+		parent::__construct ();
 
-		function __construct ()
-		{
-			parent::__construct ("about.xml");
-
-			Papyrine::RegisterHook ("on_url_modify", 
-			                        "GoogleRedirectPlugin::StripPageRank");
-		}
-
-		public static function StripPageRank ($params)
-		{
-			return sprintf (self::GoogleRedirectURL, 
-			                urlencode ($params ["url"]));
-		}
+		$GLOBALS ["papyrine"]->RegisterHook ("comment_display_url", 
+		                                     "StripPageRank",
+		                                     $this);
 	}
+
+	public function StripPageRank (&$params)
+	{
+		return sprintf (self::REDIRECT_URL, urlencode ($params ["url"]));
+	}
+}
 
 ?>
