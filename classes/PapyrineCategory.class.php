@@ -46,7 +46,7 @@ abstract class PapyrineCategory
 	abstract public function GetEntries (integer $limit = false);
 
 	// Functions to set information.
-	abstract public function SetTitle (integer $title);
+	abstract public function SetTitle (string $title);
 	abstract public function SetBlog (integer $blog);
 
 	// Functions to delete.

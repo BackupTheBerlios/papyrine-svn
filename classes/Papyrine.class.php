@@ -47,9 +47,6 @@ final class Papyrine
 	{
 		// Choose DB from config
 
-		// FIXME: Hardwired SQLite
-		require_once '/var/www/localhost/htdocs/papyrine/plugins/database-sqlite/SQLitePapyrineBlog.class.php';
-		require_once '/var/www/localhost/htdocs/papyrine/plugins/database-sqlite/SQLiteDatabasePlugin.class.php';
 		$this->database = new SQLiteDatabasePlugin;
 	}
 

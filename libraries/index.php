@@ -13,7 +13,8 @@
 		ini_set ("include_path", "." . join (array (
 			'/var/www/localhost/htdocs/papyrine/libraries/',
 			'/var/www/localhost/htdocs/papyrine/libraries/smarty/',
-			'/var/www/localhost/htdocs/papyrine/classes/'
+			'/var/www/localhost/htdocs/papyrine/classes/',
+			'/var/www/localhost/htdocs/papyrine/plugins/database-sqlite/'
 			), ":")
 		);
 
