@@ -159,6 +159,25 @@ class SQLitePapyrineUser implements PapyrineUser
 		return $this->__set ("email", $email);
 	}
 
+	public static function Authenticate ($id, $password)
+	{
+		global $papyrine;
+
+		$sql = sprintf (
+			" SELECT COUNT(*) AS num " .
+			" FROM %s                " .
+			" WHERE id = %s          " .
+			" AND password = %s      " ,
+			self::TABLE,
+			$id,
+			$password
+		);
+
+		$result = $papyrine->database->connection->query ($sql);
+
+		return (sqlite_fetch_single ($result) > 0);
+	}
+
 	/**
 	 * Delete the blog.
 	 */

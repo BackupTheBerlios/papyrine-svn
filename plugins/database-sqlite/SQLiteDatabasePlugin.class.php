@@ -29,7 +29,7 @@
  * @package Papyrine
  * @subpackage SQLiteDatabasePlugin
  */
-class SQLiteDatabasePlugin implements PapyrineDatabasePlugin
+class SQLiteDatabasePlugin implements PapyrineDatabase
 {
 	/**
 	 * Our prized database connection.

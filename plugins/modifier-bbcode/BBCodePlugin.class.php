@@ -36,7 +36,7 @@ class PapyrineBBCodeModifier extends PapyrinePlugin implements PapyrineModifier
 	const WEBSITE     = "http://www.phpbb.com/phpBB/faq.php?mode=bbcode";
 	const VERSION     = 0.1;
 
-	public static function ModifyText (string $text)
+	public static function ModifyText ($text)
 	{
 		require_once ("BBCodeParser.php");
 

@@ -59,6 +59,10 @@
 			$papyrine->display ('admin/admin.html');
         	break;
 
+		case "post":
+			$papyrine->display ('admin/post.html');
+        	break;
+
 		case "admin_users":
 			if (isset ($_POST ["Submit"]))
 			{

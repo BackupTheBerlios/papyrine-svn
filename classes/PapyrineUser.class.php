@@ -45,6 +45,8 @@ interface PapyrineUser
 	public function GetLastName ();
 	public function GetEmail ();
 
+	public static function Authenticate ($id, $password);
+
 	// Functions to set information.
 	public function SetNickname (string $nickname);
 	public function SetPassword (string $password);
