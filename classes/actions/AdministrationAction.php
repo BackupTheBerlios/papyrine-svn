@@ -31,6 +31,22 @@ class AdministrationAction extends Action
 	{
 		global $papyrine;
 
+		$sections = array (
+			"Entries" => SITE . 'administration/entries',
+			"Users" => SITE . 'administration/users',
+			"Plugin Manager" => SITE . 'administration/plugins'
+		);
+
+		$plugin = new PapyrinePlugin (BASE . 'plugins/categories/');
+		$object = $plugin->getInstance();
+		$object->recieveSectionArray ($sections);
+
+		$plugin = new PapyrinePlugin (BASE . 'plugins/comments/');
+		$object = $plugin->getInstance();
+		$object->recieveSectionArray ($sections);
+
+		$papyrine->sections =& $sections;
+
 		header("Content-Type: application/xhtml+xml;charset=UTF-8");
 		$papyrine->display ('admin/header.html');
 		$papyrine->display ($map->getParameter());

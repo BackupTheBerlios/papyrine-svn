@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Papyrine is a weblogging system built using PHP5.
+ * SQLiteCategory is a SQLite implementation of the PapyrineCategory class.
  * Copyright (C) 2004 Thomas Reynolds
  * 
  * This program is free software; you can redistribute it and/or
@@ -19,22 +19,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  * @package Papyrine
- * @subpackage Classes
- * @author Thomas Reynolds <thomasr@infograph.com>
- * @version 0.1
+ * @subpackage SQLiteDatabasePlugin
+ * @author Thomas Reynolds <tdreyno@gmail.com>
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  */
 
 /**
  * Decribes a Papyrine category.
- *
- * @author Thomas Reynolds <thomasr@infograph.com>
- * @package Papyrine
- * @subpackage SQLiteDatabasePlugin
  */
 class SQLiteCategory extends SQLiteAbstraction implements PapyrineCategory
 {
-	// Table name
 	const TABLE = 'papyrine_categories';
 
 	function __construct( $id )
@@ -64,7 +58,7 @@ class SQLiteCategory extends SQLiteAbstraction implements PapyrineCategory
 	 * @param string $title New category's title.
 	 * @return integer
 	 */
-	public static function create( $title )
+	public static function &create( $title )
 	{
 		global $papyrine;
 
@@ -77,7 +71,24 @@ class SQLiteCategory extends SQLiteAbstraction implements PapyrineCategory
 			sqlite_escape_string( $title )
 		);
 
-		return $papyrine->database->connection->unbufferedQuery( $sql );
+		$result = $papyrine->database->connection->unbufferedQuery ($sql);
+
+		return new SQliteCategory (
+			$papyrine->database->connection->lastInsertRowid()
+		);
+	}
+
+	public static function createTable ()
+	{
+		$sql = sprintf (
+			"CREATE TABLE %s (        " .
+			" id INTEGER PRIMARY KEY, " .
+			" title text NOT NULL     " .
+			")                        " ,
+			self::TABLE
+		);
+
+		$this->connection->unbufferedQuery ($sql);
 	}
 
 	public function getID()

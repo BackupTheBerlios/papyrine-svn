@@ -31,8 +31,8 @@ class EntryCreateAction extends Action
 	{
 		global $papyrine;
 
-		$result = $papyrine->createEntry ($form->title, $form->body, 
-		                                 1, 1); /* ID, Status*/
+		$result =& $papyrine->createEntry ($form->title, $form->body, 
+		                                   1, 1); /* ID, Status*/
 
 		header ('Location: ' . SITE . 'administration/entries');
 	}

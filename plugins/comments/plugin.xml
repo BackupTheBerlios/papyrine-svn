@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<plugin>
+	<title>Comment Plugin</title>
+	<description>Allow entries to have threaded comments</description>
+	<author>
+		<name>Thomas Reynolds</name>
+		<email>tdreyno@gmail.com</email>
+	</author>
+	<class>CommentPlugin</class>
+</plugin>

@@ -57,7 +57,7 @@ interface PapyrineEntry
 	public function setStatus ($status);
 
 	// Functions to create.
-	public static function create ($title, $body, $owner, $status = true);
+	public static function &create ($title, $body, $owner, $status = true);
 
 	//abstract public function CreateComment (string $body, string $owner_name,
 	//                                        string $owner_email)

@@ -32,15 +32,15 @@ interface PapyrineDatabase
 {
 	public function getUser ($id);
 	public function getUsers ($as_array = false);
-	public function createUser ($email, $name, $password);
+	public function &createUser ($email, $name, $password);
 	
 	public function getEntry ($id);
 	public function getEntries ();
-	public function createEntry ($title, $body, $owner, $status = true);
+	public function &createEntry ($title, $body, $owner, $status = true);
 
 	public function getCategory ($id);
 	public function getCategories ();
-	public function createCategory ($title);
+	public function &createCategory ($title);
 
 	public function emailExists ($email);
 	public function import ($file);

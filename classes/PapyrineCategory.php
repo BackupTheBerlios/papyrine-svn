@@ -34,8 +34,6 @@
  */
 interface PapyrineCategory
 {
-	public static function create ($title);
-
 	// General functions.
 	public function __construct ($id);
 
@@ -43,6 +41,8 @@ interface PapyrineCategory
 	public function getID ();
 	public function getTitle ();
 	public function getEntries ($limit = false);
+
+	public static function &create ($title);
 
 	// Functions to set information.
 	public function setTitle ($title);

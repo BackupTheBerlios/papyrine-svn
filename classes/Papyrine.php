@@ -80,7 +80,7 @@ final class Papyrine extends Savant2
 		return $this->database->getUsers( $as_array );
 	}
 
-	public function createUser ($email, $name, $password)
+	public function &createUser ($email, $name, $password)
 	{
 		return $this->database->createUser ($email, $name, $password);
 	}
@@ -95,7 +95,7 @@ final class Papyrine extends Savant2
 		return $this->database->getEntries ();
 	}
 
-	public function createEntry ($title, $body, $owner, $status = true)
+	public function &createEntry ($title, $body, $owner, $status = true)
 	{
 		return $this->database->createEntry ($title, $body, $owner, 
 	                                         $status = true);
@@ -111,7 +111,7 @@ final class Papyrine extends Savant2
 		return $this->database->getCategories ();
 	}
 
-	public function createCategory ($title)
+	public function &createCategory ($title)
 	{
 		return $this->database->createCategory ($title);
 	}

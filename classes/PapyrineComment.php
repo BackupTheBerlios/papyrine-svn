@@ -53,7 +53,7 @@ interface PapyrineComment
 	public function setStatus( $status );
 
 	// Functions to create.
-	public static function create( $entry, $body, $owner_name, $owner_email );
+	public static function &create( $entry, $body, $owner_name, $owner_email );
 
 	// Functions to delete.
 	public function delete();

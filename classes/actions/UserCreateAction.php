@@ -31,8 +31,8 @@ class UserCreateAction extends Action
 	{
 		global $papyrine;
 
-		$result = $papyrine->createUser ($form->email, $form->name, 
-		                                 $form->password);
+		$result =& $papyrine->createUser ($form->email, $form->name, 
+		                                  $form->password);
 
 		header ('Location: ' . SITE . 'administration/users');
 	}

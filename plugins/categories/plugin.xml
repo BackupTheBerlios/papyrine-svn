@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<plugin>
+	<title>Category Plugin</title>
+	<description>Allow entries to be associated with one or more categories</description>
+	<author>
+		<name>Thomas Reynolds</name>
+		<email>tdreyno@gmail.com</email>
+	</author>
+	<class>CategoryPlugin</class>
+</plugin>

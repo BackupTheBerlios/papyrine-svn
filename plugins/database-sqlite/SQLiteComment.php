@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Papyrine is a weblogging system built using PHP5.
+ * SQLiteComment is a SQLite implementation of the PapyrineComment class.
  * Copyright (C) 2004 Thomas Reynolds
  * 
  * This program is free software; you can redistribute it and/or
@@ -19,22 +19,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  * @package Papyrine
- * @subpackage Classes
+ * @subpackage SQLiteDatabasePlugin
  * @author Thomas Reynolds <thomasr@infograph.com>
- * @version 0.1
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  */
 
 /**
  * Decribes a Papyrine comment.
- *
- * @author Thomas Reynolds <thomasr@infograph.com>
- * @package Papyrine
- * @subpackage SQLiteDatabasePlugin
  */
 class SQLiteComment extends SQLiteAbstraction implements PapyrineComment
 {
-	// Table
 	const TABLE = 'papyrine_comments';
 
 	function __construct( $id )
@@ -61,7 +55,7 @@ class SQLiteComment extends SQLiteAbstraction implements PapyrineComment
 	/**
 	 * Create a new comment.
 	 */
-	public static function create( $entry, $body, $owner_name, $owner_email )
+	public static function &create ($entry, $body, $owner_name, $owner_email)
 	{
 		global $papyrine;
 
@@ -78,7 +72,29 @@ class SQLiteComment extends SQLiteAbstraction implements PapyrineComment
 			0
 		);
 
-		return $papyrine->database->connection->unbufferedQuery ($sql);
+		$result = $papyrine->database->connection->unbufferedQuery ($sql);
+
+		return new SQliteComment (
+			$papyrine->database->connection->lastInsertRowid()
+		);
+	}
+
+	public static function createTable ()
+	{
+		$sql = sprintf (
+			"CREATE TABLE %s (          " .
+			" id INTEGER PRIMARY KEY,   " .
+			" entry INTEGER NOT NULL,   " .
+			" body text NOT NULL,       " .
+			" created text NOT NULL,    " .
+			" status INTEGER NOT NULL,  " .
+			" owner_name text NOT NULL, " .
+			" owner_email text NOT NULL " .
+			")                          " ,
+			self::TABLE
+		);
+
+		$this->connection->unbufferedQuery ($sql);
 	}
 
 	public function getID()

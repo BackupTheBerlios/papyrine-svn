@@ -41,7 +41,7 @@ interface PapyrineUser
 
 	public static function emailExists ($email);
 	// Functions to create.
-	public static function create ($email, $name, $password);
+	public static function &create ($email, $name, $password);
 
 	// Functions to delete.
 	public function delete ();

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * SQLitePapyrineBlog is a SQLite implementation of the PapyrineBlog class.
+ * SQLiteUser is a SQLite implementation of the PapyrineUser class.
  * Copyright (C) 2004 Thomas Reynolds
  * 
  * This program is free software; you can redistribute it and/or
@@ -19,9 +19,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  * @package Papyrine
- * @subpackage Classes
- * @author Thomas Reynolds <thomasr@infograph.com>
- * @version 0.1
+ * @subpackage SQLiteDatabasePlugin
+ * @author Thomas Reynolds <tdreyno@gmail.com>
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  */
 
@@ -57,7 +56,7 @@ class SQLiteUser extends SQLiteAbstraction implements PapyrineUser
 	 *
 	 * @return integer
 	 */
-	public static function create ($email, $name, $password)
+	public static function &create ($email, $name, $password)
 	{
 		global $papyrine;
 
@@ -72,7 +71,26 @@ class SQLiteUser extends SQLiteAbstraction implements PapyrineUser
 			sqlite_escape_string (md5 ($password))
 		);
 
-		return $papyrine->database->connection->unbufferedQuery ($sql);
+		$result = $papyrine->database->connection->unbufferedQuery ($sql);
+
+		return new SQliteUser (
+			$papyrine->database->connection->lastInsertRowid()
+		);
+	}
+
+	public static function createTable ()
+	{
+		$sql = sprintf (
+			"CREATE TABLE %s (         " .
+			" id INTEGER PRIMARY KEY,  " .
+			" email text NOT NULL,     " .
+			" password text NOT NULL,  " .
+			" name text NOT NULL       " .
+			")                         " ,
+			self::TABLE
+		);
+
+		$this->connection->unbufferedQuery ($sql);
 	}
 
 	public static function authenticate ($id, $password)
@@ -89,9 +107,9 @@ class SQLiteUser extends SQLiteAbstraction implements PapyrineUser
 			$password
 		);
 
-		$result = $papyrine->database->connection->query ($sql);
+		$result = $papyrine->database->connection->singleQuery ($sql, true);
 
-		return (sqlite_fetch_single ($result) > 0);
+		return ($result > 0);
 	}
 
 	public static function emailExists ($email)
@@ -106,9 +124,9 @@ class SQLiteUser extends SQLiteAbstraction implements PapyrineUser
 			$email
 		);
 
-		$result = $papyrine->database->connection->query ($sql);
+		$result = $papyrine->database->connection->singleQuery ($sql, true);
 
-		return (sqlite_fetch_single ($result) > 0);		
+		return ($result > 0);		
 	}
 }
 

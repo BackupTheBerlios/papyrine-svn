@@ -31,7 +31,7 @@ class CategoryCreateAction extends Action
 	{
 		global $papyrine;
 
-		$result = $papyrine->createCategory ($form->title);
+		$result =& $papyrine->createCategory ($form->title);
 
 		header ('Location: ' . SITE . 'administration/categories');
 	}

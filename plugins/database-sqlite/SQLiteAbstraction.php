@@ -19,18 +19,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  * @package Papyrine
- * @subpackage Classes
- * @author Thomas Reynolds <thomasr@infograph.com>
- * @version 0.1
+ * @subpackage SQLiteDatabasePlugin
+ * @author Thomas Reynolds <tdreyno@gmail.com>
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  */
 
 /**
  * Provides the functionality required by PapyrineBlog using a SQLite database.
- *
- * @author Thomas Reynolds <thomasr@infograph.com>
- * @package Papyrine
- * @subpackage SQLiteDatabasePlugin
  */
 class SQLiteAbstraction
 {
@@ -72,6 +67,6 @@ class SQLiteAbstraction
 		global $papyrine;
 
 		return $papyrine->database->connection->unbufferedQuery(
-			$this->_deleteSQL );
+			$this->_deleteSQL);
 	}
 }

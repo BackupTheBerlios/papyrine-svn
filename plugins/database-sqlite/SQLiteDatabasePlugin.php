@@ -1,7 +1,7 @@
 <?php
 
 /**
- * SQLiteDatabasePlugin adds a the SQLite database to Papyrine.
+ * SQLiteDatabasePlugin is a SQLite implementation of the PapyrineDatabase class.
  * Copyright (C) 2004 Thomas Reynolds
  * 
  * This program is free software; you can redistribute it and/or
@@ -19,8 +19,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  * @package Papyrine
- * @subpackage Plugins
- * @author Thomas Reynolds <thomasr@infograph.com>
+ * @subpackage SQLiteDatabasePlugin
+ * @author Thomas Reynolds <tdreyno@gmail.com>
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  */
 
@@ -30,6 +30,9 @@ require_once 'SQLiteComment.php';
 require_once 'SQLiteEntry.php';
 require_once 'SQLiteUser.php';
 
+/**
+ * Defines this database.
+ */
 class SQLiteDatabasePlugin implements PapyrineDatabase
 {
 	/**
@@ -49,10 +52,10 @@ class SQLiteDatabasePlugin implements PapyrineDatabase
 	public static function install()
 	{
 		// If first run
-		$this->Category_CreateTable ();
-		$this->Comment_CreateTable ();
-		$this->Entry_CreateTable ();
-		$this->User_CreateTable ();
+		SQLiteCategory::createTable ();
+		SQLiteComment::createTable ();
+		SQLiteEntry::createTable ();
+		SQLiteUser::createTable ();
 	}
 
 	public function emailExists ($email)
@@ -60,12 +63,12 @@ class SQLiteDatabasePlugin implements PapyrineDatabase
 		return SQLiteUser::emailExists ($email);
 	}
 
-	public function getUser( $id )
+	public function getUser ($id)
 	{
-		return new SQLiteUser( $id );
+		return new SQLiteUser ($id);
 	}
 
-	public function getUsers( $as_array = false )
+	public function getUsers ($as_array = false)
 	{
 		$sql = sprintf (
 			" SELECT * FROM %s",
@@ -83,9 +86,9 @@ class SQLiteDatabasePlugin implements PapyrineDatabase
 		return $output;
 	}
 
-	public function createUser( $email, $name, $password )
+	public function &createUser ($email, $name, $password)
 	{
-		return SQLiteUser::create( $email, $name, $password );
+		return SQLiteUser::create ($email, $name, $password);
 	}
 
 	public function getEntry ($id)
@@ -111,7 +114,7 @@ class SQLiteDatabasePlugin implements PapyrineDatabase
 		return $output;
 	}
 
-	public function createEntry ($title, $body, $owner, $status = true)
+	public function &createEntry ($title, $body, $owner, $status = true)
 	{
 		return SQLiteEntry::create ($title, $body, $owner, $status = true);
 	}
@@ -139,74 +142,9 @@ class SQLiteDatabasePlugin implements PapyrineDatabase
 		return $output;
 	}
 
-	public function createCategory ($title)
+	public function &createCategory ($title)
 	{
 		return SQLiteCategory::create ($title);
-	}
-
-	public function Category_CreateTable ()
-	{
-		$sql = sprintf (
-			"CREATE TABLE %s (        " .
-			" id INTEGER PRIMARY KEY, " .
-			" title text NOT NULL     " .
-			")                        " ,
-			SQLiteCategory::TABLE
-		);
-
-		$this->connection->unbufferedQuery ($sql);
-	}
-
-	public function Comment_CreateTable ()
-	{
-		$sql = sprintf (
-			"CREATE TABLE %s (          " .
-			" id INTEGER PRIMARY KEY,   " .
-			" entry INTEGER NOT NULL,   " .
-			" body text NOT NULL,       " .
-			" created text NOT NULL,    " .
-			" status INTEGER NOT NULL,  " .
-			" owner_name text NOT NULL, " .
-			" owner_email text NOT NULL " .
-			")                          " ,
-			SQLiteComment::TABLE
-		);
-
-		$this->connection->unbufferedQuery ($sql);
-	}
-
-	public function Entry_CreateTable ()
-	{
-		$sql = sprintf (
-			"CREATE TABLE %s (                      " .
-			" id INTEGER PRIMARY KEY,               " .
-			" title text NOT NULL,                  " .
-			" linktitle text NOT NULL,              " .
-			" body text NOT NULL,                   " .
-			" created timestamp(14) NOT NULL,       " .
-			" status INTEGER NOT NULL,              " .
-			" owner INTEGER NOT NULL,               " .
-			" comments INTEGER NOT NULL default '0' " .
-			")                                      " ,
-			SQLiteEntry::TABLE
-		);
-
-		$this->connection->unbufferedQuery ($sql);
-	}
-
-	public function User_CreateTable ()
-	{
-		$sql = sprintf (
-			"CREATE TABLE %s (         " .
-			" id INTEGER PRIMARY KEY,  " .
-			" email text NOT NULL,     " .
-			" password text NOT NULL,  " .
-			" name text NOT NULL       " .
-			")                         " ,
-			SQLiteUser::TABLE
-		);
-
-		$this->connection->unbufferedQuery ($sql);
 	}
 
 	public function import( $file )

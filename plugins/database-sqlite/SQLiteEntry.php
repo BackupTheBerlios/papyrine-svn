@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Papyrine is a weblogging system built using PHP5 and Smarty.
+ * SQLiteEntry is a SQLite implementation of the PapyrineEntry class.
  * Copyright (C) 2004 Thomas Reynolds
  * 
  * This program is free software; you can redistribute it and/or
@@ -19,18 +19,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  * @package Papyrine
- * @subpackage Classes
- * @author Thomas Reynolds <thomasr@infograph.com>
- * @version 0.1
+ * @subpackage SQLiteDatabasePlugin
+ * @author Thomas Reynolds <tdreyno@gmail.com>
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  */
 
 /**
  * Decribes a Papyrine entry.
- *
- * @author Thomas Reynolds <thomasr@infograph.com>
- * @package Papyrine
- * @subpackage SQLiteDatabasePlugin
  */
 class SQLiteEntry extends SQLiteAbstraction implements PapyrineEntry
 {
@@ -56,7 +51,7 @@ class SQLiteEntry extends SQLiteAbstraction implements PapyrineEntry
 
 	}
 
-	public static function create ($title, $body, $owner, $status = true)
+	public static function &create ($title, $body, $owner, $status = true)
 	{
 		global $papyrine;
 
@@ -76,7 +71,30 @@ class SQLiteEntry extends SQLiteAbstraction implements PapyrineEntry
 			time()
 		);
 
-		return $papyrine->database->connection->unbufferedQuery ($sql);
+		$result = $papyrine->database->connection->unbufferedQuery ($sql);
+
+		return new SQliteEntry (
+			$papyrine->database->connection->lastInsertRowid()
+		);
+	}
+
+	public static function createTable ()
+	{
+		$sql = sprintf (
+			"CREATE TABLE %s (                      " .
+			" id INTEGER PRIMARY KEY,               " .
+			" title text NOT NULL,                  " .
+			" linktitle text NOT NULL,              " .
+			" body text NOT NULL,                   " .
+			" created timestamp(14) NOT NULL,       " .
+			" status INTEGER NOT NULL,              " .
+			" owner INTEGER NOT NULL,               " .
+			" comments INTEGER NOT NULL default '0' " .
+			")                                      " ,
+			self::TABLE
+		);
+
+		$this->connection->unbufferedQuery ($sql);
 	}
 
 	public function getID ()
@@ -96,7 +114,7 @@ class SQLiteEntry extends SQLiteAbstraction implements PapyrineEntry
 
 	public function getOwner ()
 	{
-		return new SQLitePapyrineUser ($this->__get ("owner"));
+		return new SQLiteUser ($this->__get ("owner"));
 	}
 
 	public function getStatus ()
