@@ -11,19 +11,51 @@
 	<class>AtomPlugin.class.php</class>
 	<layout>
 		<node id="root">
+			<node id="archives">
+				<node id="archive-by-year">
+					<node id="archive-by-month">
+						<node id="archive-by-date">
+							<node id="archive-by-individual">
+								<node id="feeds">
+									<node id="entry-comments-feed">
+										<node id="entry-comments-feed-atom" 
+						    				  template="Templates/entry_comments.xml" 
+				    						  identifier="atom" />
+										</node>
+									</node>
+								</node>
+							</node>
+						</node>
+					</node>
+				</node>
+			</node>
 			<node id="categories">
 				<node id="archive-by-category">
 					<node id="feeds">
-						<node id="category-feed-atom" 
-						      template="Templates/recent_atom_03.xml" 
-						      identifier="atom" />
+						<node id="category-entries-feed">
+							<node id="category-feed-atom" 
+						    	  template="Templates/category_entries.xml" 
+				    			  identifier="atom" />
+						</node>
+						<node id="category-comments-feed">
+							<node id="category-comments-atom" 
+						    	  template="Templates/category_comments.xml" 
+						    	  identifier="atom" />
+						</node>
 					</node>
 				</node>
 			</node>
 			<node id="feeds">
-				<node id="recent-feed-atom" 
-				      template="Templates/category_atom_03.xml" 
-				      identifier="atom" />
+				<node id="recent-feed">
+					<node id="recent-feed-atom" 
+					      template="Templates/recent_entries.xml" 
+					      identifier="atom" />
+				</node>
+				<node id="comments-feed">
+					<node id="comments-feed-atom" 
+				    	  template="Templates/recent_comments.xml" 
+				    	  identifier="atom" />
+				</node>
 			</node>
 		</node>
 	</layout>
