@@ -1,10 +1,10 @@
 Options +followsymlinks 
 RewriteEngine  on
 
-RewriteRule		^$ 			/papyrine/libraries/index.php?route=frontpage
+RewriteRule		^$ 	libraries/index.php
+RewriteRule		^administration/plugins$ libraries/index.php?PluginAdministration
 
-
-RewriteRule		^admin(.?)$ /papyrine/libraries/index.php?route=admin
-RewriteRule		^admin/post(.?)$ /papyrine/libraries/index.php?route=admin_post
-RewriteRule		^admin/users(.?)$ /papyrine/libraries/index.php?route=admin_users
-RewriteRule		^admin/plugins(.?)$ /papyrine/libraries/index.php?route=admin_plugins
+#RewriteRule		^admin(.?)$ /papyrine/libraries/index.php?route=admin
+#RewriteRule		^admin/post(.?)$ /papyrine/libraries/index.php?route=admin_post
+#RewriteRule		^admin/users(.?)$ /papyrine/libraries/index.php?route=admin_users
+#RewriteRule		^admin/plugins(.?)$ /papyrine/libraries/index.php?route=admin_plugins

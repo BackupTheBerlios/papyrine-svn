@@ -1,21 +1,14 @@
-{include file="admin/header.html"}
-<form action="/papyrine/admin/plugins" enctype="multipart/form-data" 
-      method="post">
 <table>
-	<caption>Install a new plugin</caption>
-	<tr>
-		<td>
-			<label for="plugin_file">Choose the plugin file</label>
-		</td>
-		<td>
-			<input id="plugin_file" name="plugin_file" type="file" />
-		</td>
-	</tr>
-	<tr>
-		<td colspan="2">
-			<input type="submit" name="Submit" value="Submit" />
-		</td>
-	</tr>
+    <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Author</th>
+    </tr>
+	<?php foreach ($this->plugins as $plugin): ?>
+	    <tr>
+    	    <td><?php echo $plugin->title ?></td>
+    	    <td><?php echo $plugin->description ?></td>
+    	    <td><?php echo $plugin->author->name ?> &lt;<?php echo $plugin->author->email ?>&gt;</td>
+    	</tr>
+	<?php endforeach; ?>
 </table>
-</form>
-{include file="admin/footer.html"}
