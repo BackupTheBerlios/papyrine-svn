@@ -31,14 +31,12 @@
  * @subpackage Classes
  */
 
-interface PapyrineDatabasePlugin
+interface PapyrineDatabase
 {
 	public function GetBlog (integer $id);
 	public function GetUser (integer $id);
 	public function CreateBlog (string $title);
-	public function CreateUser ($nickname, $password, 
-	                            $firstname, $lastname, 
-	                            $email);
+	public function CreateUser ($password, $firstname, $lastname, $email);
 	public function Import (string $file);
 	public function Export ();
 }

@@ -46,7 +46,7 @@ final class Papyrine
 	function __construct ()
 	{
 		// Choose DB from config
-		$this->database = new SQLiteDatabasePlugin;
+		$this->database =& new SQLiteDatabase;
 	}
 
 	public function RegisterHook ($hook, $function, $object = false)
@@ -134,11 +134,10 @@ final class Papyrine
 		return $this->database->CreateBlog ($title);
 	}
 
-	public function CreateUser ($nickname, $password, $firstname, $lastname, 
-	                            $email)
+	public function CreateUser ($password, $firstname, $lastname, $email)
 	{
-		return $this->database->CreateUser ($nickname, $password, $firstname,
-		                                    $lastname, $email);
+		return $this->database->CreateUser ($password, $firstname, $lastname, 
+		                                    $email);
 	}
 
 	public function GetUser ($id)

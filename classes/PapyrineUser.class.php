@@ -39,7 +39,6 @@ interface PapyrineUser
 
 	// Functions to fetch information.
 	public function GetID ();
-	public function GetNickname ();
 	public function GetPassword ();
 	public function GetFirstName ();
 	public function GetLastName ();
@@ -48,16 +47,13 @@ interface PapyrineUser
 	public static function Authenticate ($id, $password);
 
 	// Functions to set information.
-	public function SetNickname (string $nickname);
-	public function SetPassword (string $password);
-	public function SetFirstName (string $firstname);
-	public function SetLastName (string $lastname);
-	public function SetEmail (string $email);
+	public function SetPassword ($password);
+	public function SetFirstName ($firstname);
+	public function SetLastName ($lastname);
+	public function SetEmail ($email);
 
 	// Functions to create.
-	public static function Create ($nickname,
-	                               $password, $firstname,
-	                               $lastname, $email);
+	public static function Create ($password, $firstname, $lastname, $email);
 
 	// Functions to delete.
 	public function Delete ();
