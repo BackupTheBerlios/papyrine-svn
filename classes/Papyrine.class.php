@@ -44,28 +44,33 @@ class Papyrine
 
 	public function RegisterHook ($hook, $function, $object = false)
 	{
+		echo "Registering a hook for &quot;{$hook}&quot;<br /> ";
+
 		// See if the function has already been registered for this hook.
-		if (in_array ($function, $this->_hooks [$hook]))
+		if (@in_array ($function, $this->_hooks [$hook]))
 			return false;
 
-		$this->hooks [$hook] [] = array (
+		$this->_hooks [$hook] [] = array (
 			"object"   => $object,
 			"function" => $function
 		);
 	}
 
-	public function ExecuteHooks ($hook_id, &$params)
+	public function ExecuteHooks ($function, $params, &$output)
 	{
-		foreach ($this->hooks [$hook_id] as $hook)
+		foreach ($this->_hooks [$function] as $hook)
 		{
-			if ($hook ["object"])
+			echo "Executing Hook ";
+			if ($hook ["object"] != false)
 			{
-				if (!$hook ["object"]->$hook ["function"] ($params))
+				echo "with Object <br />";
+				if (!$hook ["object"]->$hook ["function"] ($params, $output))
 					return false;
 			}
 			else
 			{
-				if (!$hook ["function"] ($params))
+				echo "without Object <br />";
+				if (!$hook ["function"] ($params, $output))
 					return false;
 			}
 		}
@@ -120,10 +125,11 @@ class Papyrine
 	 * @return integer
 	 * @uses PapyrineBlog::Create
 	 */
-	public function CreateBlog ($blog, $title)
+	public function CreateBlog ($_title)
 	{
+		echo "Got to Papyrine::CreateBlog (&quot;{$_title}&quot;) <br /> ";
 		return PapyrineBlog::Create (
-			$title
+			$_title
 		);
 	}
 

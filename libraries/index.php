@@ -13,7 +13,8 @@
 			), ":")
 		);
 
-		require_once ($class . '.class.php');
+		if (!@require_once ($class . '.class.php'))
+			require_once ($class . '.php');
 	}
 
 	$papyrine = new Papyrine;
@@ -50,6 +51,7 @@
         	break;
 
 		case "admin":
+			$papyrine->CreateBlog ('test');
 			$papyrine->display ('admin.html');
         	break;
 

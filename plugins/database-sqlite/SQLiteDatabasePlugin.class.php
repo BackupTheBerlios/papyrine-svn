@@ -1,7 +1,7 @@
 <?php
 
 /**
- * MySQLDatabasePlugin adds a the MySQL database to Papyrine.
+ * SQLiteDatabasePlugin adds a the SQLite database to Papyrine.
  * Copyright (C) 2004 Thomas Reynolds
  * 
  * This program is free software; you can redistribute it and/or
@@ -29,35 +29,24 @@
  * @package Papyrine
  * @subpackage Plugins
  */
-class SQLiteDatabasePlugin extends PapyrinePlugin
+class SQLiteDatabasePlugin implements PapyrineDatabasePlugin
 {
-	const TABLES = array (
-		"entries" => "papyrine_entries"
-	);
+	const BLOG_TABLE = 'papyrine_blogs';
 
 	/**
 	 * Our prized database connection.
 	 *
 	 * @var mixed 
 	 */
-	private $database = false;
+	private $_database;
 
 	function __construct ()
 	{
 		global $papyrine;
-/*
-		$papyrine->RegisterHook ("entry_initialize", 
-		                         "Initialize",
-		                         $this);
 
-		$papyrine->RegisterHook ("entry_populate_data", 
-		                         "EntryPopulateData",
-		                         $this);
-
-		$papyrine->RegisterHook ("entry_delete", 
-		                         "EntryDelete",
-		                         $this);
-*/
+		$this->_database = sqlite_open ("/var/www/localhost/htdocs/papyrine/data/papyrine.db");
+		
+		$this->_init ();
 	}
 
    	/**
@@ -65,35 +54,55 @@ class SQLiteDatabasePlugin extends PapyrinePlugin
    	 */
 	function __destruct () 
 	{
-		$this->database->disconnect();
+		sqlite_close ($this->_database);
 	}
 
-   	/**
-   	 * If we ask for the database and we don't have it, create one.
-   	 */
-	function __get ($var) 
+	private function _init ()
 	{
-		if ($var == "database")
-		{
-			if (!$this->database)
-			{
-				$dsn = array(
-    				"phptype"  => "sqlite",
-				    "hostspec" => "/" . $_SERVER["DOCUMENT_ROOT"] . "data/" . 
-					              "papyrine.db"
-				);
-
-				return DB::connect ($dsn);
-			} else
-				return $this->database;
-		}
+		$this->Blog_CreateTable ();
 	}
 
-	public function Initialize (&$params, &$output)
+	public function Blog_CreateTable ()
 	{
-		// check tables, create if needed.
+		$sql = sprintf (
+			"CREATE TABLE %s (     " .
+			" title text NOT NULL, " .
+			" PRIMARY KEY (title)  " .
+			")                     " ,
+			self::BLOG_TABLE
+		);
+
+		sqlite_query ($this->_database, $sql);
 	}
 
+	public function Blog_Create ($title)
+	{
+		$sql = sprintf (
+			"INSERT INTO %s " .
+			" (title)       " .
+			"VALUES         " .
+			" ('%s')        " ,
+			self::BLOG_TABLE,
+			sqlite_escape_string ($title)
+		);
+
+		return sqlite_query ($this->_database, $sql);
+	}
+
+	public function Blog_Delete ($id)
+	{
+		$sql = sprintf (
+			" DELETE FROM %s " .
+			" WHERE id = %s  " .
+			" LIMIT 1        " ,
+			self::BLOG_TABLE,
+			$id
+		);
+
+		return sqlite_query ($this->_database, $sql);
+	}
+
+/*
 	public function EntryPopulateData ($params, &$output)
 	{
 		$output = $this->database->getRow (
@@ -126,7 +135,8 @@ class SQLiteDatabasePlugin extends PapyrinePlugin
 		$result->free ();
 
 		$output = !DB::isError ($result);
-	}*/
+	}
+*/
 }
 
 ?>
