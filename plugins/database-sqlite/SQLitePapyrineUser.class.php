@@ -27,10 +27,6 @@
 
 /**
  * Provides the functionality required by PapyrineBlog using a SQLite database.
- *
- * @author Thomas Reynolds <thomasr@infograph.com>
- * @package Papyrine
- * @subpackage SQLiteDatabasePlugin
  */
 class SQLitePapyrineUser implements PapyrineUser
 {
@@ -48,10 +44,10 @@ class SQLitePapyrineUser implements PapyrineUser
 		global $papyrine;
 
 		$sql = sprintf (
-			" SELECT id, nickname, password, firstname, lastname, email " .
-			" FROM %s WHERE                                             " .
-			" id = %s                                                   " .
-			" LIMIT 1                                                   " ,
+			" SELECT id, password, firstname, lastname, email " .
+			" FROM %s WHERE                                   " .
+			" id = %s                                         " .
+			" LIMIT 1                                         " ,
 			self::TABLE,
 			$this->_id
 		);
@@ -82,19 +78,16 @@ class SQLitePapyrineUser implements PapyrineUser
 	 * @param string $title New blog's title.
 	 * @return integer
 	 */
-	public static function Create ($nickname,
-	                               $password, $firstname,
-	                               $lastname, $email)
+	public static function Create ($password, $firstname, $lastname, $email)
 	{
 		global $papyrine;
 
 		$sql = sprintf (
-			"INSERT INTO %s                                    " .
-			" (nickname, password, firstname, lastname, email) " .
-			"VALUES                                            " .
-			" ('%s', '%s', '%s', '%s', '%s')                   " ,
+			"INSERT INTO %s                          " .
+			" (password, firstname, lastname, email) " .
+			"VALUES                                  " .
+			" ('%s', '%s', '%s', '%s', '%s')         " ,
 			self::TABLE,
-			sqlite_escape_string ($nickname),
 			sqlite_escape_string ($password),
 			sqlite_escape_string ($firstname),
 			sqlite_escape_string ($lastname),
@@ -107,11 +100,6 @@ class SQLitePapyrineUser implements PapyrineUser
 	public function GetID ()
 	{
 		return $this->__get ("id");
-	}
-
-	public function GetNickname ()
-	{
-		return $this->__get ("nickname");
 	}
 
 	public function GetPassword ()
@@ -134,27 +122,22 @@ class SQLitePapyrineUser implements PapyrineUser
 		return $this->__get ("email");
 	}
 
-	public function SetNickname (string $nickname)
-	{
-		return $this->__set ("nickname", $nickname);
-	}
-
-	public function SetPassword (string $password)
+	public function SetPassword ($password)
 	{
 		return $this->__set ("password", $password);
 	}
 
-	public function SetFirstName (string $firstname)
+	public function SetFirstName ($firstname)
 	{
 		return $this->__set ("firstname", $firstname);
 	}
 
-	public function SetLastName (string $lastname)
+	public function SetLastName ($lastname)
 	{
 		return $this->__set ("lastname", $lastname);
 	}
 
-	public function SetEmail (string $email)
+	public function SetEmail ($email)
 	{
 		return $this->__set ("email", $email);
 	}

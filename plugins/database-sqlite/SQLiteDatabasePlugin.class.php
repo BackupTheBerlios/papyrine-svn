@@ -29,7 +29,7 @@
  * @package Papyrine
  * @subpackage SQLiteDatabasePlugin
  */
-class SQLiteDatabasePlugin implements PapyrineDatabase
+class SQLiteDatabase implements PapyrineDatabase
 {
 	/**
 	 * Our prized database connection.
@@ -42,7 +42,7 @@ class SQLiteDatabasePlugin implements PapyrineDatabase
 	{
 		global $papyrine;
 
-		$this->connection = new SQLiteDatabase ("/var/www/localhost/htdocs/papyrine/data/papyrine.sqlite"); 
+		$this->connection =& new SQLiteDatabase ("/var/www/localhost/htdocs/papyrine/data/papyrine.sqlite"); 
 
 		// If first run
 		//$this->Blog_CreateTable ();
@@ -85,12 +85,10 @@ class SQLiteDatabasePlugin implements PapyrineDatabase
 		return SQLitePapyrineBlog::Create ($title);
 	}
 
-	public function CreateUser ($nickname, $password, 
-	                            $firstname, $lastname,
-	                            $email)
+	public function CreateUser ($password, $firstname, $lastname, $email)
 	{
-		return SQLitePapyrineUser::Create ($nickname, $password, $firstname, 
-		                                   $lastname, $email);
+		return SQLitePapyrineUser::Create ($password, $firstname, $lastname,
+		                                   $email);
 	}
 
 	public function Blog_CreateTable ()
@@ -168,7 +166,6 @@ class SQLiteDatabasePlugin implements PapyrineDatabase
 		$sql = sprintf (
 			"CREATE TABLE %s (         " .
 			" id INTEGER PRIMARY KEY,  " .
-			" nickname text NOT NULL,  " .
 			" password text NOT NULL,  " .
 			" firstname text NOT NULL, " .
 			" lastname text NOT NULL,  " .
