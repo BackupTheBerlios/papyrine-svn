@@ -29,7 +29,7 @@
  * @package Papyrine
  * @subpackage SQLiteDatabasePlugin
  */
-class SQLiteDatabase implements PapyrineDatabase
+class SQLiteDatabasePlugin implements PapyrineDatabase
 {
 	/**
 	 * Our prized database connection.
@@ -45,11 +45,11 @@ class SQLiteDatabase implements PapyrineDatabase
 		$this->connection =& new SQLiteDatabase ("/var/www/localhost/htdocs/papyrine/data/papyrine.sqlite"); 
 
 		// If first run
-		//$this->Blog_CreateTable ();
-		//$this->Category_CreateTable ();
-		//$this->Comment_CreateTable ();
-		//$this->Entry_CreateTable ();
-		//$this->User_CreateTable ();
+		$this->Blog_CreateTable ();
+		$this->Category_CreateTable ();
+		$this->Comment_CreateTable ();
+		$this->Entry_CreateTable ();
+		$this->User_CreateTable ();
 	}
 
 	public function GetBlog (integer $id)
