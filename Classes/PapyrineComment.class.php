@@ -143,6 +143,9 @@ class PapyrineComment extends PapyrineObject
 	public static function Create (&$database, $entry, $body, $owner_name, 
 	                               $owner_email)
 	{
+		if (!Papyrine::ExecuteHooks ("on_comment_post"))
+			return false;
+
 		// Generate the query and insert into the database.
 		$result = $database->query (sprintf (
 			"INSERT INTO %s SET " .

@@ -91,22 +91,6 @@ class PapyrinePlugin
 		return (isset ($this->xml->plugin->smarty]));
 	}
 
-	public function GetRecentFeedTemplate ()
-	{
-		if (isset ($this->xml->plugin->templates->feed_recent))
-			return $this->xml->plugin->templates->feed_recent;
-		else
-			return false;
-	}
-
-	public function GetCategoryFeedTemplate ()
-	{
-		if (isset ($this->xml->plugin->templates->feed_category))
-			return $this->xml->plugin->templates->feed_category;
-		else
-			return false;
-	}
-
 	public static function CreateTable (&$database)
 	{
 		sqlite_query ($database, sprintf (

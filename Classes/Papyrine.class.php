@@ -382,6 +382,30 @@ class Papyrine extends Smarty
 		foreach ($node->node as $subnode)
 			Papyrine::RecurseNodes ($subnode, $string, $array);
 	}
+
+	public static function RegisterHook ($hook, $function)
+	{
+		global $papyrine_hooks;
+
+		if (!isset ($papyrine_hooks))
+			$papyrine_hooks = array ();
+
+		// See if the function has already been registered for this hook.
+		if (in_array ($function, $papyrine_hooks [$hook]))
+			return false;
+
+		$papyrine_hooks [$hook] [] = $function;
+	}
+
+	public static function ExecuteHooks ($hook)
+	{
+		global $papyrine_hooks;
+
+		foreach ($papyrine_hooks [$hook] as $function)
+			if (!$function()) return false;
+
+		return true;
+	}
 }
 
 ?>
