@@ -58,6 +58,7 @@ class SQLiteDatabasePlugin extends PapyrineDatabasePlugin
 	private function _init ()
 	{
 		$this->Blog_CreateTable ();
+		$this->Category_CreateTable ();
 	}
 
 	public function GetBlog ($id)
@@ -65,19 +66,45 @@ class SQLiteDatabasePlugin extends PapyrineDatabasePlugin
 		return new SQLitePapyrineBlog ($id);
 	}
 
+	public function GetUser ($id)
+	{
+		return new SQLitePapyrineUser ($id);
+	}
+
 	public function CreateBlog ($title)
 	{
 		return SQLitePapyrineBlog::Create ($title);
 	}
 
+	public function CreateUser ($nickname, $password, $firstname, $lastname,
+	                            $email)
+	{
+		return SQLitePapyrineUser::Create ($nickname, $password, $firstname, 
+		                                   $lastname, $email);
+	}
+
 	public function Blog_CreateTable ()
 	{
 		$sql = sprintf (
-			"CREATE TABLE %s (     " .
-			" title text NOT NULL, " .
-			" PRIMARY KEY (title)  " .
-			")                     " ,
+			"CREATE TABLE %s (        " .
+			" id INTEGER PRIMARY KEY, " .
+			" title text NOT NULL     " .
+			")                        " ,
 			SQLitePapyrineBlog::TABLE
+		);
+
+		$this->connection->query ($sql);
+	}
+
+	public function Category_CreateTable ()
+	{
+		$sql = sprintf (
+			"CREATE TABLE %s (        " .
+			" id INTEGER PRIMARY KEY, " .
+			" blog int(11) NOT NULL,  " .
+			" title text NOT NULL     " .
+			")                        " ,
+			SQLitePapyrineCategory::TABLE
 		);
 
 		$this->connection->query ($sql);

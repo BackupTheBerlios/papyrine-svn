@@ -138,112 +138,24 @@ final class Papyrine
 	 */
 	public function CreateBlog ($title)
 	{
-		return $this->database->CreateBlog (
-			$title
-		);
+		return $this->database->CreateBlog ($title);
+	}
+
+	public function CreateUser ($nickname, $password, $firstname, $lastname, 
+	                            $email)
+	{
+		return $this->database->CreateUser ($nickname, $password, $firstname,
+		                                    $lastname, $email);
+	}
+
+	public function GetUser ($id)
+	{
+		return $this->database->GetUser ($id);
 	}
 
 	public function GetBlog ($id)
 	{
 		return $this->database->GetBlog ($id);
-	}
-
-	/**
-	 * Create a new category.
-	 *
-	 * @param string $blog The blog to create a category for.
-	 * @param string $title The category's title.
-	 * @return integer
-	 * @uses PapyrineBlog::CreateCategory
-	 *
-	public function CreateCategory ($blog, $title)
-	{
-		$blog = new PapyrineBlog ($this->database, $blog);
-
-		return $blog->CreateCategory (
-			$this->database,
-			$title
-		);
-	}
-
-	/**
-	 * Get a category by id.
-	 *
-	 * @param string $blog The blog to get a category for.
-	 * @param integer $id Category's unique id.
-	 * @return PapyrineCategory
-	 *
-	public function GetCategory ($blog, $id)
-	{
-		$blog = new PapyrineBlog ($this->database, $blog);
-
-		return $blog->GetCategory ($this->database, $id);
-	}
-
-	/**
-	 * Get a comment by id.
-	 *
-	 * @param integer $id Comment's unique id.
-	 * @return PapyrineComment
-	 *
-	public function GetComment ($id)
-	{
-		return new PapyrineComment ($this->database, $id);
-	}
-
-	/**
-	 * Get a category relationship.
-	 *
-	 * @param integer $entry Relationship's entry id.
-	 * @param integer $category Relationship's category id.
-	 * @return PapyrineCategoryRelationship
-	 *
-	public function GetCategoryRelationship ($entry, $category)
-	{
-		return new PapyrineCategoryRelationship ($this->database, $entry,
-		                                         $category);
-	}
-
-	/**
-	 * Create a new entry.
-	 *
-	 * @param mixed $database Reference for already opened database.
-	 * @param string $title New entry's title.
-	 * @param string $summary New entry's summary.
-	 * @param string $body New entry's body of text.
-	 * @param integer $owner New entry's creator.
-	 * @param integer $status New entry's status. 0=draft, 1=live.
-	 * @param integer $onfrontpage Whether the entry should be on the frontpage.
-	 * @param integer $allowcomments Should commenting be allowed.
-	 * @param string $autodisable Timestamp to disable comments at.
-	 * @return integer
-	 * @uses PapyrineEntry::Create
-	 *
-	public function CreateEntry ($title, $summary, $body, $owner, $status = true, $onfrontpage = true, $allowcomments = true, $autodisable = false)
-	{
-		return PapyrineEntry::Create (
-			$this->database, 
-			$this->data["id"],
-			$title,
-			$summary,
-			$body,
-			$owner,
-			$status,
-			$onfrontpage,
-			$allowcomments,
-			$autodisable
-		);
-	}
-
-	/**
-	 * Get a entry by id.
-	 *
-	 * @param integer $id Entry's unique id.
-	 * @return PapyrineEntry
-	 *
-	public function GetEntry ($id)
-	{
-		return new PapyrineEntry ($this->database, $id);
 	}
 
 	/**
@@ -280,119 +192,7 @@ final class Papyrine
 		return $entries;
 	}
 
-	/**
-	 * Create a new user.
-	 *
-	 * @param string $nickname New user's nickname.
-	 * @param string $password New user's password.
-	 * @param string $firstname New user's first name.
-	 * @param string $lastname New user's last name.
-	 * @param string $email New user's email address.
-	 * @return integer
-	 * @uses PapyrineUser::Create
-	 *
-	public function CreateUser ($nickname, $password, $firstname, $lastname,
-	                            $email)
-	{
-		return PapyrineUser::Create (
-			$this->database, 
-			$this->data["id"],
-			$nickname,
-			$password,
-			$firstname,
-			$lastname,
-			$email
-		);
-	}
-
-	/**
-	 * Get a entry by id or username.
-	 *
-	 * @param integer $id Entry's unique id or username.
-	 * @return PapyrineUser
-	 *
-	public function GetUser ($id)
-	{
-		return new PapyrineUser ($this->database, $id);
-	}
-
-	/**
-	 * Get an array of text modifiers.
-	 *
-	 * @return array
-	 * @uses PapyrinePlugin::TABLE
-	 *
-	private function GetModifiers ()
-	{
-		$result = sqlite_query ($this->database, sprintf (
-			" SELECT id, name FROM %s " .
-			" WHERE modifier = 1      " .
-			" ORDER BY name ASC       " ,
-			PapyrinePlugin::TABLE)
-		);
-
-		$modifiers = array ();
-		while (sqlite_has_more ($result))
-			$modifiers[] = sqlite_fetch_array ($result, SQLITE_ASSOC);
-
-		return $modifiers;
-	}
-
-	/**
-	 * Get an array of feed syndicators.
-	 *
-	 * @return array
-	 * @uses PapyrinePlugin::TABLE
-	 *
-	private function GetSyndicators ()
-	{
-		$result = sqlite_query ($this->database, sprintf (
-			" SELECT id FROM %s    " .
-			" WHERE syndicator = 1 " .
-			" ORDER BY name ASC    " ,
-			PapyrinePlugin::TABLE)
-		);
-
-		$syndicators = array ();
-		while (sqlite_has_more ($result))
-			$syndicators[] = new PapyrinePlugin (sqlite_fetch_single ($result));
-
-		return $syndicators;
-	}
-
-	/**
-	 * Get a plugin by id.
-	 *
-	 * @param integer $id Plugin's unique id.
-	 * @return PapyrinePlugin
-	 *
-	public function GetPlugin ($id)
-	{
-		return new PapyrinePlugin ($this->database, $id);
-	}
-
-	public function InstallPlugin ($file)
-	{
-		return PapyrinePluginManager::Install ($this->database, $file);
-	}
-
-	/**
-	 * Turn an array of objects into an array or arrays.
-	 *
-	 * @param array $objects The objects to convert.
-	 * @return array
-	 * @uses PapyrineObject::ToArray
-	 *
-	public static function Objects2Array ($objects)
-	{
-		$output = array ();
-
-		foreach ($objects as $object)
-			$output[] = $object->ToArray();
-
-		return $output;
-	}
-
+/*
 	public static function GenerateHTAccess ($layout)
 	{
 		$xml = simplexml_load_string ($layout);
@@ -411,22 +211,6 @@ final class Papyrine
 
 		foreach ($node->node as $subnode)
 			Papyrine::RecurseNodes ($subnode, $string, $array);
-	}
-
-	public function GetPluginID ($object)
-	{
-		return PapyrinePluginManager::GetID ($this->database, $object);
-	}
-
-	public static function GetFile ($url)
-	{
-		$snoopy = new Snoopy ();
-		$text = $snoopy->fetch ($url);
-
-		// create file (md5 the url for unique name?)
-		// save file
-
-		// return location
 	}
 */
 }

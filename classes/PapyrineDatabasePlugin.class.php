@@ -33,8 +33,11 @@
 
 abstract class PapyrineDatabasePlugin
 {
-	abstract function CreateBlog ($title);
-	abstract function GetBlog ($id);
+	abstract public function GetBlog ($id);
+	abstract public function GetUser ($id);
+	abstract public function CreateBlog ($title);
+	abstract public function CreateUser ($nickname, $password, $firstname, 
+	                                     $lastname, $email);
 }
 
 ?>

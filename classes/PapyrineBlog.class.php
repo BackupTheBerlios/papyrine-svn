@@ -26,7 +26,8 @@
  */
 
 /**
- * Decribes a Papyrine blog.
+ * Decribes a Papyrine blog and must be extended by a database implementation
+ * plugin.
  *
  * @author Thomas Reynolds <thomasr@infograph.com>
  * @package Papyrine
@@ -39,6 +40,13 @@ abstract class PapyrineBlog
 	abstract public function GetID ();
 	abstract public function SetTitle ($title);
 	abstract public function GetTitle ();
+	abstract public function CreateEntry ($title, $summary, $body, $owner, 
+	                                      $status, $onfrontpage, $allowcomments,
+	                                      $autodisable);
+	abstract public function CreateCategory ($title);
+	abstract public function GetEntry ($id);
+	abstract public function GetCategory ($id);
+	abstract public function GetComment ($id);
 	abstract public function GetEntries ();
 	abstract public function Delete ();
 }
