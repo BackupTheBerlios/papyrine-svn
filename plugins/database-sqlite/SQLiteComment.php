@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Papyrine is a weblogging system built using PHP5 and Smarty.
+ * Papyrine is a weblogging system built using PHP5.
  * Copyright (C) 2004 Thomas Reynolds
  * 
  * This program is free software; you can redistribute it and/or
@@ -32,56 +32,36 @@
  * @package Papyrine
  * @subpackage SQLiteDatabasePlugin
  */
-class SQLitePapyrineComment implements PapyrineComment
+class SQLiteComment extends SQLiteAbstraction implements PapyrineComment
 {
+	// Table
 	const TABLE = 'papyrine_comments';
-	private $_id;
-	private $_data = false;
 
-	function __construct (integer $id)
+	function __construct( $id )
 	{
-		$this->_id = $id;
-	}
-
-	private function _Populate ()
-	{
-		global $papyrine;
-
-		$sql = sprintf (
+		$this->_fetchSQL = sprintf (
 			" SELECT                                                     " .
 			"  id, entry, body, owner_name, owner_email, status, created " .
 			" FROM %s WHERE                                              " .
 			"  id = %s                                                   " .
 			" LIMIT 1                                                    " ,
 			self::TABLE,
-			$this->_id ["id"]
+			$id
 		);
 
-		$this->_data = $papyrine->database->connection->arrayQuery (
-			$sql,
-			SQLITE_ASSOC
+		$this->_deleteSQL = sprintf (
+			" DELETE FROM %s " .
+			" AND id = %s    " .
+			" LIMIT 1        " ,
+			self::TABLE,
+			$id
 		);
-	}
-
-	function __get ($var)
-	{
-		if ($this->_data == false)
-			$this->_Populate ();
-
-		if (isset ($this->_data[$var]))
-			return $this->_data [$var];
-	}
-
-	function __set ($var, $val)
-	{
-		//
 	}
 
 	/**
 	 * Create a new comment.
 	 */
-	public static function Create (integer $entry, string $body, 
-	                               string $owner_name, string $owner_email)
+	public static function create( $entry, $body, $owner_name, $owner_email )
 	{
 		global $papyrine;
 
@@ -92,97 +72,89 @@ class SQLitePapyrineComment implements PapyrineComment
 			" (%s, '%s', '%s', '%s', %s, NOW())                       " ,
 			self::TABLE,
 			$entry,
-			sqlite_escape_string ($body),
-			sqlite_escape_string ($owner_name),
-			sqlite_escape_string ($owner_email),
+			sqlite_escape_string( $body ),
+			sqlite_escape_string( $owner_name ),
+			sqlite_escape_string( $owner_email ),
 			0
 		);
 
 		return $papyrine->database->connection->unbufferedQuery ($sql);
 	}
 
-	public function GetID ()
+	public function getID()
 	{
-		return $this->__get ("id");
+		return $this->__get( "id" );
 	}
 
-	public function GetBody ()
+	public function getBody()
 	{
-		return $this->__get ("body");
+		return $this->__get( "body" );
 	}
 
-	public function GetOwnerName ()
+	public function getOwnerName()
 	{
-		return $this->__get ("owner_name");
+		return $this->__get( "owner_name" );
 	}
 
-	public function GetOwnerEmail ()
+	public function getOwnerEmail ()
 	{
-		return $this->__get ("owner_email");
+		return $this->__get( "owner_email" );
 	}
 
-	public function GetStatus ()
+	public function getStatus ()
 	{
-		return $this->__get ("status");
+		return $this->__get( "status" );
 	}
 
-	public function GetCreated ()
+	public function getCreated ()
 	{
-		return $this->__get ("created");
+		return $this->__get( "created" );
 	}
 
-	public function GetEntry ()
+	public function getEntry ()
 	{
-		return new SQLitePapyrineEntry ($this->__get ("entry"));
+		return new SQLiteEntry( $this->__get( "entry" ) );
 	}
 
-	public function SetBody (string $body)
+	public function setBody( $body )
 	{
-		return $this->__set ("body", $body);
+		return $this->__set( "body", $body );
 	}
 
-	public function SetOwnerName (string $name)
+	public function setOwnerName( $name )
 	{
-		return $this->__set ("owner_name", $name);
+		return $this->__set( "owner_name", $name );
 	}
 
-	public function SetOwnerEmail (string $email)
+	public function setOwnerEmail( $email )
 	{
-		return $this->__set ("owner_email", $email);
+		return $this->__set( "owner_email", $email );
 	}
 
-	public function SetStatus (integer $status)
+	public function setStatus( $status )
 	{
-		return $this->__set ("status", $status);
+		return $this->__set( "status", $status );
 	}
 
 	/**
 	 * Delete the category.
 	 */
-	public function Delete ()
+	public function delete ()
 	{
 		global $papyrine;
 
-		$sql1 = sprintf (
+		$sql = sprintf (
 			" UPDATE %s SET           " .
 			" comments = comments - 1 " .
 			" WHERE id = %s           " .
 			" LIMIT 1                 " ,
-				SQLitePapyrineEntry::TABLE,
-			$this->_id ["id"]
+			SQLiteEntry::TABLE,
+			$this->getID()
 		);
 
-		$papyrine->database->connection->unbufferedQuery ($sql1);
+		$papyrine->database->connection->unbufferedQuery ($sql);
 
-		$sql2 = sprintf (
-			" DELETE FROM %s " .
-			" AND id = %s    " .
-			" LIMIT 1        " ,
-			self::TABLE,
-			$this->_id ["id"]
-		);
-
-		return $papyrine->database->connection->unbufferedQuery ($sql2);
+		parent::delete();
 	}
 }
 

@@ -24,6 +24,12 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  */
 
+require_once 'SQLiteBlog.php';
+require_once 'SQLiteCategory.php';
+require_once 'SQLiteComment.php';
+require_once 'SQLiteEntry.php';
+require_once 'SQLiteUser.php';
+
 class SQLiteDatabasePlugin implements PapyrineDatabase
 {
 	/**
@@ -33,14 +39,14 @@ class SQLiteDatabasePlugin implements PapyrineDatabase
 	 */
 	public $connection;
 
-	function __construct ()
+	function __construct()
 	{
 		$this->connection =& new SQLiteDatabase (
-			Papyrine::getFile ("papyrine.sqlite")
+			BASE . "data/papyrine.sqlite" 
 		);
 	}
 
-	public static function install ()
+	public static function install()
 	{
 		// If first run
 		$this->Blog_CreateTable ();
@@ -50,43 +56,47 @@ class SQLiteDatabasePlugin implements PapyrineDatabase
 		$this->User_CreateTable ();
 	}
 
-	public function GetBlog (integer $id)
+	public function getBlog( $id )
 	{
-		return new SQLitePapyrineBlog ($id);
+		return new SQLiteBlog( $id );
 	}
 
-	public function GetUser (integer $id)
+	public function getUser( $id )
 	{
-		return new SQLitePapyrineUser ($id);
+		return new SQLiteUser( $id );
 	}
 
-	public function GetUsers ($as_array = false)
+	public function emailExists ($email)
+	{
+		return SQLiteUser::emailExists ($email);
+	}
+
+	public function getUsers( $as_array = false )
 	{
 		$sql = sprintf (
 			" SELECT * FROM %s",
-			SQLitePapyrineUser::TABLE
+			SQLiteUser::TABLE
 		);
-
-		if ($as_array)
-			return $this->connection->arrayQuery ($sql, SQLITE_ASSOC);
 
 		$result = $this->connection->unbufferedQuery ($sql);
 
 		$output = array ();
 
-		foreach ($result as $row)
-			$output [] = new SQLitePapyrineUser ($row ["id"]);
+		foreach ($result as $row) {
+			$output [] = new SQLiteUser ($row ["id"]);
+		}
+
+		return $output;
 	}
 
-	public function CreateBlog (string $title)
+	public function createBlog( $title )
 	{
-		return SQLitePapyrineBlog::Create ($title);
+		return SQLitePapyrineBlog::create( $title );
 	}
 
-	public function CreateUser ($password, $firstname, $lastname, $email)
+	public function createUser( $email, $name, $password )
 	{
-		return SQLitePapyrineUser::Create ($password, $firstname, $lastname,
-		                                   $email);
+		return SQLiteUser::create( $email, $name, $password );
 	}
 
 	public function Blog_CreateTable ()
@@ -164,23 +174,22 @@ class SQLiteDatabasePlugin implements PapyrineDatabase
 		$sql = sprintf (
 			"CREATE TABLE %s (         " .
 			" id INTEGER PRIMARY KEY,  " .
+			" email text NOT NULL,     " .
 			" password text NOT NULL,  " .
-			" firstname text NOT NULL, " .
-			" lastname text NOT NULL,  " .
-			" email text NOT NULL      " .
+			" name text NOT NULL       " .
 			")                         " ,
-			SQLitePapyrineUser::TABLE
+			SQLiteUser::TABLE
 		);
 
 		$this->connection->unbufferedQuery ($sql);
 	}
 
-	public function Import (string $file)
+	public function import( $file )
 	{
 		// Takes an RSS (RDF?) file and imports it
 	}
 
-	public function Export ()
+	public function export()
 	{
 		// Export the current data as RSS (RDF?)
 	}

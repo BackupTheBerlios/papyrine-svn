@@ -32,7 +32,7 @@
  * @package Papyrine
  * @subpackage SQLiteDatabasePlugin
  */
-class SQLitePapyrineEntry implements PapyrineEntry
+class SQLiteEntry implements PapyrineEntry
 {
 	const TABLE = 'papyrine_entries';
 	private $_id;

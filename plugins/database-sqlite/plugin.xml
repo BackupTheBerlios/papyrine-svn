@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<plugin>
+	<title>SQLite Database Plugin</title>
+	<description>Support for using a SQLite database with Papyrine.</description>
+	<author>
+		<name>Thomas Reynolds</name>
+		<email>tdreyno@gmail.com</email>
+	</author>
+	<class>SQLiteDatabasePlugin</class>
+</plugin>
