@@ -128,6 +128,17 @@ class Papyrine extends Smarty
 		}
 	}
 
+	public function GetQuery ($ident, $params)
+	{		
+		return Papyrine::ExecuteHooks (
+			"on_query_fetch", 
+			array (
+				"ident"  => $ident,
+				"params" => $params
+			)
+		);
+	}
+
 	/**
 	 * Create a new category.
 	 *

@@ -53,21 +53,21 @@ class PapyrineObject
 	 *
 	 * @var mixed
 	 */
-	protected $id;
+	protected $sql;
 
 	/**
 	 * Contains the changes that need to be sync'd with the database.
 	 *
 	 * @var array 
 	 */
-	protected $mod;
+	protected $mod = array ();
 
 	/**
 	 * Name of the database table to map this object to.
 	 *
 	 * @var string 
 	 */
-	protected $sqltable;
+	protected $table;
 
 	/**
 	 * Constructor, sets up our table, database and empty array.
@@ -77,9 +77,8 @@ class PapyrineObject
 	 */
 	function __construct (&$database, $table) 
 	{
-		$this->sqltable = $table
+		$this->table    = $table
 		$this->database = &$database;
-		$this->mod = array ();
 	}
 
 	/**
@@ -106,7 +105,7 @@ class PapyrineObject
 				" WHERE id = ?   " .
 				" LIMIT 1        " ,
 				array (
-					$this->sqltable,
+					$this->table,
 					join (", ", $updates),
 					$this->data["id"]
 				)
@@ -121,6 +120,9 @@ class PapyrineObject
 	 */
 	protected function __get ($var) 
 	{
+		if (!$this->data)
+			$this->PopulateData ();
+
 		if (isset ($this->data[$var]))
 			return $this->data[$var];
 	}
@@ -136,6 +138,14 @@ class PapyrineObject
 			$this->data[$var] = $val;
 			$this->mod[$var]  = true;
 		}
+	}
+
+	private function PopulateData ()
+	{
+		$this->data = $this->database->getRow (
+			$this->sql,
+			DB_FETCHMODE_ASSOC
+		);
 	}
 
 	/**

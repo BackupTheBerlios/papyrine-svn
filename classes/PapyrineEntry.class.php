@@ -48,37 +48,22 @@ class PapyrineEntry extends PapyrineObject
 	 * @param mixed $database Reference for already opened database.
 	 * @uses PapyrineEntry::TABLE
 	 */
-	function __construct (&$database, $id) 
+	function __construct (&$database, $blog, $id)
 	{
 		// Initial PapyrineObject.
 		parent::_construct ($database, self::TABLE);
 
-		$this->id = $id;
-	}
-
-	/**
-	 * Populate the object when we need it.
-	 *
-	 * @uses PapyrineEntry::TABLE
-	 * @uses DB_result::getRow
-	 */
-	function __get ($var)
-	{
-		if (!$this->data)
-		{
-			$this->data = $this->database->getRow (
-				" SELECT * FROM ! " .
-				" WHERE id = ?    " .
-				" LIMIT 1         " ,
-				array (
-					self::TABLE,
-					$this->id
-				),
-				DB_FETCHMODE_ASSOC
-			);
-		}
-
-		return parent::__get ($var);
+		// How to populate data.
+		$this->sql = sprintf (
+			" SELECT * FROM %s " .
+			" WHERE blog = %s  " .
+			" AND     %s = %s  " .
+			" LIMIT 1          " ,
+			self::TABLE,
+			$blog,
+			(is_numeric ($id) ? "id" : "linktitle"),
+			$id
+		);
 	}
 
 	/**
@@ -300,6 +285,7 @@ class PapyrineEntry extends PapyrineObject
 			" id int(11) NOT NULL auto_increment,    " .
 			" blog int(11) NOT NULL,                 " .
 			" title text NOT NULL,                   " .
+			" linktitle text NOT NULL,               " .
 			" summary text NOT NULL,                 " .
 			" body text NOT NULL,                    " .
 			" created timestamp(14) NOT NULL,        " .
@@ -353,6 +339,7 @@ class PapyrineEntry extends PapyrineObject
 			"INSERT INTO ! SET   " .
 			" blog = ?,          " .
 			" title = ?,         " .
+			" linktitle = ?,     " .
 			" summary = ?,       " .
 			" body = ?,          " .
 			" owner = ?,         " .
@@ -365,6 +352,7 @@ class PapyrineEntry extends PapyrineObject
 			array (
 				self::TABLE,
 				$blog,
+				$title,
 				$title,
 				$summary,
 				$body,

@@ -53,7 +53,14 @@ class PapyrineComment extends PapyrineObject
 		// Initial PapyrineObject.
 		parent::_construct ($database, self::TABLE);
 
-		$this->id = $id;
+		// How to populate data.
+		$this->sql = sprintf (
+			" SELECT * FROM %s " .
+			" WHERE id = %s    " .
+			" LIMIT 1          " ,
+			self::TABLE,
+			$id
+		);
 	}
 
 	/**

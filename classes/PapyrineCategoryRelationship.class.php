@@ -39,13 +39,13 @@ class PapyrineCategoryRelationship extends PapyrineObject
 	 *
 	 * @var string 
 	 */
-	const TABLE = "papyrine_comment_relationships";
+	const TABLE = "papyrine_category_relationships";
 
 	/**
 	 * PapyrineCategoryRelationship constructor.
 	 *
 	 * @param integer $entry Entry's unique id.
-	 * @param integer $comment Entry's unique id.
+	 * @param integer $category Entry's unique id.
 	 * @param mixed $database Reference for already opened database.
 	 * @uses PapyrineCategoryRelationship::TABLE
 	 */
@@ -54,37 +54,13 @@ class PapyrineCategoryRelationship extends PapyrineObject
 		// Initial PapyrineObject.
 		parent::_construct ($database, self::TABLE);
 
-		$this->id = array (
-			"entry"    => $entry,
-			"category" => $category
+		// How to populate data.
+		$this->sql = sprintf (
+			PapyrineQueries::CATEGORY_RELATIONSHIP_POPULATE_DATA,
+			self::TABLE,
+			$entry,
+			$category
 		);
-	}
-
-	/**
-	 * Populate the object when we need it.
-	 *
-	 * @uses PapyrineCategoryRelationship::table
-	 * @uses DB_common::getRow
-	 */
-	function __get ($var)
-	{
-		if (!$this->data)
-		{
-			$this->data = $this->database->getRow (
-				" SELECT * FROM !  " .
-				" WHERE entry = ?  " .
-				" AND category = ? " .
-				" LIMIT 1          " ,
-				array (
-					self::TABLE,
-					$this->id["entry"],
-					$this->id["category"]
-				),
-				DB_FETCHMODE_ASSOC
-			);
-		}
-
-		return parent::__get ($var);
 	}
 
 	/**
@@ -120,10 +96,7 @@ class PapyrineCategoryRelationship extends PapyrineObject
 	public static function CreateTable (&$database)
 	{
 		$result = $database->query (
-			"CREATE TABLE ! (           " .
-			" entry int(11) NOT NULL,   " .
-			" category int(11) NOT NULL " .
-			") TYPE=MyISAM;             " ,
+			PapyrineQueries::CATEGORY_RELATIONSHIP_CREATE_TABLE,
 			array (
 				self::TABLE
 			)
@@ -150,9 +123,7 @@ class PapyrineCategoryRelationship extends PapyrineObject
 	{
 		// Generate the query and insert into the database.
 		$result = $database->query (
-			"INSERT INTO ! SET " .
-			" entry = ?,       " .
-			" category = ?     " ,
+			PapyrineQueries::CATEGORY_RELATIONSHIP_CREATE_NEW,
 			array (
 				self::TABLE,
 				$entry,
@@ -177,6 +148,7 @@ class PapyrineCategoryRelationship extends PapyrineObject
 	public function Delete ()
 	{
 		$result = $this->database->query (
+			PapyrineQueries::CATEGORY_RELATIONSHIP_DELETE,
 			" DELETE FROM !    " .
 			" WHERE entry = ?  " .
 			" AND category = ? " .

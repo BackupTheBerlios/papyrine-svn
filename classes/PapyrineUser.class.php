@@ -53,33 +53,15 @@ class PapyrineUser extends PapyrineObject
 		// Initial PapyrineObject.
 		parent::__construct ($database, self::TABLE);
 
-		$this->id = $id;
-	}
-
-	/**
-	 * Populate the object when we need it.
-	 * 
-	 * @uses PapyrineUser::TABLE
-	 * @uses DB_common::getRow
-	 */
-	function __get ($var)
-	{
-		if (!$this->data)
-		{
-			$this->data = $this->database->getRow (
-				" SELECT * FROM ! " .
-				" WHERE ! = %s    " .
-				" LIMIT 1         " ,
-				array (
-					self::TABLE,
-					(is_numeric ($this->id) ? "id" : "nickname"),
-					$this->id
-				),
-				DB_FETCHMODE_ASSOC
-			);
-		}
-
-		return parent::__get ($var);
+		// How to populate data.
+		$this->sql = sprintf (
+			" SELECT * FROM %s " .
+			" WHERE %s = %s    " .
+			" LIMIT 1          " ,
+			self::TABLE,
+			(is_numeric ($this->id) ? "id" : "nickname"),
+			$this->id
+		);
 	}
 
 	/**
