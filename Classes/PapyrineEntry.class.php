@@ -61,6 +61,7 @@ class PapyrineEntry extends PapyrineObject
 	 *
 	 * @uses PapyrineEntry::table
 	 * @uses DB_common::query
+	 * @uses DB_result::getRow
 	 */
 	function __get ($var)
 	{
@@ -79,7 +80,7 @@ class PapyrineEntry extends PapyrineObject
 			$this->data = $result->getRow ($result, DB_FETCHMODE_ASSOC);
 		}
 
-		return parent::_get ($var);
+		return parent::__get ($var);
 	}
 
 	/**
@@ -95,7 +96,7 @@ class PapyrineEntry extends PapyrineObject
 				$this->mod["modified"]  = true;
 			}
 
-			parent::_destruct ();
+			parent::__destruct ();
 		}
 	}
 
@@ -105,7 +106,7 @@ class PapyrineEntry extends PapyrineObject
 	 * @param string $body Comment text.
 	 * @param string $owner_name Comment poster's name.
 	 * @param string $owner_email Comment poster's email.
-	 * @return integer
+	 * @return boolean
 	 * @uses PapyrineComment::Create()
 	 */
 	public function CreateComment ($body, $owner_name, $owner_email)
@@ -163,6 +164,7 @@ class PapyrineEntry extends PapyrineObject
 	/**
 	 * Add a new category for this entry.
 	 *
+	 * @return boolean
 	 * @param integer $category The unique id of the category.
 	 */
 	public function AddCategory ($category)
@@ -174,6 +176,7 @@ class PapyrineEntry extends PapyrineObject
 	/**
 	 * Remove a new category from this entry.
 	 *
+	 * @return boolean
 	 * @param integer $category The unique id of the category.
 	 */
 	public function RemoveCategory ($category)
@@ -181,7 +184,7 @@ class PapyrineEntry extends PapyrineObject
 		$relationship = new PapyrineCategoryRelationship ($this->database, 
 		                                                  $this->data["id"], 
 		                                                  $category);
-		$relationship->Delete ();
+		return $relationship->Delete ();
 	}
 
 	/**
@@ -277,7 +280,9 @@ class PapyrineEntry extends PapyrineObject
 	 * Create the database table. For Papyrine installation only.
 	 *
 	 * @param mixed $database Reference for already opened database.
+	 * @return boolean
 	 * @uses PapyrineEntry::table
+	 * @uses DB::isError
 	 * @uses DB_common::query
 	 * @uses DB_result::free
 	 */
@@ -306,6 +311,8 @@ class PapyrineEntry extends PapyrineObject
 		);
 
 		$result->free ();
+
+		return !DB::isError ($result);
 	}
 
 	/**
@@ -321,8 +328,9 @@ class PapyrineEntry extends PapyrineObject
 	 * @param integer $onfrontpage Whether the entry should be on the frontpage.
 	 * @param integer $allowcomments Should commenting be allowed.
 	 * @param string $autodisable Timestamp to disable comments at.
-	 * @return integer
+	 * @return boolean
 	 * @uses PapyrineEntry::table
+	 * @uses DB::isError
 	 * @uses DB_common::query
 	 * @uses DB_common::quoteSmart
 	 * @uses DB_result::free
@@ -358,12 +366,16 @@ class PapyrineEntry extends PapyrineObject
 		);
 
 		$result->free ();
+
+		return !DB::isError ($result);
 	}
 
 	/**
 	 * Delete the entry.
 	 *
+	 * @return boolean
 	 * @uses PapyrineEntry::table
+	 * @uses DB::isError
 	 * @uses DB_common::query
 	 * @uses DB_result::free
 	 */
@@ -378,6 +390,8 @@ class PapyrineEntry extends PapyrineObject
 		);
 
 		$result->free ();
+
+		return !DB::isError ($result);
 	}
 }
 

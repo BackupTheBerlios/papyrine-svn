@@ -88,6 +88,7 @@ class PapyrineObject
 	 *
 	 * @uses DB_common::query
 	 * @uses DB_common::quoteSmart
+	 * @uses DB_result::free
 	 */
 	function __destruct () 
 	{
@@ -107,6 +108,8 @@ class PapyrineObject
 				join (", ", $updates),
 				$this->data["id"])
 			);
+
+			$result->free ();
 		}
 	}
 

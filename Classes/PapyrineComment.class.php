@@ -60,13 +60,15 @@ class PapyrineComment extends PapyrineObject
 	 * Populate the object when we need it.
 	 *
 	 * @uses PapyrineComment::table
+	 * @uses DB_common::query
+	 * @uses DB_result::getRow
 	 */
 	function __get ($var)
 	{
 		if (!$this->data)
 		{
 			// Query the database for the desired entry.
-			$result = sqlite_query ($this->database, sprintf (
+			$result = $this->database->query (sprintf (
 				" SELECT * FROM %s " .
 				" WHERE id = %s    " .
 				" LIMIT 1          " ,
@@ -75,10 +77,10 @@ class PapyrineComment extends PapyrineObject
 			);
 
 			// Populate the object from the database.
-			$this->data = sqlite_fetch_array ($result, SQLITE_ASSOC);
+			$this->data = $result->getRow ($result, DB_FETCHMODE_ASSOC);
 		}
 
-		return parent::_get ($var);
+		return parent::__get ($var);
 	}
 
 	/**
@@ -95,11 +97,15 @@ class PapyrineComment extends PapyrineObject
 	 * Create the database table. For Papyrine installation only.
 	 *
 	 * @param mixed $database Reference for already opened database.
+	 * @return boolean
 	 * @uses PapyrineComment::table
+	 * @uses DB::isError
+	 * @uses DB_common::query
+	 * @uses DB_result::free
 	 */
 	public static function CreateTable (&$database)
 	{
-		sqlite_query ($database, sprintf (
+		$database->query (sprintf (
 			"CREATE TABLE %s (                    " .
 			" id int(11) NOT NULL auto_increment, " .
 			" entry int(11) NOT NULL,             " .
@@ -113,6 +119,10 @@ class PapyrineComment extends PapyrineObject
 			") TYPE=MyISAM;                       " ,
 			PapyrineComment::table)
 		);
+
+		$result->free ();
+
+		return !DB::isError ($result);
 	}
 
 	/**
@@ -123,14 +133,18 @@ class PapyrineComment extends PapyrineObject
 	 * @param string $body New comments's body of text.
 	 * @param string $owner_name New comments's creator.
 	 * @param string $owner_email New comments's creator's email.
-	 * @return interger
+	 * @return boolean
 	 * @uses PapyrineComment::table
+	 * @uses DB::isError
+	 * @uses DB_common::query
+	 * @uses DB_common::quoteSmart
+	 * @uses DB_result::free
 	 */
 	public static function Create (&$database, $entry, $body, $owner_name, 
 	                               $owner_email)
 	{
 		// Generate the query and insert into the database.
-		$result = sqlite_query ($database, sprintf (
+		$result = $database->query (sprintf (
 			"INSERT INTO %s SET " .
 			" entry = %s,       " .
 			" body = %s,        " .
@@ -140,26 +154,31 @@ class PapyrineComment extends PapyrineObject
 			" created = NOW()   " ,
 			PapyrineComment::table,
 			$post,
-			sqlite_escape_string ($body), 
-			sqlite_escape_string ($owner_name), 
-			sqlite_escape_string ($owner_email), 
+			$database->quoteSmart ($body), 
+			$database->quoteSmart ($owner_name), 
+			$database->quoteSmart ($owner_email), 
 			0
 		);
 
-		// If everything worked, return the PapyrineComment object created.
-		if ($result)
-			return sqlite_last_insert_rowid ($database);
+		$result->free ();
+
+		return !DB::isError ($result);
 	}
 
 	/**
 	 * Delete the entry and decrement the entry comments counter.
 	 *
+	 * @return boolean
 	 * @uses PapyrineEntry::table
 	 * @uses PapyrineComment::table
+	 * @uses DB::isError
+	 * @uses DB_common::query
+	 * @uses DB_result::free
 	 */
 	public function Delete ()
 	{
-		sqlite_query ($this->database, sprintf (
+		// Decrement the comments counter for this entry.
+		$result = $this->database->query (sprintf (
 			" UPDATE %s SET           " .
 			" comments = comments - 1 " .
 			" WHERE id = %s           " .
@@ -168,13 +187,24 @@ class PapyrineComment extends PapyrineObject
 			$this->data["entry"])
 		);
 
-		sqlite_query ($this->database, sprintf (
-			" DELETE FROM %s " .
-			" WHERE id = %s  " .
-			" LIMIT 1        " ,
-			PapyrineComment::table,
-			$this->data["id"])
-		);
+		$result->free ();
+
+		// If the previous query worked, actually delete the comment.
+		if (!DB::isError ($result))
+		{
+			$result2 = $this->database->query (sprintf (
+				" DELETE FROM %s " .
+				" WHERE id = %s  " .
+				" LIMIT 1        " ,
+				PapyrineComment::table,
+				$this->data["id"])
+			);
+
+			$result2->free ();
+
+			return !DB::isError ($result2);
+		} else
+			return false;
 	}
 }
 

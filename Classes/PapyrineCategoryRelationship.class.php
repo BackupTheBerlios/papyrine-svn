@@ -54,35 +54,37 @@ class PapyrineCategoryRelationship extends PapyrineObject
 		// Initial PapyrineObject.
 		parent::_construct ($database, PapyrineCategoryRelationship::table);
 
-		$this->id["entry"]    = $entry;
-		$this->id["category"] = $category;
+		$this->id = array (
+			"entry"    => $entry,
+			"category" => $category
+		);
 	}
 
 	/**
 	 * Populate the object when we need it.
 	 *
 	 * @uses PapyrineCategoryRelationship::table
+	 * @uses DB_common::getRow
 	 */
 	function __get ($var)
 	{
 		if (!$this->data)
 		{
-			// Query the database for the desired entry.
-			$result = sqlite_query ($this->database, sprintf (
-				" SELECT * FROM %s  " .
-				" WHERE entry = %s  " .
-				" AND category = %s " .
-				" LIMIT 1           " ,
-				(PapyrineCategoryRelationship::table,
-				$this->id["entry"],
-				$this->id["category"])
+			$this->data = $this->database->getRow (
+				" SELECT * FROM !  " .
+				" WHERE entry = ?  " .
+				" AND category = ? " .
+				" LIMIT 1          " ,
+				array (
+					PapyrineCategoryRelationship::table,
+					$this->id["entry"],
+					$this->id["category"]
+				),
+				DB_FETCHMODE_ASSOC
 			);
-
-			// Populate the object from the database.
-			$this->data = sqlite_fetch_array ($result, SQLITE_ASSOC);
 		}
 
-		return parent::_get ($var);
+		return parent::__get ($var);
 	}
 
 	/**
@@ -109,17 +111,27 @@ class PapyrineCategoryRelationship extends PapyrineObject
 	 * Create the database table. For Papyrine installation only.
 	 *
 	 * @param mixed $database Reference for already opened database.
+	 * @return boolean
 	 * @uses PapyrineCategoryRelationship::table
+	 * @uses DB::isError
+	 * @uses DB_common::query
+	 * @uses DB_result::free
 	 */
 	public static function CreateTable (&$database)
 	{
-		sqlite_query ($database, sprintf (
-			"CREATE TABLE %s (          " .
+		$result = $database->query (
+			"CREATE TABLE ! (           " .
 			" entry int(11) NOT NULL,   " .
 			" category int(11) NOT NULL " .
 			") TYPE=MyISAM;             " ,
-			PapyrineCategoryRelationship::table)
+			array (
+				PapyrineCategoryRelationship::table
+			)
 		);
+
+		$result->free ()
+
+		return !DB::isError ($result);
 	}
 
 	/**
@@ -128,37 +140,57 @@ class PapyrineCategoryRelationship extends PapyrineObject
 	 * @param mixed $database Reference for already opened database.
 	 * @param integer $entry Unique id of the entry to relate to.
 	 * @param integer $category Unique id of the category to relate to.
+	 * @return boolean
 	 * @uses PapyrineCategoryRelationship::table
+	 * @uses DB::isError
+	 * @uses DB_common::query
+	 * @uses DB_result::free
 	 */
 	public static function Create (&$database, $entry, $category)
 	{
 		// Generate the query and insert into the database.
-		$result = sqlite_query ($database, sprintf (
-			"INSERT INTO %s SET " .
-			" entry = %s,       " .
-			" category = %s     " ,
-			PapyrineCategoryRelationship::table,
-			$entry,
-			$category
+		$result = $database->query (
+			"INSERT INTO ! SET " .
+			" entry = ?,       " .
+			" category = ?     " ,
+			array (
+				PapyrineCategoryRelationship::table,
+				$entry,
+				$category
+			)
 		);
+
+		$result->free ()
+
+		return !DB::isError ($result);
 	}
 
 	/**
 	 * Delete the relationship.
 	 *
+	 * @return boolean
 	 * @uses PapyrineCategoryRelationship::table
+	 * @uses DB::isError
+	 * @uses DB_common::query
+	 * @uses DB_result::free
 	 */
 	public function Delete ()
 	{
-		sqlite_query ($this->database, sprintf (
-			" DELETE FROM %s    " .
-			" WHERE entry = %s  " .
-			" AND category = %s " .
-			" LIMIT 1           " ,
-			(PapyrineCategoryRelationship::table,
-			$this->data["entry"],
-			$this->data["category"])
+		$result = $this->database->query (
+			" DELETE FROM !    " .
+			" WHERE entry = ?  " .
+			" AND category = ? " .
+			" LIMIT 1          " ,
+			array (
+				PapyrineCategoryRelationship::table,
+				$this->data["entry"],
+				$this->data["category"]
+			)
 		);
+
+		$result->free ()
+
+		return !DB::isError ($result);
 	}
 }
 

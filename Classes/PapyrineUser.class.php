@@ -51,7 +51,7 @@ class PapyrineUser extends PapyrineObject
 	function __construct (&$database, $id) 
 	{
 		// Initial PapyrineObject.
-		parent::__construct ($database, PapyrineUser::$table);
+		parent::__construct ($database, PapyrineUser::table);
 
 		$this->id = $id;
 	}
@@ -60,25 +60,23 @@ class PapyrineUser extends PapyrineObject
 	 * Populate the object when we need it.
 	 * 
 	 * @uses PapyrineUser::table
-	 * @uses DB_common::query
 	 * @uses DB_common::getRow
 	 */
 	function __get ($var)
 	{
 		if (!$this->data)
 		{
-			// Query the database for the desired user.
-			$result = $this->database->query(sprintf (
-				" SELECT * FROM %s " .
-				" WHERE %s = %s    " .
-				" LIMIT 1          " ,
-				PapyrineUser::table,
-				(is_numeric ($this->id) ? "id" : "nickname"),
-				$this->id)
+			$this->data = $this->database->getRow (
+				" SELECT * FROM ! " .
+				" WHERE ! = %s    " .
+				" LIMIT 1         " ,
+				array (
+					PapyrineUser::table,
+					(is_numeric ($this->id) ? "id" : "nickname"),
+					$this->id
+				),
+				DB_FETCHMODE_ASSOC
 			);
-
-			// Populate the object from the database.
-			$this->data = $result->getRow ($result, DB_FETCHMODE_ASSOC);
 		}
 
 		return parent::__get ($var);
@@ -88,14 +86,16 @@ class PapyrineUser extends PapyrineObject
 	 * Create the database table. For Papyrine installation only.
 	 *
 	 * @param mixed $database Reference for already opened database.
+	 * @return boolean
 	 * @uses PapyrineUser::table
+	 * @uses DB::isError
 	 * @uses DB_common::query
 	 * @uses DB_result::free
 	 */
 	public static function CreateTable (&$database)
 	{
-		$database->query (sprintf (
-			"CREATE TABLE %s (                           " .
+		$result = $database->query (
+			"CREATE TABLE ! (                            " .
 			" id int(11) NOT NULL auto_increment,        " .
 			" blog int(11) NOT NULL,                     " .
 			" nickname text NOT NULL,                    " .
@@ -108,10 +108,14 @@ class PapyrineUser extends PapyrineObject
 			" notification int(11) NOT NULL default '0', " .
 			" PRIMARY KEY (id)                           " .
 			") TYPE=MyISAM;                              " ,
-			PapyrineUser::table)
+			array (
+				PapyrineUser::table
+			)
 		);
 
 		$result->free ();
+
+		return !DB::isError ($result);
 	}
 
 	/**
@@ -124,34 +128,38 @@ class PapyrineUser extends PapyrineObject
 	 * @param string $firstname New user's first name.
 	 * @param string $lastname New user's last name.
 	 * @param string $email New user's email address.
-	 * @return integer
+	 * @return boolean
 	 * @uses PapyrineUser::table
+	 * @uses DB::isError
 	 * @uses DB_common::query
-	 * @uses DB_common::quoteSmart
 	 * @uses DB_result::free
 	 */
 	public static function Create (&$database, $blog, $nickname, $password, 
 	                               $firstname, $lastname, $email)
 	{
 		// Generate the query and insert into the database.
-		$result = $database->query (sprintf (
-			"INSERT INTO %s SET " .
-			" blog = %s,        " .
-			" nickname = %s,    " .
-			" password = %s,    " .
-			" firstname = %s,   " .
-			" lastname = %s,    " .
-			" email = %s        " ,
-			PapyrineUser::table,
-			$blog,
-			$database->quoteSmart ($nickname),
-			$database->quoteSmart (md5 ($password)),
-			$database->quoteSmart ($firstname),
-			$database->quoteSmart ($lastname),
-			$database->quoteSmart ($email)
+		$result = $database->query (
+			"INSERT INTO ! SET " .
+			" blog = ?,        " .
+			" nickname = ?,    " .
+			" password = ?,    " .
+			" firstname = ?,   " .
+			" lastname = ?,    " .
+			" email = ?        " ,
+			array (
+				PapyrineUser::table,
+				$blog,
+				$nickname,
+				md5 ($password),
+				$firstname,
+				$lastname,
+				$email
+			)
 		);
 
 		$result->free ();
+
+		return !DB::isError ($result);
 	}
 
 	/**
@@ -168,19 +176,27 @@ class PapyrineUser extends PapyrineObject
 	/**
 	 * Delete the user.
 	 *
+	 * @return boolean
 	 * @uses PapyrineUser::table
+	 * @uses DB::isError
 	 * @uses DB_common::query
 	 * @uses DB_result::free
 	 */
 	public function Delete ()
 	{
-		$result = $this->database->query (sprintf (
-			"DELETE FROM %s WHERE id = %s LIMIT 1" ,
-			PapyrineUser::table,
-			$this->data["id"])
+		$result = $this->database->query (
+			" DELETE FROM ! " .
+			" WHERE id = ?  " .
+			" LIMIT 1       " ,
+			array (
+				PapyrineUser::table,
+				$this->data["id"]
+			)
 		);
 
 		$result->free ();
+
+		return !DB::isError ($result);
 	}
 }
 

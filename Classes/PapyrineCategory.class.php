@@ -60,25 +60,25 @@ class PapyrineCategory extends PapyrineObject
 	 * Populate the object when we need it.
 	 *
 	 * @uses PapyrineCategory::table
+	 * @uses DB_common::getRow
 	 */
 	function __get ($var)
 	{
 		if (!$this->data)
 		{
-			// Query the database for the desired entry.
-			$result = sqlite_query ($this->database, sprintf (
+			$this->data = $this->database->getRow (
 				" SELECT * FROM %s " .
 				" WHERE id = %s    " .
 				" LIMIT 1          " ,
-				PapyrineCategory::table,
-				$this->id)
+				array (
+					PapyrineCategory::table,
+					$this->id
+				),
+				DB_FETCHMODE_ASSOC
 			);
-
-			// Populate the object from the database.
-			$this->data = sqlite_fetch_array ($result, SQLITE_ASSOC);
 		}
 
-		return parent::_get ($var);
+		return parent::__get ($var);
 	}
 
 	/**
