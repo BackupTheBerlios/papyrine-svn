@@ -25,10 +25,6 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  */
 
-		require_once '/var/www/localhost/htdocs/papyrine/plugins/database-sqlite/SQLiteDatabasePlugin.class.php';
-
-		$db = new SQLiteDatabasePlugin;
-
 /**
  * Decribes a Papyrine blog.
  *
@@ -36,42 +32,15 @@
  * @package Papyrine
  * @subpackage Classes
  */
-class PapyrineBlog
+abstract class PapyrineBlog
 {
-	function __get ($var)
-	{
-		global $papyrine;
-
-		if ($var == 'title')
-		{
-		}
-	}
-	/**
-	 * Create a new blog.
-	 *
-	 * @param mixed $database Reference for already opened database.
-	 * @param string $title New blog's title.
-	 * @return integer
-	 * @uses PapyrineDatabasePlugin::Blog_Create
-	 */
-	public static function Create ($title)
-	{
-		global $papyrine;
-
-		return $papyrine->database->Blog_Create ($title);
-	}
-
-	/**
-	 * Delete the blog.
-	 *
-	 * @uses PapyrineDatabasePlugin::Blog_Delete
-	 */
-	public function Delete ()
-	{
-		global $papyrine;
-
-		return $papyrine->database->Blog_Delete ($this->id);
-	}
+	abstract public static function Create ($title);
+	abstract public function __construct ($id);
+	abstract public function GetID ();
+	abstract public function SetTitle ($title);
+	abstract public function GetTitle ();
+	abstract public function GetEntries ();
+	abstract public function Delete ();
 }
 
 ?>

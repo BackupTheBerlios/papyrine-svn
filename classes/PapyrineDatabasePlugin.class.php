@@ -31,10 +31,10 @@
  * @subpackage Classes
  */
 
-interface PapyrineDatabasePlugin
+abstract class PapyrineDatabasePlugin
 {
-	function Blog_Create ($title);
-	function Blog_Delete ($id);
+	abstract function CreateBlog ($title);
+	abstract function GetBlog ($id);
 }
 
 ?>

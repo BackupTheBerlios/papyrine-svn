@@ -32,7 +32,7 @@
  * @package Papyrine
  * @subpackage Classes
  */
-class Papyrine
+final class Papyrine
 {
 	/**
 	 * An array of registered hooks.
@@ -41,6 +41,17 @@ class Papyrine
 	 */
 	private $_hooks = array ();
 	private $_smarty = false;
+	public $database;
+
+	function __construct ()
+	{
+		// Choose DB from config
+
+		// FIXME: Hardwired SQLite
+		require_once '/var/www/localhost/htdocs/papyrine/plugins/database-sqlite/SQLitePapyrineBlog.class.php';
+		require_once '/var/www/localhost/htdocs/papyrine/plugins/database-sqlite/SQLiteDatabasePlugin.class.php';
+		$this->database = new SQLiteDatabasePlugin;
+	}
 
 	public function RegisterHook ($hook, $function, $object = false)
 	{
@@ -125,12 +136,16 @@ class Papyrine
 	 * @return integer
 	 * @uses PapyrineBlog::Create
 	 */
-	public function CreateBlog ($_title)
+	public function CreateBlog ($title)
 	{
-		echo "Got to Papyrine::CreateBlog (&quot;{$_title}&quot;) <br /> ";
-		return PapyrineBlog::Create (
-			$_title
+		return $this->database->CreateBlog (
+			$title
 		);
+	}
+
+	public function GetBlog ($id)
+	{
+		return $this->database->GetBlog ($id);
 	}
 
 	/**

@@ -29,22 +29,20 @@
  * @package Papyrine
  * @subpackage Plugins
  */
-class SQLiteDatabasePlugin implements PapyrineDatabasePlugin
+class SQLiteDatabasePlugin extends PapyrineDatabasePlugin
 {
-	const BLOG_TABLE = 'papyrine_blogs';
-
 	/**
 	 * Our prized database connection.
 	 *
 	 * @var mixed 
 	 */
-	private $_database;
+	public $connection;
 
 	function __construct ()
 	{
 		global $papyrine;
 
-		$this->_database = sqlite_open ("/var/www/localhost/htdocs/papyrine/data/papyrine.db");
+		$this->connection = new SQLiteDatabase ("/var/www/localhost/htdocs/papyrine/data/papyrine.sqlite"); 
 		
 		$this->_init ();
 	}
@@ -54,12 +52,22 @@ class SQLiteDatabasePlugin implements PapyrineDatabasePlugin
    	 */
 	function __destruct () 
 	{
-		sqlite_close ($this->_database);
+		$this->connection->close;
 	}
 
 	private function _init ()
 	{
 		$this->Blog_CreateTable ();
+	}
+
+	public function GetBlog ($id)
+	{
+		return new SQLitePapyrineBlog ($id);
+	}
+
+	public function CreateBlog ($title)
+	{
+		return SQLitePapyrineBlog::Create ($title);
 	}
 
 	public function Blog_CreateTable ()
@@ -69,37 +77,10 @@ class SQLiteDatabasePlugin implements PapyrineDatabasePlugin
 			" title text NOT NULL, " .
 			" PRIMARY KEY (title)  " .
 			")                     " ,
-			self::BLOG_TABLE
+			SQLitePapyrineBlog::TABLE
 		);
 
-		sqlite_query ($this->_database, $sql);
-	}
-
-	public function Blog_Create ($title)
-	{
-		$sql = sprintf (
-			"INSERT INTO %s " .
-			" (title)       " .
-			"VALUES         " .
-			" ('%s')        " ,
-			self::BLOG_TABLE,
-			sqlite_escape_string ($title)
-		);
-
-		return sqlite_query ($this->_database, $sql);
-	}
-
-	public function Blog_Delete ($id)
-	{
-		$sql = sprintf (
-			" DELETE FROM %s " .
-			" WHERE id = %s  " .
-			" LIMIT 1        " ,
-			self::BLOG_TABLE,
-			$id
-		);
-
-		return sqlite_query ($this->_database, $sql);
+		$this->connection->query ($sql);
 	}
 
 /*
