@@ -6,6 +6,8 @@ RewriteRule		^administration$ 				libraries/?Administration
 RewriteRule		^administration/plugins$ 		libraries/?PluginAdministration
 RewriteRule		^administration/users$ 			libraries/?UserAdministration
 RewriteRule		^administration/user-create$	libraries/?UserCreate
+RewriteRule		^administration/entries$ 		libraries/?EntryAdministration
+RewriteRule		^administration/entry-create$	libraries/?EntryCreate
 
 #RewriteRule		^admin(.?)$ /papyrine/libraries/index.php?route=admin
 #RewriteRule		^admin/post(.?)$ /papyrine/libraries/index.php?route=admin_post

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Papyrine is a weblogging system built using PHP5 and Smarty.
+ * Papyrine is a weblogging system built using PHP5.
  * Copyright (C) 2004 Thomas Reynolds
  * 
  * This program is free software; you can redistribute it and/or
@@ -19,27 +19,22 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  * @package Papyrine
- * @subpackage Classes
- * @author Thomas Reynolds <thomasr@infograph.com>
+ * @subpackage Actions
+ * @author Thomas Reynolds <tdreyno@gmail.com>
  * @version 0.1
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  */
 
-/**
- * PapyrineDatabase interface.
- */
-interface PapyrineDatabase
-{
-	public function getUser ($id);
-	public function getUsers ($as_array = false);
-	public function createUser ($email, $name, $password);
-	
-	public function getEntry ($id);
-	public function getEntries ();
-	public function createEntry ($title, $body, $owner, $status = true);
-	public function emailExists ($email);
-	public function import ($file);
-	public function export ();
-}
+class EntryCreateAction extends Action 
+{	
+	function execute (ActionMapping $map, ActionForm $form, Request $req)
+	{
+		global $papyrine;
 
+		$result = $papyrine->createEntry ($form->title, $form->body, 
+		                                 1, 1); /* ID, Status*/
+
+		header ('Location: ' . SITE . 'administration/entries');
+	}
+}	
 ?>

@@ -1,0 +1,37 @@
+<table>
+	<tr>
+		<th>Title</th>
+	</tr>
+	<?php foreach ($this->entries as $entry): ?>
+		<tr>
+			<td><?php echo $entry->title ?></td>
+			<td><input type="submit" name="delete" value="Delete" /></td>
+		</tr>
+  	<?php endforeach; ?>
+</table>
+<form action="<?php echo SITE ?>administration/entry-create" method="post">
+<table>
+	<caption>Create a new user</caption>
+	<tr>
+		<td>
+			<label for="title">Title</label>
+		</td>
+		<td>
+			<input type="text" id="title" name="title" />
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<label for="body">Body</label>
+		</td>
+		<td>
+			<input type="text" id="body" name="body" />
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<input type="submit" name="Submit" value="Submit" />
+		</td>
+	</tr>
+</table>
+</form>

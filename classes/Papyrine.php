@@ -70,24 +70,9 @@ final class Papyrine extends Savant2
 		return $output;
 	}
 
-	public function createBlog( $title )
-	{
-		return $this->database->createBlog( $title );
-	}
-
-	public function createUser ($email, $name, $password)
-	{
-		return $this->database->createUser ($email, $name, $password);
-	}
-
 	public function getUser( $id )
 	{
 		return $this->database->getUser( $id );
-	}
-
-	public function emailExists ($email)
-	{
-		return $this->database->emailExists ($email);
 	}
 
 	public function getUsers( $as_array = false )
@@ -95,15 +80,32 @@ final class Papyrine extends Savant2
 		return $this->database->getUsers( $as_array );
 	}
 
-	public function getBlog( $id )
+	public function createUser ($email, $name, $password)
 	{
-		return $this->database->getBlog( $id );
+		return $this->database->createUser ($email, $name, $password);
 	}
 
-	public function getEntries( $status, $limit = 10, $frontpage = true )
+	public function getEntry ($id)
 	{
-		return $this->database->getEntries();
+		return $this->database->getEntry ($id);
 	}
+
+	public function getEntries ()
+	{
+		return $this->database->getEntries ();
+	}
+
+	public function createEntry ($title, $body, $owner, $status = true)
+	{
+		return $this->database->createEntry ($title, $body, $owner, 
+	                                         $status = true);
+	}
+
+	public function emailExists ($email)
+	{
+		return $this->database->emailExists ($email);
+	}
+
 }
 
 ?>

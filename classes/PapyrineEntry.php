@@ -35,18 +35,14 @@
 interface PapyrineEntry
 {
 	// General functions.
-	public function __construct (integer $blog, integer $id);
+	public function __construct ($id);
 
 	// Functions to fetch information.
-	public function GetID ();
-	public function GetTitle ();
-	public function GetSummary ();
-	public function GetBody ();
-	public function GetOwner ();
-	public function GetStatus ();
-	public function GetOnFrontpage ();
-	public function GetAllowComments ();
-	public function GetAutoDisable ();
+	public function getID ();
+	public function getTitle ();
+	public function getBody ();
+	public function getOwner ();
+	public function getStatus ();
 	//abstract public function GetCategories ();
 	//abstract public function GetComments ();
 	//abstract public function GetNext ();
@@ -55,27 +51,19 @@ interface PapyrineEntry
 	//abstract public function RemoveCategory (integer $id);
 
 	// Functions to set information.
-	public function SetTitle (string $title);
-	public function SetSummary (string $summary);
-	public function SetBody (string $body);
-	public function SetOwner (integer $owner);
-	public function SetStatus (integer $status);
-	public function SetOnFrontpage (integer $onfrontpage);
-	public function SetAllowComments (integer $allowcomments);
-	public function SetAutoDisable (integer $autodisable);
+	public function setTitle ($title);
+	public function setBody ($body);
+	public function setOwner ($owner);
+	public function setStatus ($status);
 
 	// Functions to create.
-	public static function Create (string $title, string $summary, 
-	                               string $body, integer $owner, 
-	                               boolean $status = true, 
-	                               boolean $onfrontpage = true, 
-	                               boolean $allowcomments = true, 
-	                               boolean $autodisable = false);
+	public static function create ($title, $body, $owner, $status = true);
+
 	//abstract public function CreateComment (string $body, string $owner_name,
 	//                                        string $owner_email)
 
 	// Functions to delete.
-	public function Delete ();
+	public function delete ();
 }
 
 ?>

@@ -24,7 +24,7 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  */
 
-require_once 'SQLiteBlog.php';
+require_once 'SQLiteAbstraction.php';
 require_once 'SQLiteCategory.php';
 require_once 'SQLiteComment.php';
 require_once 'SQLiteEntry.php';
@@ -49,26 +49,20 @@ class SQLiteDatabasePlugin implements PapyrineDatabase
 	public static function install()
 	{
 		// If first run
-		$this->Blog_CreateTable ();
 		$this->Category_CreateTable ();
 		$this->Comment_CreateTable ();
 		$this->Entry_CreateTable ();
 		$this->User_CreateTable ();
 	}
 
-	public function getBlog( $id )
+	public function emailExists ($email)
 	{
-		return new SQLiteBlog( $id );
+		return SQLiteUser::emailExists ($email);
 	}
 
 	public function getUser( $id )
 	{
 		return new SQLiteUser( $id );
-	}
-
-	public function emailExists ($email)
-	{
-		return SQLiteUser::emailExists ($email);
 	}
 
 	public function getUsers( $as_array = false )
@@ -89,27 +83,37 @@ class SQLiteDatabasePlugin implements PapyrineDatabase
 		return $output;
 	}
 
-	public function createBlog( $title )
-	{
-		return SQLitePapyrineBlog::create( $title );
-	}
-
 	public function createUser( $email, $name, $password )
 	{
 		return SQLiteUser::create( $email, $name, $password );
 	}
 
-	public function Blog_CreateTable ()
+	public function getEntry ($id)
+	{
+		return new SQLiteEntry ($id);
+	}
+
+	public function getEntries ()
 	{
 		$sql = sprintf (
-			"CREATE TABLE %s (        " .
-			" id INTEGER PRIMARY KEY, " .
-			" title text NOT NULL     " .
-			")                        " ,
-			SQLitePapyrineBlog::TABLE
+			" SELECT * FROM %s",
+			SQLiteEntry::TABLE
 		);
 
-		$this->connection->unbufferedQuery ($sql);
+		$result = $this->connection->unbufferedQuery ($sql);
+
+		$output = array ();
+
+		foreach ($result as $row) {
+			$output [] = new SQLiteEntry ($row ["id"]);
+		}
+
+		return $output;
+	}
+
+	public function createEntry ($title, $body, $owner, $status = true)
+	{
+		return SQLiteEntry::create ($title, $body, $owner, $status = true);
 	}
 
 	public function Category_CreateTable ()
@@ -120,7 +124,7 @@ class SQLiteDatabasePlugin implements PapyrineDatabase
 			" blog INTEGER NOT NULL,  " .
 			" title text NOT NULL     " .
 			")                        " ,
-			SQLitePapyrineCategory::TABLE
+			SQLiteCategory::TABLE
 		);
 
 		$this->connection->unbufferedQuery ($sql);
@@ -138,7 +142,7 @@ class SQLiteDatabasePlugin implements PapyrineDatabase
 			" owner_name text NOT NULL, " .
 			" owner_email text NOT NULL " .
 			")                          " ,
-			SQLitePapyrineComment::TABLE
+			SQLiteComment::TABLE
 		);
 
 		$this->connection->unbufferedQuery ($sql);
@@ -149,21 +153,15 @@ class SQLiteDatabasePlugin implements PapyrineDatabase
 		$sql = sprintf (
 			"CREATE TABLE %s (                      " .
 			" id INTEGER PRIMARY KEY,               " .
-			" blog INTEGER NOT NULL,                " .
 			" title text NOT NULL,                  " .
 			" linktitle text NOT NULL,              " .
-			" summary text NOT NULL,                " .
 			" body text NOT NULL,                   " .
 			" created timestamp(14) NOT NULL,       " .
-			" modified timestamp(14) NOT NULL,      " .
 			" status INTEGER NOT NULL,              " .
 			" owner INTEGER NOT NULL,               " .
-			" onfrontpage INTEGER NOT NULL,         " .
-			" allowcomments INTEGER NOT NULL,       " .
-			" autodisable timestamp(14) NOT NULL,   " .
 			" comments INTEGER NOT NULL default '0' " .
 			")                                      " ,
-			SQLitePapyrineEntry::TABLE
+			SQLiteEntry::TABLE
 		);
 
 		$this->connection->unbufferedQuery ($sql);

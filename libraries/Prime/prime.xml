@@ -3,6 +3,7 @@
 	<!--// Form's Objects //-->
 	<forms>
 		<form name="UserCreate" class="UserCreateForm" />
+		<form name="EntryCreate" class="EntryCreateForm" />
 	</forms>
 	
 	<!--// Global Forwards //-->
@@ -36,6 +37,17 @@
 			name="UserCreate" 
 			class="UserCreateAction"
 			form="UserCreate" 
+			validate="true" >
+		</action>
+		<action 
+			name="EntryAdministration" 
+			parameter="admin/entries.html" 
+			class="EntryAdministrationAction" >
+		</action>
+		<action 
+			name="EntryCreate" 
+			class="EntryCreateAction"
+			form="EntryCreate" 
 			validate="true" >
 		</action>
 	</actions>
