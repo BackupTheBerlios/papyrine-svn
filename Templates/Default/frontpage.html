@@ -1,0 +1,86 @@
+{papyrine_getblog assign="blog"}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="application/xhtml+xml" />
+	<title>{$blog.title}</title>
+	<link rel="stylesheet" type="text/css" href="style.css" />
+{papyrine_getsyndicators type="recent" assign="syndicators"}
+{foreach from=$syndicators item="syndicator"}
+	<link rel="alternate" type="{$syndicator.mime-type}" title="{$syndicator.title}" href="{$syndicator.url}" />
+{/foreach{
+</head>
+<body>
+    <div id="banner">
+        <h1><a href="{$blog.url}">{$blog.title}</a></h1>
+        <span class="description">{$blog.description}</span>
+    </div>
+    <div id="content">
+        <div class="blog">
+{papyrine_getentries assign="entries" frontpage=true limit=10}
+{foreach from=$entries item="entry"}
+  {if $entry.newday}
+            <h2 class="date">{$entry.posttime|date_format:s2}</h2>
+  {/if}
+            <div class="blogbody">
+                <h3 class="title">{$entry.title}</h3>
+                {$entry.body}
+                <div class="posted">
+
+{papyrine_getcategories assign="categories" entry=$entry.id}
+{foreach from=$categories item="category"}
+			<a href="{$category.url}">{$category.title}</a>, 
+{/foreach}
+
+				&#8226; <a href="{$entry.url}">{$entry.comments} Comments/Trackbacks</a></div>
+            </div>
+{/foreach}
+        </div>
+    </div>
+    <div id="links">
+        <div class="sidetitle">Sections</div>
+        <div class="side">
+
+{papyrine_getcategories assign="categories"}
+{foreach from=$categories item="category"}
+			<a href="{$category.url}">{$category.title}</a><br />
+{/foreach}
+
+		</div>
+        <div class="sidetitle">Currently Reading</div>
+        <div class="side">
+
+{delicious_getcurrentlyreading assign="books"}
+{foreach from=$books item="book"}
+			<a href="{$book.url}"><img src="{$book.image} /></a><br />
+			<a href="{$book.url}">{$book.title}</a> by {$book.authors}<br />
+{/foreach}
+
+        </div>
+        <div class="sidetitle">Friends</div>
+        <div class="side">
+            {links cat="Friends"}
+        </div>
+        <div class="sidetitle">Blogroll</div>
+        <div class="side">
+            {blogroll userid=4829}
+        </div>
+        <div class="sidetitle">My Links</div>
+        <div class="side">
+
+{allconsuming_getlinks assign="links"}
+{foreach from=$links item="link"}
+			<a href="{$link.url}">{$link.title}</a><br />
+{/foreach}
+
+        </div>
+        <div class="syndicate">
+            <!--a href="/rss.php" title="RSS 0.92 Feed"><img src="/bblog/images/rss092.gif" /></a><br /-->
+            <a href="/rss.php?ver=2" title="RSS 2.0 Feed"><img src="/bblog/images/rss2.gif" /></a><br />
+            <!--a href="/rss.php?ver=atom03" title="Atom 0.3 Feed"><img src="/bblog/images/atom03.gif" /></a><br /-->
+            <a href="http://thomas.jedijawa.com/foaf.rdf" title="My FOAF Profile"><img src="/bblog/images/foaf.gif" /></a>
+        </div>
+    </div>
+    <br clear="all" />
+</body>
+</html>

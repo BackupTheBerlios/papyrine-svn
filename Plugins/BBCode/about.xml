@@ -1,0 +1,13 @@
+<?xml version='1.0' standalone='yes'?>
+<plugin>
+	<name>BBCode Modifier Plugin</name>
+	<description>Coverts from BBCode markup to XHTML</description>
+	<version>0.1</version>
+	<author>
+		<name>Thomas Reynolds</name>
+		<email>thomasr@infograph.com</email>
+	</author>
+	<class modifier="true">BBCodePlugin.class.php</class>
+	<smarty provided="true">Smarty/</smarty>
+	<templates provided="false" />
+</plugin>

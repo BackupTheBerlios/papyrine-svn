@@ -1,0 +1,20 @@
+<?xml version='1.0' standalone='yes'?>
+<plugin>
+	<name>Amazon Wishlist Display Plugin</name>
+	<description>Display items from a user's Amazon wishlist</description>
+	<website>http://www.amazon.com/</website>
+	<version>0.1</version>
+	<api>0.1</api>
+	<author>
+		<name>Thomas Reynolds</name>
+		<email>thomasr@infograph.com</email>
+	</author>
+	<class>AmazonWishlistPlugin.class.php</class>
+	<smarty provided="true">Smarty/</smarty>
+	<templates provided="false" />
+	<modifiers provided="false" />
+	<options>
+		<wishlist_id>3PJ7JD29E7CZR</wishlist_id>
+		<associate_id>calypso02-20</associate_id>
+	</options>
+</plugin>

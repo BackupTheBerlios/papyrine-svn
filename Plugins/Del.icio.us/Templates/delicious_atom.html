@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed version="0.3" xmlns="http://purl.org/atom/ns#" xml:lang="en">
+
+{delicious_getposts assign="posts"}
+
+	<title>{$blog.title} Links</title>
+	<tagline>an ongoing linkdump</tagline>
+	<link rel="alternate" type="text/html" href="http://del.icio.us/{delicious_getusernam}"/>
+	<id>tag:{$smarty.server.SERVER_NAME},{$blog.modified|date_format:"Y:m.d"}:links</id>
+  <copyright>Copyright 2001-2004, Mark Pilgrim</copyright>
+	<generator url="{$system.url}" version="{$system.version}">{$system.name}</generator>
+
+  <author>
+    <name>Mark Pilgrim</name>
+    <url>http://diveintomark.org/</url>
+  </author>
+	
+    <modified>2004-05-27T15:57:23Z</modified>
+
+{foreach from=$posts item=post}
+
+	<entry>
+		<title>{$post.description}</title>
+		<link rel="alternate" type="text/html" href="{$post.href}"/>
+		<issued>{$post.time}</issued>
+		<created>{$post.time}</created>
+		<id>tag:diveintomark.org,2001-07-29:/archives/blinks/2004/05/#b20040527151959</id>
+	</entry>
+
+{/foreach}
+
+</feed>
+

@@ -1,0 +1,16 @@
+<?xml version='1.0' standalone='yes'?>
+<plugin>
+	<version>0.1</version>
+	<name>Blo.gs Blogroll Plugin</name>
+	<description>Display blog updates from blo.gs</description>
+	<website>http://blo.gs/</website>
+	<author>
+		<name>Thomas Reynolds</name>
+		<email>thomasr@infograph.com</email>
+	</author>
+	<class>BlogsPlugin.class.php</class>
+	<smarty provided="true">Smarty/</smarty>
+	<options>
+		<userid>4829</userid>
+	</options>
+</plugin>

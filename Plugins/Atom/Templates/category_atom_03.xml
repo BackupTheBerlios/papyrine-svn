@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<feed version="0.3" xmlns="http://purl.org/atom/ns#" xml:lang="en">
+
+{getcategory assign="category" id=$id}
+{getentries assign="entries" limit=10 category=$category.id}
+
+	<title>{$blog.title}: {$category.title}</title>
+	<tagline>{$blog.description}</tagline>
+	<link rel="alternate" type="application/xhtml+xml" href="{$category.url}" />
+	<modified>{$category.modified|iso8601}</modified>
+	<id>tag:{$smarty.server.SERVER_NAME},{$category.modified|date_format:"Y:m.d"}</id>
+	<generator url="{$system.url}" version="{$system.version}">{$system.name}</generator>
+
+{foreach from=$entries item=entry}
+  {getuser assign="author" id=$entry.owner}
+
+	<entry>
+		<title>{$entry.title|escape}</title>
+		<link rel="alternate" type="application/xhtml+xml" href="{$entry.url}" />
+		<issued>{$entry.created|iso8601}</issued>
+		<modified>{$entry.modified|iso8601}</modified>
+		<id>tag:{$smarty.server.SERVER_NAME},{$category.modified|date_format:"Y:m.d."}{$entry.id}</id>
+		<author>
+			<name>{$author.name}</name>
+			<email>{$author.email}</email>
+		</author>
+		<summary>{$entry.summary}</summary>
+		<content type="application/xhtml+xml" mode="escaped" xml:lang="en">
+			<![CDATA[{$entry.body}]]>
+		</content>
+	</entry>
+
+{/foreach}
+
+</feed>

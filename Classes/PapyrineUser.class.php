@@ -1,0 +1,187 @@
+<?php
+
+/**
+ * Papyrine is a weblogging system built using PHP5 and Smarty.
+ * Copyright (C) 2004 Thomas Reynolds
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @package Papyrine
+ * @subpackage Classes
+ * @author Thomas Reynolds <thomasr@infograph.com>
+ * @version 0.1
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+ */
+
+/**
+ * Decribes a Papyrine user.
+ *
+ * @author Thomas Reynolds <thomasr@infograph.com>
+ * @package Papyrine
+ * @subpackage Classes
+ */
+class PapyrineUser extends PapyrineObject
+{
+	/**
+	 * Name of the database table to map this object to.
+	 *
+	 * @var string 
+	 */
+	const table = "papyrine_users";
+
+	/**
+	 * PapyrineUser constructor.
+	 *
+	 * @param integer|string $id User's unique id or username.
+	 * @param mixed $database Reference for already opened database.
+	 * @uses PapyrineUser::table
+	 */
+	function __construct (&$database, $id) 
+	{
+		// Initial PapyrineObject.
+		parent::__construct ($database, PapyrineUser::$table);
+
+		$this->id = $id;
+	}
+
+	/**
+	 * Populate the object when we need it.
+	 * 
+	 * @uses PapyrineUser::table
+	 * @uses DB_common::query
+	 * @uses DB_common::getRow
+	 */
+	function __get ($var)
+	{
+		if (!$this->data)
+		{
+			// Query the database for the desired user.
+			$result = $this->database->query(sprintf (
+				" SELECT * FROM %s " .
+				" WHERE %s = %s    " .
+				" LIMIT 1          " ,
+				PapyrineUser::table,
+				(is_numeric ($this->id) ? "id" : "nickname"),
+				$this->id)
+			);
+
+			// Populate the object from the database.
+			$this->data = $result->getRow ($result, DB_FETCHMODE_ASSOC);
+		}
+
+		return parent::__get ($var);
+	}
+
+	/**
+	 * Create the database table. For Papyrine installation only.
+	 *
+	 * @param mixed $database Reference for already opened database.
+	 * @uses PapyrineUser::table
+	 * @uses DB_common::query
+	 * @uses DB_result::free
+	 */
+	public static function CreateTable (&$database)
+	{
+		$database->query (sprintf (
+			"CREATE TABLE %s (                           " .
+			" id int(11) NOT NULL auto_increment,        " .
+			" blog int(11) NOT NULL,                     " .
+			" nickname text NOT NULL,                    " .
+			" password text NOT NULL,                    " .
+			" firstname text NOT NULL,                   " .
+			" lastname text NOT NULL,                    " .
+			" email text NOT NULL,                       " .
+			" nameformat int(11) NOT NULL default '0',   " .
+			" modifier int(11) NOT NULL default '0',     " .
+			" notification int(11) NOT NULL default '0', " .
+			" PRIMARY KEY (id)                           " .
+			") TYPE=MyISAM;                              " ,
+			PapyrineUser::table)
+		);
+
+		$result->free ();
+	}
+
+	/**
+	 * Create a new user.
+	 *
+	 * @param mixed $database Reference for already opened database.
+	 * @param integer $blog Unique id of this blog.
+	 * @param string $nickname New user's nickname.
+	 * @param string $password New user's password.
+	 * @param string $firstname New user's first name.
+	 * @param string $lastname New user's last name.
+	 * @param string $email New user's email address.
+	 * @return integer
+	 * @uses PapyrineUser::table
+	 * @uses DB_common::query
+	 * @uses DB_common::quoteSmart
+	 * @uses DB_result::free
+	 */
+	public static function Create (&$database, $blog, $nickname, $password, 
+	                               $firstname, $lastname, $email)
+	{
+		// Generate the query and insert into the database.
+		$result = $database->query (sprintf (
+			"INSERT INTO %s SET " .
+			" blog = %s,        " .
+			" nickname = %s,    " .
+			" password = %s,    " .
+			" firstname = %s,   " .
+			" lastname = %s,    " .
+			" email = %s        " ,
+			PapyrineUser::table,
+			$blog,
+			$database->quoteSmart ($nickname),
+			$database->quoteSmart (md5 ($password)),
+			$database->quoteSmart ($firstname),
+			$database->quoteSmart ($lastname),
+			$database->quoteSmart ($email)
+		);
+
+		$result->free ();
+	}
+
+	/**
+	 * See if the supplied password equals the hash of our records.
+	 *
+	 * @param string $password
+	 * @return boolean
+	 */
+	public function ValidatePassword ($password)
+	{
+		return ($this->data["password"] == md5 ($password));
+	}
+
+	/**
+	 * Delete the user.
+	 *
+	 * @uses PapyrineUser::table
+	 * @uses DB_common::query
+	 * @uses DB_result::free
+	 */
+	public function Delete ()
+	{
+		$result = $this->database->query (sprintf (
+			"DELETE FROM %s WHERE id = %s LIMIT 1" ,
+			PapyrineUser::table,
+			$this->data["id"])
+		);
+
+		$result->free ();
+	}
+}
+
+?>

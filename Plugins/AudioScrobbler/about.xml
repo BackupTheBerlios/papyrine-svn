@@ -1,0 +1,18 @@
+<?xml version='1.0' standalone='yes'?>
+<plugin>
+	<name>AudioScrobbler Recent Songs Plugin</name>
+	<description>Display recently played songs from audioscrobbler.com</description>
+	<website>http://www.audioscrobbler.com/</website>
+	<version>0.1</version>
+	<author>
+		<name>Thomas Reynolds</name>
+		<email>thomasr@infograph.com</email>
+	</author>
+	<class>AudioScrobbler.class.php</class>
+	<smarty provided="true">Smarty/</smarty>
+	<templates provided="false" />
+	<modifiers provided="false" />
+	<options>
+		<username>JediJawa</username>
+	</options>
+</plugin>

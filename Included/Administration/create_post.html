@@ -1,0 +1,98 @@
+{include file="papyrine_header.html"}
+
+<h3>Post Entry</h3>
+<form action="" method="post" name="post">
+	<fieldset id="input">
+		<div>
+			<label for="title">Title</label>
+			<input type="text" id="title" name="title" size="40" />
+		</div>
+		<div>
+			<label for="body">Entry Text</label>
+			<textarea id="body" name="body" cols="60" rows="10"></textarea>
+		</div>
+		<div>
+			<label for="modifier">Entry Modifier</label>
+			<select id="modifier" name="modifier">
+{papyrine_getmodifiers assign="modifiers"}
+{foreach from=$modifiers item="modifier"}
+				<option value="{$modifier.id}">{$modifier.name}</option>
+{foreach}
+				<option value="0">None</option>
+			</select>
+		</div>
+		<div>
+			<label for="category">Categories</label>
+			<ol>
+{papyrine_getcategories assign="categories"}
+{foreach from=$categories item="category"}
+				<li>
+					<input type="checkbox" id="category_{$category.id}" name="category[]" value="4" />
+					<label for="category_{$category.id}">{$category.title}</label>
+				</li>
+{/foreach}
+			</ol>
+		</div>
+		<div>
+			<label for="status">Publication Status</label>
+			<ol>
+				<li>
+					<input type="radio" id="draft" name="status" value="0" />
+					<label for="draft">Draft</label>
+				</li>
+				<li>
+					<input type="radio" id="live" name="status" value="1" checked="checked" />
+					<label for="live">Live</label>
+				</li>
+			</ol>
+		</div>
+		<div>
+			<label for="status">Hide from Home Page</label>
+			<ol>
+				<li>
+					<input type="checkbox" id="onfrontpage" name="onfrontpage" value="1" />
+					<label for="onfrontpage">Do not show this post on the home page</label>
+				</li>
+			</ol>
+		</div>
+		<div>
+			<label for="status">Comment Options</label>
+			<ol>
+				<li>
+					<input type="radio" id="allowcomments" name="commentoptions" value="allow" checked="checked" />
+					<label for="allowcomments">Allow comments on this post</label>
+				</li>
+				<li>
+					<input type="radio" id="timedcomments" name="commentoptions" value="timed" />
+					<label for="timedcomments">Allow comments on this post but disable after </label>
+					<select id="disallow_comments_after" name="disallowcommentsdays">
+						<option value="7">1 Week</option>
+						<option value="14">2 Weeks</option>
+						<option value="30">30 Days</option>
+						<option value="90">90 Days</option>
+					</select>
+				</li>
+				<li>
+					<input type="radio" id="disallowcomments" name="commentoptions" value="disallow" />
+					<label for="disallowcomments">Disallow comments on this post</label>
+				</li>
+			</ol>
+		</div>
+		<div>
+			<label for="status">Send Trackback</label>
+			<ol>
+				<li>
+					<input type="checkbox" id="trackback" name="trackback" />
+					<label for="trackback">Send Trackback?</label>
+				</li>
+			</ol>
+		</div>
+	</fieldset>
+	<fieldset id="submit">
+		<div>
+			<input type="submit" name="submit" value="Save Entry" />
+		</div>
+	</fieldset>
+</form>
+
+{include file="papyrine_footer.html"}

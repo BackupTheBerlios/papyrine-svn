@@ -1,0 +1,16 @@
+<?xml version='1.0' xmlns="plugin.rng">
+<plugin>
+	<name>RSS 2.0 Syndication Plugin</name>
+	<description>Provides various feeds in the RSS 2.0 format</description>
+	<website>rss</website>
+	<version>0.1</version>
+	<author>
+		<name>Thomas Reynolds</name>
+		<email>thomasr@infograph.com</email>
+	</author>
+	<class modifier="true">RSS2Plugin.class.php</class>
+	<templates location="Templates/">
+		<feed_recent>recent_rss_20.xml</feed_recent>
+		<feed_category>recent_rss_20.xml</feed_category>
+	</templates>
+</plugin>
