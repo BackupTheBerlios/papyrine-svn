@@ -1,0 +1,31 @@
+<?xml version='1.0' xmlns="plugin.rng">
+<plugin>
+	<name>Archive Plugin</name>
+	<description>Provides various archives of posts</description>
+	<version>0.1</version>
+	<author>
+		<name>Thomas Reynolds</name>
+		<email>thomasr@infograph.com</email>
+	</author>
+	<class>ArchivesPlugin.class.php</class>
+	<layout>
+		<node id="root">
+			<node id="archives" 
+			      template="archives.html" identifier="archives">
+				<node id="archive-by-year"
+				      template="archive-by-year.html" identifier="[0-9]+">
+					<node id="archive-by-month" 
+					      template="archive-by-month.html" identifier="[0-9]+">
+						<node id="archive-by-date" 
+						      template="archive-by-day.html"
+						      identifier="[0-9]+">
+							<node id="archive-by-individual" 
+							      template="archive-by-entry.html"
+							      identifier="[a-zA-Z0-9]+" />
+						</node>
+					</node>
+				</node>
+			</node>
+		</node>
+	</layout>
+</plugin>

@@ -1,0 +1,11 @@
+<?xml version='1.0' xmlns="plugin.rng">
+<plugin>
+	<name>Google Redirect Plugin</name>
+	<description>Strips PageRank information from links</description>
+	<version>0.1</version>
+	<author>
+		<name>Thomas Reynolds</name>
+		<email>thomasr@infograph.com</email>
+	</author>
+	<class>GoogleRedirectPlugin.class.php</class>
+</plugin>

@@ -1,0 +1,11 @@
+<?xml version='1.0' xmlns="plugin.rng">
+<plugin>
+	<name>Comment Blacklist Plugin</name>
+	<description>Check new comments for spam content</description>
+	<version>0.1</version>
+	<author>
+		<name>Thomas Reynolds</name>
+		<email>thomasr@infograph.com</email>
+	</author>
+	<class>CommentBlacklistPlugin.class.php</class>
+</plugin>

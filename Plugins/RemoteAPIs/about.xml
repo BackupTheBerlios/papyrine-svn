@@ -1,0 +1,17 @@
+<?xml version='1.0' xmlns="plugin.rng">
+<plugin>
+	<name>Remote APIs Plugin</name>
+	<description>Provides many popular remote APIs</description>
+	<website>papyrine</website>
+	<version>0.1</version>
+	<author>
+		<name>Thomas Reynolds</name>
+		<email>thomasr@infograph.com</email>
+	</author>
+	<class>RemoteAPIsPlugin.class.php</class>
+	<layout>
+		<node id="root">
+			<node id="RPC2" identifier="RPC2" />
+		</node>
+	</layout>
+</plugin>
