@@ -13,4 +13,18 @@
 		<feed_recent>recent_rss_10.xml</feed_recent>
 		<feed_category>recent_rss_10.xml</feed_category>
 	</templates>
+	<layout>
+		<node id="root">
+			<node id="categories">
+				<node id="archive-by-category">
+					<node id="feeds">
+						<node id="category-feed-rss20" identifier="rss20" />
+					</node>
+				</node>
+			</node>
+			<node id="feeds">
+				<node id="recent-feed-rss20" identifier="rss20" />
+			</node>
+		</node>
+	</layout>
 </plugin>

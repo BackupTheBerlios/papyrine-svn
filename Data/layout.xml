@@ -1,26 +1,9 @@
 <?xml version='1.0' xmlns="layout.rng">
 <layout>
 	<node id="root" identifier="^">
-		<node id="archives" identifier="archives">
-			<node id="archive-by-year" identifier="[0-9]+">
-				<node id="archive-by-month" identifier="[0-9]+">
-					<node id="archive-by-date" identifier="[0-9]+">
-						<node id="archive-by-individual" identifier="[a-zA-Z0-9]+" />
-					</node>
-				</node>
-			</node>
-		</node>
 		<node id="categories">
-			<node id="archive-by-category" identifier="[a-zA-Z0-9]+">
-				<node id="feeds" identifier="feeds">
-					<node id="feed-by-category" identifier="[a-zA-Z0-9]+" />
-				</node>
-			</node>
+			<node id="archive-by-category" identifier="[a-zA-Z0-9]+" />
 		</node>
-		<node id="feeds" identifier="feeds">
-			<node id="feed-by-recent" identifier="[a-zA-Z0-9]+" />
-		</node>
-		<node id="RPC2" identifier="RPC2" />
 	</node>
 </layout>
 
